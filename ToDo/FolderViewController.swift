@@ -12,8 +12,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     //TableView宣言
     @IBOutlet var table: UITableView!
-
+    
     var foldernameArray = [String]()
+    
+    var saveData : UserDefaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +25,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.delegate = self
         
         foldernameArray = ["学校", "LifeisTech", "SEG"]
+        self.saveData.set(self.foldernameArray, forKey: "folder")
+        foldernameArray = saveData.object(forKey: "folder") as! [String]
+        self.saveData.set(self.foldernameArray, forKey: "folder")
+        self.saveData.synchronize()
     }
 
     override func didReceiveMemoryWarning() {
@@ -62,6 +68,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             self.foldernameArray.append(textField.text!)
             print(self.foldernameArray)
             self.table.reloadData()
+            
+            self.saveData.set(self.foldernameArray, forKey: "folder")
+            self.saveData.synchronize()
+
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in

@@ -15,7 +15,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var filenameArray = [String]()
     
-    var saveData : UserDefaults = UserDefaults.standard//////////////////////////////////////////////////
+    var saveData : UserDefaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +25,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         table.delegate = self
         
-        filenameArray = saveData.object(forKey: "file") as! [String]/////////////////////////////////////
-        self.saveData.set(self.filenameArray, forKey: "file")////////////////////////////////////////////
-        self.saveData.synchronize()//////////////////////////////////////////////////////////////////////
+        filenameArray = ["歴史", "美術", "物理"]
+        self.saveData.set(self.filenameArray, forKey: "file")
+        filenameArray = saveData.object(forKey: "file") as! [String]
+        self.saveData.set(self.filenameArray, forKey: "file")
+        self.saveData.synchronize()
     }
 
     override func didReceiveMemoryWarning() {
@@ -69,8 +71,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             print(self.filenameArray)
             self.table.reloadData()
             
-            self.saveData.set(self.filenameArray, forKey: "file")////////////////////////////////////////
-            self.saveData.synchronize()//////////////////////////////////////////////////////////////////
+            self.saveData.set(self.filenameArray, forKey: "file")
+            self.saveData.synchronize()
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
