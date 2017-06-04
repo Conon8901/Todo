@@ -15,7 +15,6 @@
 		112E64881EE2D3B80048DB21 /* ToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112E64871EE2D3B80048DB21 /* ToDoTests.swift */; };
 		112E64931EE2D3B80048DB21 /* ToDoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112E64921EE2D3B80048DB21 /* ToDoUITests.swift */; };
 		112E64A11EE2D5680048DB21 /* FileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112E64A01EE2D5680048DB21 /* FileViewController.swift */; };
-		114A363B1EE2E68000B6BC56 /* AddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 114A363A1EE2E68000B6BC56 /* AddViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,7 +49,6 @@
 		112E64921EE2D3B80048DB21 /* ToDoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoUITests.swift; sourceTree = "<group>"; };
 		112E64941EE2D3B80048DB21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		112E64A01EE2D5680048DB21 /* FileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileViewController.swift; sourceTree = "<group>"; };
-		114A363A1EE2E68000B6BC56 /* AddViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +102,6 @@
 				112E64721EE2D3B80048DB21 /* AppDelegate.swift */,
 				112E64741EE2D3B80048DB21 /* FolderViewController.swift */,
 				112E64A01EE2D5680048DB21 /* FileViewController.swift */,
-				114A363A1EE2E68000B6BC56 /* AddViewController.swift */,
 				112E64761EE2D3B80048DB21 /* Main.storyboard */,
 				112E64791EE2D3B80048DB21 /* Assets.xcassets */,
 				112E647B1EE2D3B80048DB21 /* LaunchScreen.storyboard */,
@@ -267,7 +264,6 @@
 			files = (
 				112E64A11EE2D5680048DB21 /* FileViewController.swift in Sources */,
 				112E64751EE2D3B80048DB21 /* FolderViewController.swift in Sources */,
-				114A363B1EE2E68000B6BC56 /* AddViewController.swift in Sources */,
 				112E64731EE2D3B80048DB21 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
