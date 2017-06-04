@@ -136,7 +136,11 @@
                                                 <action selector="back" destination="7DH-dA-Yea" id="tC1-xe-2yY"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="lsO-t3-KtB"/>
+                                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="lsO-t3-KtB">
+                                            <connections>
+                                                <action selector="addWithSender:" destination="7DH-dA-Yea" id="bTa-3c-yJj"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>

@@ -50,7 +50,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let storyboard: UIStoryboard = self.storyboard!
         let nextView = storyboard.instantiateViewController(withIdentifier: "File") as! FileViewController
         self.present(nextView, animated: true, completion: nil)
-    }
+    }//\(filenameArray[indexPath.row])でforKey設定してsavedata,読み込み
     
     @IBAction func add(sender: AnyObject) {
         
@@ -75,9 +75,20 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         alert.addAction(cancelAction)
         
         present(alert, animated: true, completion: nil)
-        
-        
     }
     
-}
+    
+    
+    func tableView(_ tableView: UITableView,canEditRowAt indexPath: IndexPath) -> Bool{
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            foldernameArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
+        }
+    }
 
+    
+}

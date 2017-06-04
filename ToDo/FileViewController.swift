@@ -15,6 +15,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var filenameArray = [String]()
     
+    var saveData : UserDefaults = UserDefaults.standard//////////////////////////////////////////////////
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -23,7 +25,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         table.delegate = self
         
-        filenameArray = ["歴史レポート", "美術レポート"]
+        filenameArray = saveData.object(forKey: "file") as! [String]/////////////////////////////////////
+        self.saveData.set(self.filenameArray, forKey: "file")////////////////////////////////////////////
+        self.saveData.synchronize()//////////////////////////////////////////////////////////////////////
     }
 
     override func didReceiveMemoryWarning() {
@@ -54,15 +58,45 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.dismiss(animated: true, completion: nil)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    @IBAction func add(sender: AnyObject) {
+        
+        let alert = UIAlertController(title: "フォルダ追加", message: "タイトル入力", preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
+            
+            // 入力したテキストをコンソールに表示
+            let textField = alert.textFields![0] as UITextField
+            self.filenameArray.append(textField.text!)
+            print(self.filenameArray)
+            self.table.reloadData()
+            
+            self.saveData.set(self.filenameArray, forKey: "file")////////////////////////////////////////
+            self.saveData.synchronize()//////////////////////////////////////////////////////////////////
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
+        }
+        
+        // UIAlertControllerにtextFieldを追加
+        alert.addTextField { (textField:UITextField!) -> Void in
+        }
+        
+        alert.addAction(saveAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
     }
-    */
+    
+    
+    
+    func tableView(_ tableView: UITableView,canEditRowAt indexPath: IndexPath) -> Bool{
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            filenameArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
+        }
+    }
 
 }
