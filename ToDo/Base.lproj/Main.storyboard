@@ -69,7 +69,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8eg-WV-9OM" id="mpi-P5-sBQ">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -82,7 +82,7 @@
                                     <navigationItem title="Title" id="Ger-Gs-w4h">
                                         <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="dPn-rD-VI1">
                                             <connections>
-                                                <action selector="add" destination="BYZ-38-t0r" id="BCU-85-4ts"/>
+                                                <action selector="addWithSender:" destination="BYZ-38-t0r" id="3ZH-48-0vC"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>

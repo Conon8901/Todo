@@ -23,7 +23,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.delegate = self
         
         foldernameArray = ["学校", "LifeisTech", "SEG"]
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -51,15 +50,34 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let storyboard: UIStoryboard = self.storyboard!
         let nextView = storyboard.instantiateViewController(withIdentifier: "File") as! FileViewController
         self.present(nextView, animated: true, completion: nil)
-
     }
     
-    @IBAction func add() {
-        let storyboard: UIStoryboard = self.storyboard!
-        let nextView = storyboard.instantiateViewController(withIdentifier: "Add") as! FileViewController
-        self.present(nextView, animated: true, completion: nil)
-        foldernameArray.append("")
+    @IBAction func add(sender: AnyObject) {
+        
+        let alert = UIAlertController(title: "フォルダ追加", message: "タイトル入力", preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
+            
+            // 入力したテキストをコンソールに表示
+            let textField = alert.textFields![0] as UITextField
+            self.foldernameArray.append(textField.text!)
+            print(self.foldernameArray)
+            self.table.reloadData()
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
+        }
+        
+        // UIAlertControllerにtextFieldを追加
+        alert.addTextField { (textField:UITextField!) -> Void in
+        }
+        
+        alert.addAction(saveAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
+        
+        
     }
-
+    
 }
 
