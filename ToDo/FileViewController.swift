@@ -13,9 +13,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     //TableView宣言
     @IBOutlet var table: UITableView!
     
-    var filenameArray = [String]()
+    var fileNameArray = [String]()
     
     var saveData : UserDefaults = UserDefaults.standard
+    
+    let excludes = CharacterSet(charactersIn: "　 ")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,11 +27,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         table.delegate = self
         
-        filenameArray = ["歴史", "美術", "物理"]
-        self.saveData.set(self.filenameArray, forKey: "file")
-        filenameArray = saveData.object(forKey: "file") as! [String]
-        self.saveData.set(self.filenameArray, forKey: "file")
-        self.saveData.synchronize()
+        fileNameArray = saveData.object(forKey: "file") as! [String]
+        self.saveData.set(self.fileNameArray, forKey: "file")
     }
 
     override func didReceiveMemoryWarning() {
@@ -39,21 +38,21 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     //セル数設定
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filenameArray.count
+        return fileNameArray.count
     }
     
     //セル取得・表示
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "File")
         
-        cell?.textLabel?.text = filenameArray[indexPath.row]
+        cell?.textLabel?.text = fileNameArray[indexPath.row]
         
         return cell!
     }
     
     //タッチ時の挙動
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("File: \(filenameArray[indexPath.row])を選択")
+        print("File: \(fileNameArray[indexPath.row])を選択")
     }
     
     @IBAction func back() {
@@ -65,17 +64,20 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let alert = UIAlertController(title: "フォルダ追加", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
             
-            // 入力したテキストをコンソールに表示
+            // 入力したテキストを配列に代入
             let textField = alert.textFields![0] as UITextField
-            self.filenameArray.append(textField.text!)
-            print(self.filenameArray)
-            self.table.reloadData()
-            
-            self.saveData.set(self.filenameArray, forKey: "file")
-            self.saveData.synchronize()
+            let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
+            if add != "Optional(\"\")"{
+                self.fileNameArray.append(textField.text!)
+                print(self.fileNameArray)
+                self.table.reloadData()
+                
+                self.saveData.set(self.fileNameArray, forKey: "file")
+                self.saveData.synchronize()
+            }
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
         }
         
         // UIAlertControllerにtextFieldを追加
@@ -96,7 +98,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
-            filenameArray.remove(at: indexPath.row)
+            fileNameArray.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
         }
     }

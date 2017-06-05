@@ -13,9 +13,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     //TableView宣言
     @IBOutlet var table: UITableView!
     
-    var foldernameArray = [String]()
+    var folderNameArray = [String]()
     
     var saveData : UserDefaults = UserDefaults.standard
+    
+    let excludes = CharacterSet(charactersIn: "　 ")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,11 +26,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         table.delegate = self
         
-        foldernameArray = ["学校", "LifeisTech", "SEG"]
-        self.saveData.set(self.foldernameArray, forKey: "folder")
-        foldernameArray = saveData.object(forKey: "folder") as! [String]
-        self.saveData.set(self.foldernameArray, forKey: "folder")
-        self.saveData.synchronize()
+        folderNameArray = saveData.object(forKey: "folder") as! [String]
+        self.saveData.set(self.folderNameArray, forKey: "folder")
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,21 +37,21 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
 
     //セル数設定
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return foldernameArray.count
+        return folderNameArray.count
     }
     
     //セル取得・表示
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Folder")
         
-        cell?.textLabel?.text = foldernameArray[indexPath.row]
+        cell?.textLabel?.text = folderNameArray[indexPath.row]
         
         return cell!
     }
     
     //タッチ時の挙動
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Folder: \(foldernameArray[indexPath.row])を選択")
+        print("Folder: \(folderNameArray[indexPath.row])を選択")
         let storyboard: UIStoryboard = self.storyboard!
         let nextView = storyboard.instantiateViewController(withIdentifier: "File") as! FileViewController
         self.present(nextView, animated: true, completion: nil)
@@ -63,18 +62,21 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let alert = UIAlertController(title: "フォルダ追加", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
             
-            // 入力したテキストをコンソールに表示
+            // 入力したテキストを配列に代入
             let textField = alert.textFields![0] as UITextField
-            self.foldernameArray.append(textField.text!)
-            print(self.foldernameArray)
-            self.table.reloadData()
+            let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
+            if add != "Optional(\"\")"{
+                self.folderNameArray.append(textField.text!)
+                print(self.folderNameArray)
+                self.table.reloadData()
+                
+                self.saveData.set(self.folderNameArray, forKey: "folder")
+                self.saveData.synchronize()
+            }
             
-            self.saveData.set(self.foldernameArray, forKey: "folder")
-            self.saveData.synchronize()
-
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action:UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
         }
         
         // UIAlertControllerにtextFieldを追加
@@ -95,7 +97,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
-            foldernameArray.remove(at: indexPath.row)
+            folderNameArray.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
         }
     }
