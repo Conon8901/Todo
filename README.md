@@ -1,6 +1,7 @@
 # Todo
 
 FolderごとのFile設定
+
     Folder新規追加時
     中身(空)をsaveData.set(fileNameArray, forKey: "\(folderName)")として保存
 
