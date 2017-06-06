@@ -52,10 +52,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     //タッチ時の挙動
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("Folder: \(folderNameArray[indexPath.row])を選択")
+        print(saveData.object(forKey: "file") as! [String])////////////////////////////////////////////
         let storyboard: UIStoryboard = self.storyboard!
         let nextView = storyboard.instantiateViewController(withIdentifier: "File") as! FileViewController
-        self.present(nextView, animated: true, completion: nil)
-    }//\(filenameArray[indexPath.row])でforKey設定してsavedata,読み込み
+//        self.present(nextView, animated: true, completion: nil)
+        self.navigationController?.pushViewController(nextView, animated: true)
+    }
     
     @IBAction func add(sender: AnyObject) {
         
@@ -70,8 +72,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 print(self.folderNameArray)
                 self.table.reloadData()
                 
+                
+                self.saveData.set(self.saveData.object(forKey: "file") as! [String], forKey: "\(textField.text!)")
+                
                 self.saveData.set(self.folderNameArray, forKey: "folder")
                 self.saveData.synchronize()
+                
             }
             
         }
@@ -99,6 +105,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         if editingStyle == UITableViewCellEditingStyle.delete {
             folderNameArray.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
+            saveData.set(self.folderNameArray, forKey: "folder")
         }
     }
 

@@ -56,12 +56,15 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     @IBAction func back() {
-        self.dismiss(animated: true, completion: nil)
+        self.saveData.set(self.fileNameArray, forKey: "file")
+
+//        self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func add(sender: AnyObject) {
         
-        let alert = UIAlertController(title: "フォルダ追加", message: "タイトル入力", preferredStyle: .alert)
+        let alert = UIAlertController(title: "項目追加", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
             
             // 入力したテキストを配列に代入
@@ -100,6 +103,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if editingStyle == UITableViewCellEditingStyle.delete {
             fileNameArray.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
+            saveData.set(self.fileNameArray, forKey: "file")
         }
     }
 
