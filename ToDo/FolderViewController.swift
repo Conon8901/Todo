@@ -14,6 +14,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet var table: UITableView!
     
     var folderNameArray = [String]()
+    var addNameArray = [String]()
     
     var saveData : UserDefaults = UserDefaults.standard
     
@@ -28,6 +29,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         folderNameArray = saveData.object(forKey: "folder") as! [String]
         self.saveData.set(self.folderNameArray, forKey: "folder")
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,10 +54,13 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     //タッチ時の挙動
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("Folder: \(folderNameArray[indexPath.row])を選択")
-        print(saveData.object(forKey: "file") as! [String])////////////////////////////////////////////
+        
+//        print(folderNameArray[indexPath.row])//LiT
+//        
+        saveData.set(String(folderNameArray[indexPath.row]), forKey: "move")
+//        
         let storyboard: UIStoryboard = self.storyboard!
         let nextView = storyboard.instantiateViewController(withIdentifier: "File") as! FileViewController
-//        self.present(nextView, animated: true, completion: nil)
         self.navigationController?.pushViewController(nextView, animated: true)
     }
     
@@ -69,11 +74,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
             if add != "Optional(\"\")"{
                 self.folderNameArray.append(textField.text!)
-                print(self.folderNameArray)
                 self.table.reloadData()
                 
-                
-                self.saveData.set(self.saveData.object(forKey: "file") as! [String], forKey: "\(textField.text!)")
+//                self.addNameArray = []
+//                self.saveData.set(self.addNameArray, forKey: "\(textField.text!)")
+//                print(textField.text!)
+////                self.saveData.set(self.saveData.object(forKey: "file") as! [String], forKey: "\(textField.text!)")
                 
                 self.saveData.set(self.folderNameArray, forKey: "folder")
                 self.saveData.synchronize()
