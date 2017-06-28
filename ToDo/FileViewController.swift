@@ -31,14 +31,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // Do any additional setup after loading the view.
         table.dataSource = self
         table.delegate = self
-//        self.saveData.set(self.showDict, forKey: "ToDoList")
+        
         showDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
         
-        print("Folder名: \(saveData.object(forKey: "move")!)")//LiT
         moved = saveData.object(forKey: "move")! as! String
 
-        print(showDict)
-        
         if showDict[moved] == nil{
             showDict[moved] = []
         }
@@ -64,7 +61,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "File")
         
-        cell?.textLabel?.text = showDict[moved]?[indexPath.row]/////
+        cell?.textLabel?.text = showDict[moved]?[indexPath.row]
         
         return cell!
     }
@@ -97,11 +94,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
                 self.addfile = textField.text!
                 self.addArray.append(self.addfile)
-                self.showDict[self.moved] = self.addArray//追加にする
+                self.showDict[self.moved] = self.addArray
                 
-                print(self.showDict[self.moved]!)//保存内容
                 self.saveData.setValue(self.showDict, forKeyPath: "ToDoList")
-                print(self.saveData.object(forKey: "ToDoList")!)
                 
                 self.saveData.synchronize()
                 self.table.reloadData()
@@ -123,7 +118,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     
-    
+    //削除関係
     func tableView(_ tableView: UITableView,canEditRowAt indexPath: IndexPath) -> Bool{
         return true
     }
@@ -149,6 +144,34 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     // セルの並び替えを有効にする
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+    }
+    
+    
+    
+    func edit(indexPath: IndexPath) {
+        let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
+            
+            // 入力したテキストに変更
+            let textField = alert.textFields![0] as UITextField
+            
+            self.showDict[self.moved]?[indexPath.row] = textField.text!
+            
+            
+        }
+        
+        let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
+        }
+        
+        // UIAlertControllerにtextFieldを追加
+        alert.addTextField { (textField:UITextField!) -> Void in
+        }
+        
+        alert.addAction(saveAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
+
     }
     
 }

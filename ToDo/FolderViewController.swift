@@ -55,10 +55,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("Folder: \(folderNameArray[indexPath.row])を選択")
         
-//        print(folderNameArray[indexPath.row])//LiT
-//        
+        
         saveData.set(String(folderNameArray[indexPath.row]), forKey: "move")
-//        
+
         let storyboard: UIStoryboard = self.storyboard!
         let nextView = storyboard.instantiateViewController(withIdentifier: "File") as! FileViewController
         self.navigationController?.pushViewController(nextView, animated: true)
@@ -75,11 +74,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             if add != "Optional(\"\")"{
                 self.folderNameArray.append(textField.text!)
                 self.table.reloadData()
-                
-//                self.addNameArray = []
-//                self.saveData.set(self.addNameArray, forKey: "\(textField.text!)")
-//                print(textField.text!)
-////                self.saveData.set(self.saveData.object(forKey: "file") as! [String], forKey: "\(textField.text!)")
                 
                 self.saveData.set(self.folderNameArray, forKey: "folder")
                 self.saveData.synchronize()
