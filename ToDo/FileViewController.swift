@@ -23,7 +23,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var addfile = ""
     
     var addArray = [String]()
-    var showDict = ["LiT": ["ToDo", "Camera"]]
+    var showDict = [String: Array<String>]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +32,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.dataSource = self
         table.delegate = self
         
+        self.saveData.set(self.showDict, forKey: "TodoList")
         showDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
         
         moved = saveData.object(forKey: "move")! as! String
@@ -72,8 +73,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     @IBAction func back() {
-        self.saveData.set(self.showDict, forKey: "file")
+        saveData.setValue(showDict, forKeyPath: "ToDoList")
         _ = self.navigationController?.popViewController(animated: true)
+        print(showDict)
     }
     
     @IBAction func add(sender: AnyObject) {
@@ -97,6 +99,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.showDict[self.moved] = self.addArray
                 
                 self.saveData.setValue(self.showDict, forKeyPath: "ToDoList")
+                print(self.showDict)
                 
                 self.saveData.synchronize()
                 self.table.reloadData()
@@ -148,30 +151,30 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     
     
-    func edit(indexPath: IndexPath) {
-        let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
-        let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
-            
-            // 入力したテキストに変更
-            let textField = alert.textFields![0] as UITextField
-            
-            self.showDict[self.moved]?[indexPath.row] = textField.text!
-            
-            
-        }
-        
-        let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
-        }
-        
-        // UIAlertControllerにtextFieldを追加
-        alert.addTextField { (textField:UITextField!) -> Void in
-        }
-        
-        alert.addAction(saveAction)
-        alert.addAction(cancelAction)
-        
-        present(alert, animated: true, completion: nil)
-
-    }
+//    func edit(indexPath: IndexPath) {
+//        let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
+//        let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
+//            
+//            // 入力したテキストに変更
+//            let textField = alert.textFields![0] as UITextField
+//            
+//            self.showDict[self.moved]?[indexPath.row] = textField.text!
+//            
+//            
+//        }
+//        
+//        let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
+//        }
+//        
+//        // UIAlertControllerにtextFieldを追加
+//        alert.addTextField { (textField:UITextField!) -> Void in
+//        }
+//        
+//        alert.addAction(saveAction)
+//        alert.addAction(cancelAction)
+//        
+//        present(alert, animated: true, completion: nil)
+//
+//    }
     
 }

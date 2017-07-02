@@ -196,7 +196,8 @@
 				TargetAttributes = {
 					112E646E1EE2D3B80048DB21 = {
 						CreatedOnToolsVersion = 8.2.1;
-						ProvisioningStyle = Manual;
+						DevelopmentTeam = N53N4F786M;
+						ProvisioningStyle = Automatic;
 					};
 					112E64821EE2D3B80048DB21 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -414,11 +415,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = N53N4F786M;
 				INFOPLIST_FILE = ToDo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.litech.ToDo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.litech.ToDo9618;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -428,11 +430,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = N53N4F786M;
 				INFOPLIST_FILE = ToDo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.litech.ToDo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.litech.ToDo9618;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};

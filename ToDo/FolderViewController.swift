@@ -29,6 +29,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         folderNameArray = saveData.object(forKey: "folder") as! [String]
         self.saveData.set(self.folderNameArray, forKey: "folder")
+        folderNameArray = saveData.object(forKey: "folder") as! [String]
         
     }
 
