@@ -154,13 +154,26 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func edit(indexPath: IndexPath) {
         let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
+
+            
+            
             
             // 入力したテキストに変更
             let textField = alert.textFields![0] as UITextField
             
-            self.showDict[self.moved]?[indexPath.row] = textField.text!
+            let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
+            if add != "Optional(\"\")"{
+                self.showDict[self.moved]?[indexPath.row] = textField.text!
             
-            self.table.reloadData()
+                self.table.reloadData()
+            }else{
+                self.showDict[self.moved]?.remove(at: indexPath.row)
+                self.table.deleteRows(at: [indexPath], with: .fade)
+                self.table.reloadData()
+            }
+            
+            self.saveData.set(self.showDict, forKey: "TodoList")
+            
         }
         
         let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
@@ -168,6 +181,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         // UIAlertControllerにtextFieldを追加
         alert.addTextField { (textField:UITextField!) -> Void in
+            textField.text = self.showDict[self.moved]?[indexPath.row]
         }
         
         alert.addAction(saveAction)
@@ -176,5 +190,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         present(alert, animated: true, completion: nil)
 
     }
+    
     
 }
