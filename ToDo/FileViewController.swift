@@ -70,6 +70,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     //タッチ時の挙動
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("File: \(showDict[moved]?[indexPath.row])を選択")
+        edit(indexPath: indexPath)
     }
     
     @IBAction func back() {
@@ -150,31 +151,30 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     
-    
-//    func edit(indexPath: IndexPath) {
-//        let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
-//        let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
-//            
-//            // 入力したテキストに変更
-//            let textField = alert.textFields![0] as UITextField
-//            
-//            self.showDict[self.moved]?[indexPath.row] = textField.text!
-//            
-//            
-//        }
-//        
-//        let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
-//        }
-//        
-//        // UIAlertControllerにtextFieldを追加
-//        alert.addTextField { (textField:UITextField!) -> Void in
-//        }
-//        
-//        alert.addAction(saveAction)
-//        alert.addAction(cancelAction)
-//        
-//        present(alert, animated: true, completion: nil)
-//
-//    }
+    func edit(indexPath: IndexPath) {
+        let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
+            
+            // 入力したテキストに変更
+            let textField = alert.textFields![0] as UITextField
+            
+            self.showDict[self.moved]?[indexPath.row] = textField.text!
+            
+            self.table.reloadData()
+        }
+        
+        let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
+        }
+        
+        // UIAlertControllerにtextFieldを追加
+        alert.addTextField { (textField:UITextField!) -> Void in
+        }
+        
+        alert.addAction(saveAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
+
+    }
     
 }
