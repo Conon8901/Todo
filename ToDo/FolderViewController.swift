@@ -117,19 +117,22 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
 
     
-//    //並び替え関係
-//    @IBAction func tapEdit(sender: AnyObject) {
-//        if isEditing {
-//            super.setEditing(false, animated: true)
-//            table.setEditing(false, animated: true)
-//        } else {
-//            super.setEditing(true, animated: true)
-//            table.setEditing(true, animated: true)
-//        }
-//    }
-//    
-//    // セルの並び替えを有効にする
-//    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-//    }
+    //並び替え関係
+    @IBAction func tapEdit(sender: AnyObject) {
+        if isEditing {
+            super.setEditing(false, animated: true)
+            table.setEditing(false, animated: true)
+        } else {
+            super.setEditing(true, animated: true)
+            table.setEditing(true, animated: true)
+        }
+    }
+    
+    // セルの並び替えを有効にする
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let delete = folderNameArray[sourceIndexPath.row]
+        folderNameArray.remove(at: sourceIndexPath.row)
+        folderNameArray.insert(delete, at: destinationIndexPath.row)
+    }
     
 }

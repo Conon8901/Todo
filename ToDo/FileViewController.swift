@@ -147,25 +147,29 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
 
-    // セルの並び替えを有効にする
+    //セルの移動時に呼ばれる
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let delete = showDict[moved]?[sourceIndexPath.row]
+        showDict[moved]?.remove(at: sourceIndexPath.row)
+        showDict[moved]?.insert(delete!, at: destinationIndexPath.row)
     }
+
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
     
     
     func edit(indexPath: IndexPath) {
         let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
 
-            
-            
-            
             // 入力したテキストに変更
             let textField = alert.textFields![0] as UITextField
             
             let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
             if add != "Optional(\"\")"{
                 self.showDict[self.moved]?[indexPath.row] = textField.text!
-            
                 self.table.reloadData()
             }else{
                 self.showDict[self.moved]?.remove(at: indexPath.row)
