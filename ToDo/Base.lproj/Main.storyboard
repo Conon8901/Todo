@@ -42,18 +42,11 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="ToDo" id="Ger-Gs-w4h">
-                                        <rightBarButtonItems>
-                                            <barButtonItem style="plain" systemItem="add" id="dPn-rD-VI1">
-                                                <connections>
-                                                    <action selector="addWithSender:" destination="BYZ-38-t0r" id="3ZH-48-0vC"/>
-                                                </connections>
-                                            </barButtonItem>
-                                            <barButtonItem systemItem="edit" id="67E-7u-bur">
-                                                <connections>
-                                                    <action selector="tapEditWithSender:" destination="BYZ-38-t0r" id="tHI-bo-n93"/>
-                                                </connections>
-                                            </barButtonItem>
-                                        </rightBarButtonItems>
+                                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="add" id="dPn-rD-VI1">
+                                            <connections>
+                                                <action selector="addWithSender:" destination="BYZ-38-t0r" id="3ZH-48-0vC"/>
+                                            </connections>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>

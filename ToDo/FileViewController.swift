@@ -23,6 +23,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var addfile = ""
     
     var addArray = [String]()
+    
     var showDict = [String: Array<String>]()
     
     override func viewDidLoad() {
@@ -52,7 +53,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
     //セル数設定
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return showDict[moved]!.count
@@ -100,7 +101,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.showDict[self.moved] = self.addArray
                 
                 self.saveData.setValue(self.showDict, forKeyPath: "ToDoList")
-                print(self.showDict)
+                print("後: \(self.showDict[self.moved])")
                 
                 self.saveData.synchronize()
                 self.table.reloadData()
@@ -172,7 +173,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.table.reloadData()
             }
             
-            self.saveData.set(self.showDict, forKey: "TodoList")
+            self.saveData.set(self.showDict, forKey: "ToDoList")
+            print("前: \(self.showDict[self.moved])")
             
         }
         

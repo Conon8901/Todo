@@ -20,6 +20,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     let excludes = CharacterSet(charactersIn: "　 ")
     
+    var deleteDict = [String: Array<String>]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -104,6 +106,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
+            deleteDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+            deleteDict[String(folderNameArray[indexPath.row])] = nil
+            print(deleteDict)
+            self.saveData.set(self.deleteDict, forKey: "ToDoList")
             folderNameArray.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
             saveData.set(self.folderNameArray, forKey: "folder")
@@ -111,19 +117,19 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
 
     
-    //並び替え関係
-    @IBAction func tapEdit(sender: AnyObject) {
-        if isEditing {
-            super.setEditing(false, animated: true)
-            table.setEditing(false, animated: true)
-        } else {
-            super.setEditing(true, animated: true)
-            table.setEditing(true, animated: true)
-        }
-    }
-    
-    // セルの並び替えを有効にする
-    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-    }
+//    //並び替え関係
+//    @IBAction func tapEdit(sender: AnyObject) {
+//        if isEditing {
+//            super.setEditing(false, animated: true)
+//            table.setEditing(false, animated: true)
+//        } else {
+//            super.setEditing(true, animated: true)
+//            table.setEditing(true, animated: true)
+//        }
+//    }
+//    
+//    // セルの並び替えを有効にする
+//    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+//    }
     
 }
