@@ -183,6 +183,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
+            
+            if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
+                self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
+            }
+
         }
         
         // UIAlertControllerにtextFieldを追加
