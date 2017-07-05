@@ -39,6 +39,14 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let indexPathForSelectedRow = table.indexPathForSelectedRow {
+            table.deselectRow(at: indexPathForSelectedRow, animated: true)
+        }
+    }
 
     //セル数設定
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
