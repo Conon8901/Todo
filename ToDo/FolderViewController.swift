@@ -64,9 +64,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     //タッチ時の挙動
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Folder: \(folderNameArray[indexPath.row])を選択")
-        
-        
         saveData.set(String(folderNameArray[indexPath.row]), forKey: "move")
 
         let storyboard: UIStoryboard = self.storyboard!
@@ -116,7 +113,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         if editingStyle == UITableViewCellEditingStyle.delete {
             deleteDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
             deleteDict[String(folderNameArray[indexPath.row])] = nil
-            print(deleteDict)
             self.saveData.set(self.deleteDict, forKey: "ToDoList")
             folderNameArray.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
