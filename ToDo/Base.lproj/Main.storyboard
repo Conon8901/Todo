@@ -48,7 +48,7 @@
                                                     <action selector="addWithSender:" destination="BYZ-38-t0r" id="3ZH-48-0vC"/>
                                                 </connections>
                                             </barButtonItem>
-                                            <barButtonItem systemItem="edit" id="brS-NQ-fPn">
+                                            <barButtonItem style="plain" systemItem="edit" id="brS-NQ-fPn">
                                                 <connections>
                                                     <action selector="tapEditWithSender:" destination="BYZ-38-t0r" id="2N7-1Q-CC9"/>
                                                 </connections>
@@ -116,7 +116,7 @@
                                                     <action selector="addWithSender:" destination="7DH-dA-Yea" id="uhq-55-LFI"/>
                                                 </connections>
                                             </barButtonItem>
-                                            <barButtonItem systemItem="edit" id="lKS-zJ-ReQ">
+                                            <barButtonItem style="plain" systemItem="edit" id="lKS-zJ-ReQ">
                                                 <connections>
                                                     <action selector="tapEditWithSender:" destination="7DH-dA-Yea" id="4Lk-yD-bQZ"/>
                                                 </connections>

@@ -43,6 +43,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navTitle.topItem?.title = moved
@@ -70,14 +71,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     //タッチ時の挙動
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("File: \(showDict[moved]?[indexPath.row])を選択")
         edit(indexPath: indexPath)
     }
     
     @IBAction func back() {
         saveData.setValue(showDict, forKeyPath: "ToDoList")
         _ = self.navigationController?.popViewController(animated: true)
-        print(showDict)
     }
     
     @IBAction func add(sender: AnyObject) {
@@ -101,7 +100,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.showDict[self.moved] = self.addArray
                 
                 self.saveData.setValue(self.showDict, forKeyPath: "ToDoList")
-                print("後: \(self.showDict[self.moved])")
                 
                 self.saveData.synchronize()
                 self.table.reloadData()
@@ -178,8 +176,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             
             self.saveData.set(self.showDict, forKey: "ToDoList")
-            print("前: \(self.showDict[self.moved])")
-            
         }
         
         let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
