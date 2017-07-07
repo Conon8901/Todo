@@ -131,6 +131,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             let textField = alert.textFields![0] as UITextField
             let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
             if add != "Optional(\"\")"{
+//                for i in 0...self.folderNameArray.count-2{
+//                    if self.folderNameArray[i] == textField.text!{
+//                        let text = textField.text! + ""
+//                    }
+//                }
                 self.folderNameArray.append(textField.text!)
                 self.table.reloadData()
                 
