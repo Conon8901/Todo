@@ -26,6 +26,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var showDict = [String: Array<String>]()
     
+    var name: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -71,7 +73,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     //タッチ時の挙動
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        edit(indexPath: indexPath)
+        if name {
+            edit(indexPath: indexPath)
+        }else{
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+        
     }
     
     @IBAction func back() {
@@ -139,9 +146,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if isEditing {
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
+            name = false
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
+            table.allowsSelectionDuringEditing = true
+            name = true
         }
     }
 
