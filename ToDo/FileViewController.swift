@@ -150,6 +150,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let delete = showDict[moved]?[sourceIndexPath.row]
         showDict[moved]?.remove(at: sourceIndexPath.row)
         showDict[moved]?.insert(delete!, at: destinationIndexPath.row)
+        saveData.setValue(showDict, forKeyPath: "ToDoList")
+        table.reloadData()
     }
 
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
