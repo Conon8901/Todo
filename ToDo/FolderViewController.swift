@@ -22,6 +22,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     var deleteDict = [String: Array<String>]()
     
+    var name: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -32,7 +34,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         folderNameArray = saveData.object(forKey: "folder") as! [String]
         self.saveData.set(self.folderNameArray, forKey: "folder")
         folderNameArray = saveData.object(forKey: "folder") as! [String]
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -64,11 +65,54 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     //タッチ時の挙動
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        saveData.set(String(folderNameArray[indexPath.row]), forKey: "move")
+        if name {
+            let before = String(folderNameArray[indexPath.row])
+            
+            let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
+            let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
+                
+                // 入力したテキストに変更
+                let textField = alert.textFields![0] as UITextField
+                
+                let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
+                if add != "Optional(\"\")"{
+                    self.folderNameArray[indexPath.row] = textField.text!
+                    self.table.reloadData()
+                }else{
+                    self.folderNameArray.remove(at: indexPath.row)
+                    self.table.deleteRows(at: [indexPath], with: .fade)
+                    self.table.reloadData()
+                }
+                
+                self.saveData.set(self.folderNameArray, forKey: "folder")
+            }
+            
+            let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
+                
+                if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
+                    self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
+                }
+                
+            }
+            
+            // UIAlertControllerにtextFieldを追加
+            alert.addTextField { (textField:UITextField!) -> Void in
+                textField.text = self.folderNameArray[indexPath.row]
+            }
+            
+            alert.addAction(saveAction)
+            alert.addAction(cancelAction)
+            
+            present(alert, animated: true, completion: nil)
 
-        let storyboard: UIStoryboard = self.storyboard!
-        let nextView = storyboard.instantiateViewController(withIdentifier: "File") as! FileViewController
-        self.navigationController?.pushViewController(nextView, animated: true)
+        }else{
+            saveData.set(String(folderNameArray[indexPath.row]), forKey: "move")
+            
+            let storyboard: UIStoryboard = self.storyboard!
+            let nextView = storyboard.instantiateViewController(withIdentifier: "File") as! FileViewController
+            self.navigationController?.pushViewController(nextView, animated: true)
+
+        }
     }
     
     @IBAction func add(sender: AnyObject) {
@@ -126,17 +170,21 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         if isEditing {
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
+            name = false
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
+            table.allowsSelectionDuringEditing = true
+            name = true
         }
     }
     
-    // セルの並び替えを有効にする
+    //セルの移動時に呼ばれる
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let delete = folderNameArray[sourceIndexPath.row]
         folderNameArray.remove(at: sourceIndexPath.row)
         folderNameArray.insert(delete, at: destinationIndexPath.row)
+        saveData.set(folderNameArray, forKey:"folder")
     }
     
 }
