@@ -22,6 +22,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     var deleteDict = [String: Array<String>]()
     
+    var editDict = [String: Array<String>]()
+    
     var name: Bool = false
     
     override func viewDidLoad() {
@@ -85,6 +87,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 }
                 
                 self.saveData.set(self.folderNameArray, forKey: "folder")
+                
+                self.editDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+                self.editDict[String(self.folderNameArray[indexPath.row])] = self.editDict[before!]
+                self.editDict[before!] = nil
+                self.saveData.set(self.editDict, forKey: "ToDoList")
             }
             
             let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in

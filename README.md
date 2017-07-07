@@ -4,13 +4,7 @@
 
     Yattyから受け取り
 
-Folder名称を変更するとFileが消える問題修正
-    
-    新名称でキーを作り元名称の要素を追加
-    元キーは削除
-    ↓
-    showDict[新名称] = 旧名称の要素
-    showDict[旧名称] = nil
-    ↓
-    showDict[String(folderNameArray[indexPath.row])] = showDict[before]
-    showDict[before] = nil
+Folder名称を元からあるものに設定して作り削除すると元からあったFolderの要素も消える問題修正
+
+    同じ名称のものをもう一つ作った時は名称に数字をつけて管理
+    同じ名称のものをもう一つ作った時のキーに数字をつけて管理
