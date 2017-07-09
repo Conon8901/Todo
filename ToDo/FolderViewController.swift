@@ -26,6 +26,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     var name: Bool = false
     
+    var remove: Bool = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -163,12 +165,36 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
-            deleteDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
-            deleteDict[String(folderNameArray[indexPath.row])] = nil
-            self.saveData.set(self.deleteDict, forKey: "ToDoList")
-            folderNameArray.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
-            saveData.set(self.folderNameArray, forKey: "folder")
+            remove = false
+            if indexPath.row != 0{
+                for i in 0...indexPath.row-1{
+                    if folderNameArray[i] == folderNameArray[indexPath.row]{
+                        remove = true
+                    }
+                }
+            }
+            if indexPath.row != folderNameArray.count-1{
+                for i in indexPath.row+1...folderNameArray.count-1{
+                    if folderNameArray[i] == folderNameArray[indexPath.row]{
+                        remove = true
+                        
+                    }
+                }
+            }
+            
+            if remove{
+                folderNameArray.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
+                saveData.set(self.folderNameArray, forKey: "folder")
+            }else{
+                deleteDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+                deleteDict[String(folderNameArray[indexPath.row])] = nil
+                self.saveData.set(self.deleteDict, forKey: "ToDoList")
+                folderNameArray.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
+                saveData.set(self.folderNameArray, forKey: "folder")
+            }
+            print(folderNameArray)
         }
     }
 
