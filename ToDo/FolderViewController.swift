@@ -10,7 +10,6 @@ import UIKit
 
 class FolderViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    //TableView宣言
     @IBOutlet var table: UITableView!
     
     var folderNameArray = [String]()
@@ -21,20 +20,15 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     let excludes = CharacterSet(charactersIn: "　 ")
     
     var deleteDict = [String: Array<String>]()
-    
     var editDict = [String: Array<String>]()
     
     var name: Bool = false
-    
-    var remove: Bool = true
-    
     var same: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         table.dataSource = self
-        
         table.delegate = self
         
         folderNameArray = saveData.object(forKey: "folder") as! [String]
@@ -77,7 +71,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
             let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
                 
-                // 入力したテキストに変更
                 let textField = alert.textFields![0] as UITextField
                 
                 let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
@@ -106,7 +99,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 
             }
             
-            // UIAlertControllerにtextFieldを追加
             alert.addTextField { (textField:UITextField!) -> Void in
                 textField.text = self.folderNameArray[indexPath.row]
             }
@@ -131,7 +123,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let alert = UIAlertController(title: "フォルダ追加", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
             
-            // 入力したテキストを配列に代入
             self.same = false
             let textField = alert.textFields![0] as UITextField
             let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
@@ -147,10 +138,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         message: "同名のフォルダがあります",
                         preferredStyle: .alert)
                     
-                    // アラートにボタンをつける
                     alert.addAction(UIAlertAction(title: "OK", style: .default))
                     
-                    // アラート表示
                     self.present(alert, animated: true, completion: nil)
                 }else{
                     self.folderNameArray.append(textField.text!)
@@ -167,7 +156,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
         }
         
-        // UIAlertControllerにtextFieldを追加
         alert.addTextField { (textField:UITextField!) -> Void in
         }
         
@@ -185,35 +173,13 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
-            remove = false
-            if indexPath.row != 0{
-                for i in 0...indexPath.row-1{
-                    if folderNameArray[i] == folderNameArray[indexPath.row]{
-                        remove = true
-                    }
-                }
-            }
-            if indexPath.row != folderNameArray.count-1{
-                for i in indexPath.row+1...folderNameArray.count-1{
-                    if folderNameArray[i] == folderNameArray[indexPath.row]{
-                        remove = true
-                        
-                    }
-                }
-            }
+            deleteDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+            deleteDict[String(folderNameArray[indexPath.row])] = nil
+            self.saveData.set(self.deleteDict, forKey: "ToDoList")
+            folderNameArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
             
-            if remove{
-                folderNameArray.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
-                saveData.set(self.folderNameArray, forKey: "folder")
-            }else{
-                deleteDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
-                deleteDict[String(folderNameArray[indexPath.row])] = nil
-                self.saveData.set(self.deleteDict, forKey: "ToDoList")
-                folderNameArray.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
-                saveData.set(self.folderNameArray, forKey: "folder")
-            }
+            saveData.set(self.folderNameArray, forKey: "folder")
             print(folderNameArray)
         }
     }
