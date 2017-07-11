@@ -28,6 +28,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     var remove: Bool = true
     
+    var same: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -130,15 +132,33 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
             
             // 入力したテキストを配列に代入
+            self.same = false
             let textField = alert.textFields![0] as UITextField
             let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
             if add != "Optional(\"\")"{
-                
-                self.folderNameArray.append(textField.text!)
-                self.table.reloadData()
-                
-                self.saveData.set(self.folderNameArray, forKey: "folder")
-                self.saveData.synchronize()
+                for i in 0...self.folderNameArray.count-1{
+                    if self.folderNameArray[i] == textField.text!{
+                        self.same = true
+                    }
+                }
+                if self.same{
+                    let alert = UIAlertController(
+                        title: "エラー",
+                        message: "同名のフォルダがあります",
+                        preferredStyle: .alert)
+                    
+                    // アラートにボタンをつける
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    
+                    // アラート表示
+                    self.present(alert, animated: true, completion: nil)
+                }else{
+                    self.folderNameArray.append(textField.text!)
+                    self.table.reloadData()
+                    
+                    self.saveData.set(self.folderNameArray, forKey: "folder")
+                    self.saveData.synchronize()
+                }
                 
             }
             
