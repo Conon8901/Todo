@@ -18,7 +18,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     let excludes = CharacterSet(charactersIn: "　 ")
     
-    var moved = ""
+    var openedFolder = ""
     
     var addfile = ""
     
@@ -26,7 +26,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var showDict = [String: Array<String>]()
     
-    var name: Bool = false
+    var edit: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,17 +38,17 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.saveData.set(self.showDict, forKey: "TodoList")
         showDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
         
-        moved = saveData.object(forKey: "move")! as! String
+        openedFolder = saveData.object(forKey: "move")! as! String
 
-        if showDict[moved] == nil{
-            showDict[moved] = []
+        if showDict[openedFolder] == nil{
+            showDict[openedFolder] = []
         }
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navTitle.topItem?.title = moved
+        navTitle.topItem?.title = openedFolder
     }
 
 
@@ -59,21 +59,21 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     //セル数設定
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return showDict[moved]!.count
+        return showDict[openedFolder]!.count
     }
     
     //セル取得・表示
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "File")
         
-        cell?.textLabel?.text = showDict[moved]?[indexPath.row]
+        cell?.textLabel?.text = showDict[openedFolder]?[indexPath.row]
         
         return cell!
     }
     
     //タッチ時の挙動
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if name {
+        if edit {
             edit(indexPath: indexPath)
         }else{
             tableView.deselectRow(at: indexPath, animated: true)
@@ -93,18 +93,18 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             // 入力したテキストを配列に代入
             let textField = alert.textFields![0] as UITextField
-            let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
-            if add != "Optional(\"\")"{
+            let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
+            if blank != "Optional(\"\")"{
                 self.showDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
                 //オプショナルバインディング nilの値を安全に取り出す
-                if let dict = self.showDict[self.moved] {
+                if let dict = self.showDict[self.openedFolder] {
                     self.addArray = dict
                 }else {
                     print("nil")
                 }
                 self.addfile = textField.text!
                 self.addArray.append(self.addfile)
-                self.showDict[self.moved] = self.addArray
+                self.showDict[self.openedFolder] = self.addArray
                 
                 self.saveData.setValue(self.showDict, forKeyPath: "ToDoList")
                 
@@ -135,7 +135,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
-            showDict[moved]?.remove(at: indexPath.row)
+            showDict[openedFolder]?.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
             saveData.set(self.showDict, forKey: "ToDoList")
         }
@@ -146,20 +146,20 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if isEditing {
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
-            name = false
+            edit = false
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             table.allowsSelectionDuringEditing = true
-            name = true
+            edit = true
         }
     }
 
     //セルの移動時に呼ばれる
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let delete = showDict[moved]?[sourceIndexPath.row]
-        showDict[moved]?.remove(at: sourceIndexPath.row)
-        showDict[moved]?.insert(delete!, at: destinationIndexPath.row)
+        let movingFile = showDict[openedFolder]?[sourceIndexPath.row]
+        showDict[openedFolder]?.remove(at: sourceIndexPath.row)
+        showDict[openedFolder]?.insert(movingFile!, at: destinationIndexPath.row)
         saveData.setValue(showDict, forKeyPath: "ToDoList")
         table.reloadData()
     }
@@ -177,12 +177,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             // 入力したテキストに変更
             let textField = alert.textFields![0] as UITextField
             
-            let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
-            if add != "Optional(\"\")"{
-                self.showDict[self.moved]?[indexPath.row] = textField.text!
+            let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
+            if blank != "Optional(\"\")"{
+                self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
                 self.table.reloadData()
             }else{
-                self.showDict[self.moved]?.remove(at: indexPath.row)
+                self.showDict[self.openedFolder]?.remove(at: indexPath.row)
                 self.table.deleteRows(at: [indexPath], with: .fade)
                 self.table.reloadData()
             }
@@ -200,7 +200,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         // UIAlertControllerにtextFieldを追加
         alert.addTextField { (textField:UITextField!) -> Void in
-            textField.text = self.showDict[self.moved]?[indexPath.row]
+            textField.text = self.showDict[self.openedFolder]?[indexPath.row]
         }
         
         alert.addAction(saveAction)

@@ -22,8 +22,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     var deleteDict = [String: Array<String>]()
     var editDict = [String: Array<String>]()
     
-    var name: Bool = false
-    var same: Bool = false
+    var edit: Bool = false
+    var sameName: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,29 +65,43 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     //タッチ時の挙動
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if name {
-            let before = String(folderNameArray[indexPath.row])
+        if edit {
+            let beforeAddition = String(folderNameArray[indexPath.row])
             
             let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
             let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
                 
                 let textField = alert.textFields![0] as UITextField
                 
-                let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
-                if add != "Optional(\"\")"{
-                    self.folderNameArray[indexPath.row] = textField.text!
-                    self.table.reloadData()
+                let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
+                if blank != "Optional(\"\")"{
+                    self.sameName = false
+                    for i in 0...self.folderNameArray.count-1{
+                        if self.folderNameArray[i] == textField.text!{
+                            self.sameName = true
+                        }
+                    }
+                    
+                    if self.sameName{
+                        self.showalert(message: "同名のフォルダがあります")
+
+                    }else{
+                        if textField.text != "move" && textField.text != "folder" && textField.text != "TodoList" && textField.text != "ToDoList"{
+                            self.folderNameArray[indexPath.row] = textField.text!
+                            self.table.reloadData()
+                        }else{
+                            self.showalert(message: "その名称は使用できません")
+                        }
+                    }
                 }else{
-                    self.folderNameArray.remove(at: indexPath.row)
-                    self.table.deleteRows(at: [indexPath], with: .fade)
-                    self.table.reloadData()
+                    self.showalert(message: "入力してください")
                 }
                 
                 self.saveData.set(self.folderNameArray, forKey: "folder")
                 
                 self.editDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
-                self.editDict[String(self.folderNameArray[indexPath.row])] = self.editDict[before!]
-                self.editDict[before!] = nil
+                self.editDict[String(self.folderNameArray[indexPath.row])] = self.editDict[beforeAddition!]
+                self.editDict[beforeAddition!] = nil
                 self.saveData.set(self.editDict, forKey: "ToDoList")
             }
             
@@ -123,32 +137,34 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let alert = UIAlertController(title: "フォルダ追加", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
             
-            self.same = false
+            
+            
             let textField = alert.textFields![0] as UITextField
-            let add = String(describing: textField.text).components(separatedBy: self.excludes).joined()
-            if add != "Optional(\"\")"{
+            let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
+            if blank != "Optional(\"\")"{
+                self.sameName = false
                 for i in 0...self.folderNameArray.count-1{
                     if self.folderNameArray[i] == textField.text!{
-                        self.same = true
+                        self.sameName = true
                     }
                 }
-                if self.same{
-                    let alert = UIAlertController(
-                        title: "エラー",
-                        message: "同名のフォルダがあります",
-                        preferredStyle: .alert)
-                    
-                    alert.addAction(UIAlertAction(title: "OK", style: .default))
-                    
-                    self.present(alert, animated: true, completion: nil)
+                if self.sameName{
+                    self.showalert(message: "同名のフォルダがあります")
                 }else{
-                    self.folderNameArray.append(textField.text!)
-                    self.table.reloadData()
-                    
-                    self.saveData.set(self.folderNameArray, forKey: "folder")
-                    self.saveData.synchronize()
+                    if textField.text != "move" && textField.text != "folder" && textField.text != "TodoList" && textField.text != "ToDoList"{
+                        self.folderNameArray.append(textField.text!)
+                        self.table.reloadData()
+                        
+                        self.saveData.set(self.folderNameArray, forKey: "folder")
+                        self.saveData.synchronize()
+                    }else{
+                        self.showalert(message: "その名称は使用できません")
+                    }
+
                 }
                 
+            }else{
+                self.showalert(message: "入力してください")
             }
             
         }
@@ -191,21 +207,35 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         if isEditing {
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
-            name = false
+            edit = false
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             table.allowsSelectionDuringEditing = true
-            name = true
+            edit = true
         }
     }
     
     //セルの移動時に呼ばれる
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let delete = folderNameArray[sourceIndexPath.row]
+        let movingFolder = folderNameArray[sourceIndexPath.row]
         folderNameArray.remove(at: sourceIndexPath.row)
-        folderNameArray.insert(delete, at: destinationIndexPath.row)
+        folderNameArray.insert(movingFolder, at: destinationIndexPath.row)
         saveData.set(folderNameArray, forKey:"folder")
     }
+    
+    
+    func showalert(message: String) {
+        let alert = UIAlertController(
+            title: "エラー",
+            message: message,
+            preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    
     
 }
