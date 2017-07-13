@@ -11,7 +11,7 @@ import UIKit
 class FileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var navTitle: UINavigationBar!
-    //TableView宣言
+    
     @IBOutlet var table: UITableView!
     
     var saveData : UserDefaults = UserDefaults.standard
@@ -91,7 +91,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let alert = UIAlertController(title: "項目追加", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
             
-            // 入力したテキストを配列に代入
             let textField = alert.textFields![0] as UITextField
             let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
             if blank != "Optional(\"\")"{
@@ -117,8 +116,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
         }
         
-        // UIAlertControllerにtextFieldを追加
         alert.addTextField { (textField:UITextField!) -> Void in
+            textField.textAlignment = NSTextAlignment.center
         }
         
         alert.addAction(saveAction)
@@ -174,7 +173,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
 
-            // 入力したテキストに変更
             let textField = alert.textFields![0] as UITextField
             
             let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
@@ -198,9 +196,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
         }
         
-        // UIAlertControllerにtextFieldを追加
         alert.addTextField { (textField:UITextField!) -> Void in
             textField.text = self.showDict[self.openedFolder]?[indexPath.row]
+            textField.textAlignment = NSTextAlignment.center
         }
         
         alert.addAction(saveAction)
