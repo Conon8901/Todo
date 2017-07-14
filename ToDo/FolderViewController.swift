@@ -25,6 +25,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     var edit: Bool = false
     var sameName: Bool = false
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -138,8 +139,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let alert = UIAlertController(title: "フォルダ追加", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
             
-            
-            
             let textField = alert.textFields![0] as UITextField
             let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
             if blank != "Optional(\"\")"{
@@ -238,6 +237,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         self.present(alert, animated: true, completion: nil)
     }
     
-    
+
     
 }

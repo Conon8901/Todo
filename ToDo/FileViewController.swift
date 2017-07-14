@@ -28,6 +28,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var edit: Bool = false
     
+    var sameName: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -95,6 +97,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
             if blank != "Optional(\"\")"{
                 self.showDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+                
                 //オプショナルバインディング nilの値を安全に取り出す
                 if let dict = self.showDict[self.openedFolder] {
                     self.addArray = dict
@@ -110,6 +113,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.saveData.synchronize()
                 self.table.reloadData()
             
+            }else{
+                self.showalert(message: "入力してください")
             }
         }
         
@@ -180,9 +185,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
                 self.table.reloadData()
             }else{
-                self.showDict[self.openedFolder]?.remove(at: indexPath.row)
-                self.table.deleteRows(at: [indexPath], with: .fade)
-                self.table.reloadData()
+                self.showalert(message: "入力してください")
+                if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
+                    self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
+                }
             }
             
             self.saveData.set(self.showDict, forKey: "ToDoList")
@@ -206,6 +212,17 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         present(alert, animated: true, completion: nil)
 
+    }
+    
+    func showalert(message: String) {
+        let alert = UIAlertController(
+            title: "エラー",
+            message: message,
+            preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        
+        self.present(alert, animated: true, completion: nil)
     }
     
     
