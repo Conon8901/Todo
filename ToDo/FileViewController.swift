@@ -122,7 +122,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         alert.addTextField { (textField:UITextField!) -> Void in
-            textField.textAlignment = NSTextAlignment.center
+            textField.textAlignment = NSTextAlignment.left
         }
         
         alert.addAction(saveAction)
@@ -130,7 +130,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         present(alert, animated: true, completion: nil)
     }
-    
     
     //削除関係
     func tableView(_ tableView: UITableView,canEditRowAt indexPath: IndexPath) -> Bool{
@@ -204,7 +203,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         alert.addTextField { (textField:UITextField!) -> Void in
             textField.text = self.showDict[self.openedFolder]?[indexPath.row]
-            textField.textAlignment = NSTextAlignment.center
+            textField.textAlignment = NSTextAlignment.left
         }
         
         alert.addAction(saveAction)
