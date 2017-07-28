@@ -116,7 +116,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             alert.addTextField { (textField:UITextField!) -> Void in
                 textField.text = self.folderNameArray[indexPath.row]
-                textField.textAlignment = NSTextAlignment.center
+                textField.textAlignment = NSTextAlignment.left
             }
             
             alert.addAction(saveAction)
@@ -173,7 +173,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         alert.addTextField { (textField:UITextField!) -> Void in
-            textField.textAlignment = NSTextAlignment.center
+            textField.textAlignment = NSTextAlignment.left
         }
         
         alert.addAction(saveAction)
