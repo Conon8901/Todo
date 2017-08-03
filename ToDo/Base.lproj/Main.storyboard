@@ -145,6 +145,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="BackToFolder" destination="9bt-Wb-H0I" id="Lxw-Uy-UXI"/>
                         <outlet property="navTitle" destination="Q7O-8P-OWF" id="dre-ee-NVz"/>
                         <outlet property="table" destination="40m-Kp-Nxk" id="OMa-UA-7ah"/>
                     </connections>
