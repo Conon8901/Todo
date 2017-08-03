@@ -30,6 +30,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var sameName: Bool = false
     
+    @IBOutlet var BackToFolder: UIBarButtonItem!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -150,11 +152,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
             edit = false
+            BackToFolder.isEnabled = true
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             table.allowsSelectionDuringEditing = true
             edit = true
+            BackToFolder.isEnabled = false
         }
     }
 
@@ -170,7 +174,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-
     
     
     func edit(indexPath: IndexPath) {
