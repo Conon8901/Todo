@@ -12,6 +12,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     @IBOutlet var table: UITableView!
     
+    @IBOutlet var editButton: UIBarButtonItem!
+    
     var folderNameArray = [String]()
     var addNameArray = [String]()
     
@@ -32,9 +34,14 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.dataSource = self
         table.delegate = self
         
-        folderNameArray = saveData.object(forKey: "folder") as! [String]
-        self.saveData.set(self.folderNameArray, forKey: "folder")
-        folderNameArray = saveData.object(forKey: "folder") as! [String]
+        
+        if saveData.object(forKey: "folder") != nil{
+            folderNameArray = saveData.object(forKey: "folder") as! [String]
+        }else{
+           self.saveData.set(self.folderNameArray, forKey: "folder")
+        }
+        
+        search()
     }
 
     override func didReceiveMemoryWarning() {
@@ -143,9 +150,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
             if blank != "Optional(\"\")"{
                 self.sameName = false
-                for i in 0...self.folderNameArray.count-1{
-                    if self.folderNameArray[i] == textField.text!{
-                        self.sameName = true
+                if self.folderNameArray.count != 0{
+                    for i in 0...self.folderNameArray.count-1{
+                        if self.folderNameArray[i] == textField.text!{
+                            self.sameName = true
+                        }
                     }
                 }
                 if self.sameName{
@@ -157,6 +166,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         self.saveData.set(self.folderNameArray, forKey: "folder")
                         self.saveData.synchronize()
+                        
+                        self.search()
                     }else{
                         self.showalert(message: "その名称は使用できません")
                     }
@@ -183,7 +194,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     
-    
+    //削除関係
     func tableView(_ tableView: UITableView,canEditRowAt indexPath: IndexPath) -> Bool{
         return true
     }
@@ -197,12 +208,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
             
             saveData.set(self.folderNameArray, forKey: "folder")
-            print(folderNameArray)
+            
+            search()
         }
     }
 
-
-    
     //並び替え関係
     @IBAction func tapEdit(sender: AnyObject) {
         if isEditing {
@@ -225,7 +235,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         saveData.set(folderNameArray, forKey:"folder")
     }
     
-    
     func showalert(message: String) {
         let alert = UIAlertController(
             title: "エラー",
@@ -237,6 +246,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         self.present(alert, animated: true, completion: nil)
     }
     
-
+    func search() {
+        if folderNameArray.count == 0{
+            editButton.isEnabled = false
+        }else{
+            editButton.isEnabled = true
+        }
+    }
     
 }
