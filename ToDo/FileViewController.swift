@@ -14,6 +14,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBOutlet var table: UITableView!
     
+    @IBOutlet var editButton: UIBarButtonItem!
+    
     var saveData : UserDefaults = UserDefaults.standard
     
     let excludes = CharacterSet(charactersIn: "　 ")
@@ -39,15 +41,19 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.dataSource = self
         table.delegate = self
         
-        self.saveData.set(self.showDict, forKey: "TodoList")
-        showDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+        if saveData.object(forKey: "ToDoList") != nil{
+            showDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+        }else{
+            self.saveData.set(self.showDict, forKey: "TodoList")
+        }
         
-        openedFolder = saveData.object(forKey: "move")! as! String
-
         if showDict[openedFolder] == nil{
             showDict[openedFolder] = []
         }
         
+        openedFolder = saveData.object(forKey: "move")! as! String
+        
+        search()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -63,7 +69,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     //セル数設定
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return showDict[openedFolder]!.count
+        if showDict[openedFolder] == nil{
+            return 0
+        }else{
+            return showDict[openedFolder]!.count
+        }
     }
     
     //セル取得・表示
@@ -98,7 +108,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let textField = alert.textFields![0] as UITextField
             let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
             if blank != "Optional(\"\")"{
-                self.showDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+                
+                if self.saveData.object(forKey: "ToDoList") != nil{
+                    self.showDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+                }
                 
                 //オプショナルバインディング nilの値を安全に取り出す
                 if let dict = self.showDict[self.openedFolder] {
@@ -114,6 +127,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 self.saveData.synchronize()
                 self.table.reloadData()
+                
+                self.search()
             
             }else{
                 self.showalert(message: "入力してください")
@@ -143,6 +158,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             showDict[openedFolder]?.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
             saveData.set(self.showDict, forKey: "ToDoList")
+
+            search()
         }
     }
     
@@ -227,5 +244,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.present(alert, animated: true, completion: nil)
     }
     
+    func search() {
+        if showDict[openedFolder]?.count == 0{
+            editButton.isEnabled = false
+        }else{
+            editButton.isEnabled = true
+        }
+    }
     
 }
