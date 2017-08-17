@@ -57,8 +57,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         //何も入力されていなくてもReturnキーを押せるようにする。
         searchbar.enablesReturnKeyAutomatically = false
         
-        //検索結果配列にデータをコピーする。
-        searchArray = showDict[openedFolder]!
+        if showDict[openedFolder] != nil{
+            searchArray = showDict[openedFolder]!
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,7 +78,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if searchbar.text != ""{
             return searchArray.count
         }else{
-            return showDict[openedFolder]!.count
+            if showDict[openedFolder] == nil{
+                return 0
+            }else{
+                return showDict[openedFolder]!.count
+            }
         }
     }
     

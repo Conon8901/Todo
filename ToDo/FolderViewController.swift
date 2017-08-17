@@ -52,10 +52,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         searchbar.delegate = self
         
-        //何も入力されていなくてもReturnキーを押せるようにする。
         searchbar.enablesReturnKeyAutomatically = false
         
-        //検索結果配列にデータをコピーする。
         searchArray = folderNameArray
     }
 
@@ -177,7 +175,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             present(alert, animated: true, completion: nil)
 
         }else{
-            saveData.set(String(folderNameArray[indexPath.row]), forKey: "move")
+            if(searchbar.text == "") {
+                saveData.set(String(folderNameArray[indexPath.row]), forKey: "move")
+            } else {
+                saveData.set(String(searchArray[indexPath.row]), forKey: "move")
+            }
             
             let storyboard: UIStoryboard = self.storyboard!
             let nextView = storyboard.instantiateViewController(withIdentifier: "File") as! FileViewController
