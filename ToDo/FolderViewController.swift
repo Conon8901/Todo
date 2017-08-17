@@ -8,14 +8,15 @@
 
 import UIKit
 
-class FolderViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class FolderViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
     @IBOutlet var table: UITableView!
-    
     @IBOutlet var editButton: UIBarButtonItem!
+    @IBOutlet var searchbar: UISearchBar!
     
     var folderNameArray = [String]()
     var addNameArray = [String]()
+    var searchArray = [String]()
     
     var saveData : UserDefaults = UserDefaults.standard
     
@@ -41,7 +42,21 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
            self.saveData.set(self.folderNameArray, forKey: "folder")
         }
         
+        if saveData.object(forKey: "ToDoList") != nil{
+            editDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+        }else{
+            self.saveData.set(self.editDict, forKey: "ToDoList")
+        }
+        
         search()
+        
+        searchbar.delegate = self
+        
+        //何も入力されていなくてもReturnキーを押せるようにする。
+        searchbar.enablesReturnKeyAutomatically = false
+        
+        //検索結果配列にデータをコピーする。
+        searchArray = folderNameArray
     }
 
     override func didReceiveMemoryWarning() {
@@ -59,16 +74,46 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
 
     //セル数設定
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return folderNameArray.count
+        if searchbar.text != ""{
+            return searchArray.count
+        }else{
+            return folderNameArray.count
+        }
     }
     
     //セル取得・表示
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Folder")
         
-        cell?.textLabel?.text = folderNameArray[indexPath.row]
+        if searchbar.text != ""{
+            cell?.textLabel?.text = searchArray[indexPath.row]
+        }else{
+            cell?.textLabel?.text = folderNameArray[indexPath.row]
+        }
         
         return cell!
+    }
+    
+    //検索ボタン押下時の呼び出しメソッド
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchbar.endEditing(true)
+    }
+    
+    //テキスト変更時の呼び出しメソッド
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        searchArray.removeAll()
+        
+        if(searchbar.text == "") {
+            searchArray = folderNameArray
+        } else {
+            for data in folderNameArray {
+                if data.contains(searchbar.text!) {
+                    searchArray.append(data)
+                }
+            }
+        }
+        table.reloadData()
     }
     
     //タッチ時の挙動

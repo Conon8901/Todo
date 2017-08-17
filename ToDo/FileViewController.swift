@@ -8,28 +8,25 @@
 
 import UIKit
 
-class FileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class FileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
     @IBOutlet weak var navTitle: UINavigationBar!
-    
     @IBOutlet var table: UITableView!
-    
     @IBOutlet var editButton: UIBarButtonItem!
+    @IBOutlet var searchbar: UISearchBar!
     
     var saveData : UserDefaults = UserDefaults.standard
     
     let excludes = CharacterSet(charactersIn: "　 ")
     
     var openedFolder = ""
-    
     var addfile = ""
     
     var addArray = [String]()
-    
     var showDict = [String: Array<String>]()
-    
+    var searchArray = [String]()
+
     var edit: Bool = false
-    
     var sameName: Bool = false
     
     @IBOutlet var BackToFolder: UIBarButtonItem!
@@ -54,6 +51,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         openedFolder = saveData.object(forKey: "move")! as! String
         
         search()
+        
+        searchbar.delegate = self
+        
+        //何も入力されていなくてもReturnキーを押せるようにする。
+        searchbar.enablesReturnKeyAutomatically = false
+        
+        //検索結果配列にデータをコピーする。
+        searchArray = showDict[openedFolder]!
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -69,8 +74,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     //セル数設定
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if showDict[openedFolder] == nil{
-            return 0
+        if searchbar.text != ""{
+            return searchArray.count
         }else{
             return showDict[openedFolder]!.count
         }
@@ -80,9 +85,35 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "File")
         
-        cell?.textLabel?.text = showDict[openedFolder]?[indexPath.row]
+        if searchbar.text != ""{
+            cell?.textLabel?.text = searchArray[indexPath.row]
+        }else{
+            cell?.textLabel?.text = showDict[openedFolder]?[indexPath.row]
+        }
         
         return cell!
+    }
+    
+    //検索ボタン押下時の呼び出しメソッド
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchbar.endEditing(true)
+    }
+    
+    //テキスト変更時の呼び出しメソッド
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        searchArray.removeAll()
+        
+        if(searchbar.text == "") {
+            searchArray = showDict[openedFolder]!
+        } else {
+            for data in showDict[openedFolder]! {
+                if data.contains(searchbar.text!) {
+                    searchArray.append(data)
+                }
+            }
+        }
+        table.reloadData()
     }
     
     //タッチ時の挙動
