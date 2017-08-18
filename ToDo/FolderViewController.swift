@@ -68,7 +68,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             table.deselectRow(at: indexPathForSelectedRow, animated: true)
         }
     }
-
+    
     //セル数設定
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searchbar.text != ""{
@@ -266,6 +266,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             search()
         }
+    }
+    
+    @IBAction func tapScreen(sender: UITapGestureRecognizer) {
+        sender.cancelsTouchesInView = false
+        self.view.endEditing(true)
     }
 
     //並び替え関係

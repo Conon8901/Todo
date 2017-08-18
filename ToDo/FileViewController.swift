@@ -28,6 +28,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     var edit: Bool = false
     var sameName: Bool = false
+    var button: Bool = false
     
     @IBOutlet var BackToFolder: UIBarButtonItem!
     
@@ -49,8 +50,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if showDict[openedFolder] == nil {
             print("openedFolderisnil")
             editButton.isEnabled = false
-            loadView()
-            viewDidLoad()
         }
         
         search()
@@ -136,32 +135,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         saveData.setValue(showDict, forKeyPath: "ToDoList")
         _ = self.navigationController?.popViewController(animated: true)
     }
-
-    @IBAction func allRemove(_ sender: UILongPressGestureRecognizer) {
-        
-        if (sender.state == UIGestureRecognizerState.began) {
-            let alert = UIAlertController(title: "全削除", message: "本当によろしいですか？", preferredStyle: .alert)
-            let saveAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) -> Void in
-                
-                self.showDict[self.openedFolder] = []
-                self.saveData.set(self.showDict, forKey: "ToDoList")
-                
-                self.table.reloadData()
-                
-                self.editButton.isEnabled = false
-            }
-            
-            let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
-                
-            }
-            
-            alert.addAction(saveAction)
-            alert.addAction(cancelAction)
-            
-            present(alert, animated: true, completion: nil)
-
-        }
-    }
     
     @IBAction func back() {
         saveData.setValue(showDict, forKeyPath: "ToDoList")
@@ -214,6 +187,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         alert.addAction(cancelAction)
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    @IBAction func tapScreen(sender: UITapGestureRecognizer) {
+        sender.cancelsTouchesInView = false
+        self.view.endEditing(true)
     }
     
     //削除関係

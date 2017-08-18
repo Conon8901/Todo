@@ -72,6 +72,10 @@
                             </navigationBar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="gfA-c9-yFG" appends="YES" id="jfF-JA-stl"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Folder" id="Ml9-jU-I4o">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="NUa-FK-I5D"/>
@@ -85,6 +89,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="gfA-c9-yFG">
+                    <connections>
+                        <action selector="tapScreenWithSender:" destination="BYZ-38-t0r" id="vLf-oK-ssi"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="815.20000000000005" y="133.5832083958021"/>
         </scene>
@@ -158,7 +167,7 @@
                         <gestureRecognizers/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Lft-vg-Z9V" appends="YES" id="Mdq-bU-6Kv"/>
-                            <outletCollection property="gestureRecognizers" destination="uhc-9q-agJ" appends="YES" id="TTT-38-fH6"/>
+                            <outletCollection property="gestureRecognizers" destination="Pwg-7m-DeI" appends="YES" id="AjL-Cc-LDI"/>
                         </connections>
                     </view>
                     <connections>
@@ -176,11 +185,11 @@
                         <action selector="panLeft:" destination="7DH-dA-Yea" id="iuF-a4-ZWQ"/>
                     </connections>
                 </screenEdgePanGestureRecognizer>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="uhc-9q-agJ">
+                <tapGestureRecognizer id="Pwg-7m-DeI">
                     <connections>
-                        <action selector="allRemove:" destination="7DH-dA-Yea" id="LQc-rI-QWd"/>
+                        <action selector="tapScreenWithSender:" destination="7DH-dA-Yea" id="GX7-iu-WHj"/>
                     </connections>
-                </pongPressGestureRecognizer>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1469.5999999999999" y="133.5832083958021"/>
         </scene>
