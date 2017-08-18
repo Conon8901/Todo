@@ -249,9 +249,18 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == UITableViewCellEditingStyle.delete {
             deleteDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
-            deleteDict[String(folderNameArray[indexPath.row])] = nil
-            self.saveData.set(self.deleteDict, forKey: "ToDoList")
-            folderNameArray.remove(at: indexPath.row)
+            
+            if(searchbar.text == "") {
+                deleteDict[String(folderNameArray[indexPath.row])] = nil
+                self.saveData.set(self.deleteDict, forKey: "ToDoList")
+                folderNameArray.remove(at: indexPath.row)
+            } else {
+                deleteDict[String(searchArray[indexPath.row])] = nil
+                self.saveData.set(self.deleteDict, forKey: "ToDoList")
+                searchArray.remove(at: indexPath.row)
+                folderNameArray.remove(at: folderNameArray.index(of: searchArray[indexPath.row])!-1)
+            }
+            
             tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
             
             saveData.set(self.folderNameArray, forKey: "folder")
