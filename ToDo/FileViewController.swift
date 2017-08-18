@@ -137,6 +137,32 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         _ = self.navigationController?.popViewController(animated: true)
     }
 
+    @IBAction func allRemove(_ sender: UILongPressGestureRecognizer) {
+        
+        if (sender.state == UIGestureRecognizerState.began) {
+            let alert = UIAlertController(title: "全削除", message: "本当によろしいですか？", preferredStyle: .alert)
+            let saveAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) -> Void in
+                
+                self.showDict[self.openedFolder] = []
+                self.saveData.set(self.showDict, forKey: "ToDoList")
+                
+                self.table.reloadData()
+                
+                self.editButton.isEnabled = false
+            }
+            
+            let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
+                
+            }
+            
+            alert.addAction(saveAction)
+            alert.addAction(cancelAction)
+            
+            present(alert, animated: true, completion: nil)
+
+        }
+    }
+    
     @IBAction func back() {
         saveData.setValue(showDict, forKeyPath: "ToDoList")
         _ = self.navigationController?.popViewController(animated: true)
@@ -173,7 +199,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.search()
             
             }else{
-                self.showalert(message: "入力してください")
+                self.showalert(title: "エラー", message: "入力してください")
             }
         }
         
@@ -246,7 +272,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
                 self.table.reloadData()
             }else{
-                self.showalert(message: "入力してください")
+                self.showalert(title: "エラー", message: "入力してください")
                 if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
                     self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
                 }
@@ -275,9 +301,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     }
     
-    func showalert(message: String) {
+    func showalert(title: String, message: String) {
         let alert = UIAlertController(
-            title: "エラー",
+            title: title,
             message: message,
             preferredStyle: .alert)
         
