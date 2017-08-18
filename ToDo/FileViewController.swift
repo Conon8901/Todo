@@ -10,7 +10,8 @@ import UIKit
 
 class FileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
-    @IBOutlet weak var navTitle: UINavigationBar!
+    @IBOutlet var leftConstraint: NSLayoutConstraint!
+    @IBOutlet var navTitle: UINavigationBar!
     @IBOutlet var table: UITableView!
     @IBOutlet var editButton: UIBarButtonItem!
     @IBOutlet var searchbar: UISearchBar!
@@ -53,13 +54,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         search()
         
         searchbar.delegate = self
-        
-        //何も入力されていなくてもReturnキーを押せるようにする。
         searchbar.enablesReturnKeyAutomatically = false
         
         if showDict[openedFolder] != nil{
             searchArray = showDict[openedFolder]!
         }
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -131,6 +132,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
     }
     
+    @IBAction func panLeft(_ sender: UIScreenEdgePanGestureRecognizer) {
+        saveData.setValue(showDict, forKeyPath: "ToDoList")
+        _ = self.navigationController?.popViewController(animated: true)
+    }
+
     @IBAction func back() {
         saveData.setValue(showDict, forKeyPath: "ToDoList")
         _ = self.navigationController?.popViewController(animated: true)
