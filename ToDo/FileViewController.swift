@@ -10,7 +10,6 @@ import UIKit
 
 class FileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
-    @IBOutlet var leftConstraint: NSLayoutConstraint!
     @IBOutlet var navTitle: UINavigationBar!
     @IBOutlet var table: UITableView!
     @IBOutlet var editButton: UIBarButtonItem!
@@ -45,11 +44,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.saveData.set(self.showDict, forKey: "TodoList")
         }
         
-        if showDict[openedFolder] == nil{
-            showDict[openedFolder] = []
-        }
-        
         openedFolder = saveData.object(forKey: "move")! as! String
+        
+        if showDict[openedFolder] == nil {
+            print("openedFolderisnil")
+            editButton.isEnabled = false
+            loadView()
+            viewDidLoad()
+        }
         
         search()
         
@@ -59,8 +61,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if showDict[openedFolder] != nil{
             searchArray = showDict[openedFolder]!
         }
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {

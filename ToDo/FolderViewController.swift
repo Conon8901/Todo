@@ -28,7 +28,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     var edit: Bool = false
     var sameName: Bool = false
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -51,11 +50,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         search()
         
         searchbar.delegate = self
-        
         searchbar.enablesReturnKeyAutomatically = false
         
         searchArray = folderNameArray
-    }
+        
+     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
