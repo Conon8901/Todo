@@ -32,6 +32,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBOutlet var BackToFolder: UIBarButtonItem!
     
+    @IBOutlet var nav: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -48,7 +49,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         openedFolder = saveData.object(forKey: "move")! as! String
         
         if showDict[openedFolder] == nil {
-            print("openedFolderisnil")
             editButton.isEnabled = false
         }
         
@@ -60,13 +60,15 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if showDict[openedFolder] != nil{
             searchArray = showDict[openedFolder]!
         }
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
+        self.navTitle.addGestureRecognizer(longPressGesture)
     }
-    
+   
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navTitle.topItem?.title = openedFolder
     }
-
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -139,6 +141,31 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBAction func back() {
         saveData.setValue(showDict, forKeyPath: "ToDoList")
         _ = self.navigationController?.popViewController(animated: true)
+    }
+    
+    func allRemove(_ sender: UILongPressGestureRecognizer) {
+        if (sender.state == UIGestureRecognizerState.began) {
+            let alert = UIAlertController(title: "全削除", message: "本当によろしいですか？", preferredStyle: .alert)
+            
+            let saveAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) -> Void in
+                self.showDict[self.openedFolder] = []
+                    
+                self.saveData.set(self.showDict, forKey: "ToDoList")
+                    
+                self.table.reloadData()
+                    
+                self.editButton.isEnabled = false
+            }
+        
+            let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
+            }
+            
+            alert.addAction(saveAction)
+            alert.addAction(cancelAction)
+            
+            present(alert, animated: true, completion: nil)
+            
+        }
     }
     
     @IBAction func add(sender: AnyObject) {
@@ -297,5 +324,4 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             editButton.isEnabled = true
         }
     }
-    
 }
