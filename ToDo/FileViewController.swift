@@ -32,7 +32,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBOutlet var BackToFolder: UIBarButtonItem!
     
-    @IBOutlet var nav: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -101,14 +100,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return cell!
     }
     
-    //検索ボタン押下時の呼び出しメソッド
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchbar.endEditing(true)
     }
     
-    //テキスト変更時の呼び出しメソッド
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
         searchArray.removeAll()
         
         if(searchbar.text == "") {
@@ -134,13 +130,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     @IBAction func panLeft(_ sender: UIScreenEdgePanGestureRecognizer) {
-        saveData.setValue(showDict, forKeyPath: "ToDoList")
-        _ = self.navigationController?.popViewController(animated: true)
+        backFolder()
     }
     
     @IBAction func back() {
-        saveData.setValue(showDict, forKeyPath: "ToDoList")
-        _ = self.navigationController?.popViewController(animated: true)
+        backFolder()
     }
     
     func allRemove(_ sender: UILongPressGestureRecognizer) {
@@ -174,8 +168,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
             
             let textField = alert.textFields![0] as UITextField
-            let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
-            if blank != "Optional(\"\")"{
+            let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
+            if blank != ""{
                 
                 if self.saveData.object(forKey: "ToDoList") != nil{
                     self.showDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
@@ -200,6 +194,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             }else{
                 self.showalert(title: "エラー", message: "入力してください")
+                
+                if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
+                    self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
+                }
             }
         }
         
@@ -272,8 +270,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
             let textField = alert.textFields![0] as UITextField
             
-            let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
-            if blank != "Optional(\"\")"{
+            let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
+            if blank != ""{
                 self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
                 self.table.reloadData()
             }else{
@@ -323,5 +321,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }else{
             editButton.isEnabled = true
         }
+    }
+    
+    func backFolder() {
+        saveData.setValue(showDict, forKeyPath: "ToDoList")
+        _ = self.navigationController?.popViewController(animated: true)
     }
 }
