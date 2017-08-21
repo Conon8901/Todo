@@ -123,8 +123,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 
                 let textField = alert.textFields![0] as UITextField
                 
-                let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
-                if blank != "Optional(\"\")"{
+                let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
+                if blank != ""{
                     self.sameName = false
                     for i in 0...self.folderNameArray.count-1{
                         if self.folderNameArray[i] == textField.text!{
@@ -134,6 +134,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     
                     if self.sameName{
                         self.showalert(message: "同名のフォルダがあります")
+                        
+                        if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
+                            self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
+                        }
 
                     }else{
                         if textField.text != "move" && textField.text != "folder" && textField.text != "TodoList" && textField.text != "ToDoList"{
@@ -141,10 +145,18 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             self.table.reloadData()
                         }else{
                             self.showalert(message: "その名称は使用できません")
+                            
+                            if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
+                                self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
+                            }
                         }
                     }
                 }else{
                     self.showalert(message: "入力してください")
+                    
+                    if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
+                        self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
+                    }
                 }
                 
                 self.saveData.set(self.folderNameArray, forKey: "folder")
@@ -193,8 +205,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
             
             let textField = alert.textFields![0] as UITextField
-            let blank = String(describing: textField.text).components(separatedBy: self.excludes).joined()
-            if blank != "Optional(\"\")"{
+            let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
+            if blank != ""{
                 self.sameName = false
                 if self.folderNameArray.count != 0{
                     for i in 0...self.folderNameArray.count-1{
@@ -217,16 +229,17 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     }else{
                         self.showalert(message: "その名称は使用できません")
                     }
-
                 }
-                
             }else{
                 self.showalert(message: "入力してください")
             }
-            
         }
         
         let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
+            
+            if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
+                self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
+            }
         }
         
         alert.addTextField { (textField:UITextField!) -> Void in
@@ -313,5 +326,4 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             editButton.isEnabled = true
         }
     }
-    
 }
