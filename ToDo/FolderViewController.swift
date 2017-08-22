@@ -30,10 +30,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         table.dataSource = self
         table.delegate = self
-        
         
         if saveData.object(forKey: "folder") != nil{
             folderNameArray = saveData.object(forKey: "folder") as! [String]
@@ -53,12 +51,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         searchbar.enablesReturnKeyAutomatically = false
         
         searchArray = folderNameArray
-        
-     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -68,35 +60,17 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             table.deselectRow(at: indexPathForSelectedRow, animated: true)
         }
     }
-    
-    //セル数設定
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchbar.text != ""{
-            return searchArray.count
-        }else{
-            return folderNameArray.count
-        }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
     }
     
-    //セル取得・表示
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Folder")
-        
-        if searchbar.text != ""{
-            cell?.textLabel?.text = searchArray[indexPath.row]
-        }else{
-            cell?.textLabel?.text = folderNameArray[indexPath.row]
-        }
-        
-        return cell!
-    }
+    // MARK: - SearchBar
     
-    //検索ボタン押下時の呼び出しメソッド
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchbar.endEditing(true)
     }
     
-    //テキスト変更時の呼び出しメソッド
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
         searchArray.removeAll()
@@ -113,78 +87,31 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.reloadData()
     }
     
-    //タッチ時の挙動
+    // MARK: - TableView
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if searchbar.text != ""{
+            return searchArray.count
+        }else{
+            return folderNameArray.count
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Folder")
+        
+        if searchbar.text != ""{
+            cell?.textLabel?.text = searchArray[indexPath.row]
+        }else{
+            cell?.textLabel?.text = folderNameArray[indexPath.row]
+        }
+        
+        return cell!
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if edit {
-            let beforeAddition = String(folderNameArray[indexPath.row])
-            
-            let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
-            let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
-                
-                let textField = alert.textFields![0] as UITextField
-                
-                let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
-                if blank != ""{
-                    self.sameName = false
-                    for i in 0...self.folderNameArray.count-1{
-                        if self.folderNameArray[i] == textField.text!{
-                            self.sameName = true
-                        }
-                    }
-                    
-                    if self.sameName{
-                        self.showalert(message: "同名のフォルダがあります")
-                        
-                        if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
-                            self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
-                        }
-
-                    }else{
-                        if textField.text != "move" && textField.text != "folder" && textField.text != "TodoList" && textField.text != "ToDoList"{
-                            self.folderNameArray[indexPath.row] = textField.text!
-                            self.table.reloadData()
-                        }else{
-                            self.showalert(message: "その名称は使用できません")
-                            
-                            if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
-                                self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
-                            }
-                        }
-                    }
-                }else{
-                    self.showalert(message: "入力してください")
-                    
-                    if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
-                        self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
-                    }
-                }
-                
-                self.saveData.set(self.folderNameArray, forKey: "folder")
-                
-                self.editDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
-                self.editDict[String(self.folderNameArray[indexPath.row])] = self.editDict[beforeAddition!]
-                self.editDict[beforeAddition!] = nil
-                self.saveData.set(self.editDict, forKey: "ToDoList")
-            }
-            
-            let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
-                
-                if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
-                    self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
-                }
-                
-            }
-            
-            alert.addTextField { (textField:UITextField!) -> Void in
-                textField.text = self.folderNameArray[indexPath.row]
-                textField.textAlignment = NSTextAlignment.left
-            }
-            
-            alert.addAction(saveAction)
-            alert.addAction(cancelAction)
-            
-            present(alert, animated: true, completion: nil)
-
+            edit(indexPath: indexPath)
         }else{
             if(searchbar.text == "") {
                 saveData.set(String(folderNameArray[indexPath.row]), forKey: "move")
@@ -197,6 +124,115 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             self.navigationController?.pushViewController(nextView, animated: true)
 
         }
+    }
+
+    func tableView(_ tableView: UITableView,canEditRowAt indexPath: IndexPath) -> Bool{
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            deleteDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+            
+            if(searchbar.text == "") {
+                deleteDict[String(folderNameArray[indexPath.row])] = nil
+                self.saveData.set(self.deleteDict, forKey: "ToDoList")
+                folderNameArray.remove(at: indexPath.row)
+            } else {
+                deleteDict[String(searchArray[indexPath.row])] = nil
+                self.saveData.set(self.deleteDict, forKey: "ToDoList")
+                searchArray.remove(at: indexPath.row)
+                folderNameArray.remove(at: folderNameArray.index(of: searchArray[indexPath.row])!-1)
+            }
+            
+            tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
+            
+            saveData.set(self.folderNameArray, forKey: "folder")
+            
+            search()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let movingFolder = folderNameArray[sourceIndexPath.row]
+        folderNameArray.remove(at: sourceIndexPath.row)
+        folderNameArray.insert(movingFolder, at: destinationIndexPath.row)
+        saveData.set(folderNameArray, forKey:"folder")
+    }
+    
+    @IBAction func tapEdit(sender: AnyObject) {
+        if isEditing {
+            super.setEditing(false, animated: true)
+            table.setEditing(false, animated: true)
+            edit = false
+        } else {
+            super.setEditing(true, animated: true)
+            table.setEditing(true, animated: true)
+            table.allowsSelectionDuringEditing = true
+            edit = true
+        }
+    }
+    
+    func edit(indexPath: IndexPath) {
+        let beforeAddition = String(folderNameArray[indexPath.row])
+        
+        let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
+            
+            let textField = alert.textFields![0] as UITextField
+            
+            let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
+            if blank != ""{
+                self.sameName = false
+                for i in 0...self.folderNameArray.count-1{
+                    if self.folderNameArray[i] == textField.text!{
+                        self.sameName = true
+                    }
+                }
+                
+                if self.sameName{
+                    self.showalert(message: "同名のフォルダがあります")
+                    
+                    self.deselect()
+                    
+                }else{
+                    if textField.text != "move" && textField.text != "folder" && textField.text != "TodoList" && textField.text != "ToDoList"{
+                        self.folderNameArray[indexPath.row] = textField.text!
+                        self.table.reloadData()
+                    }else{
+                        self.showalert(message: "その名称は使用できません")
+                        
+                        self.deselect()
+                    }
+                }
+            }else{
+                self.showalert(message: "入力してください")
+                
+                self.deselect()
+            }
+            
+            self.saveData.set(self.folderNameArray, forKey: "folder")
+            
+            self.editDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+            self.editDict[String(self.folderNameArray[indexPath.row])] = self.editDict[beforeAddition!]
+            self.editDict[beforeAddition!] = nil
+            self.saveData.set(self.editDict, forKey: "ToDoList")
+        }
+        
+        let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
+            
+            self.deselect()
+        }
+        
+        alert.addTextField { (textField:UITextField!) -> Void in
+            textField.text = self.folderNameArray[indexPath.row]
+            textField.textAlignment = NSTextAlignment.left
+        }
+        
+        alert.addAction(saveAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
     }
     
     @IBAction func add(sender: AnyObject) {
@@ -237,9 +273,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
             
-            if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
-                self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
-            }
+            self.deselect()
         }
         
         alert.addTextField { (textField:UITextField!) -> Void in
@@ -252,61 +286,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         present(alert, animated: true, completion: nil)
     }
     
-    
-    //削除関係
-    func tableView(_ tableView: UITableView,canEditRowAt indexPath: IndexPath) -> Bool{
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == UITableViewCellEditingStyle.delete {
-            deleteDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
-            
-            if(searchbar.text == "") {
-                deleteDict[String(folderNameArray[indexPath.row])] = nil
-                self.saveData.set(self.deleteDict, forKey: "ToDoList")
-                folderNameArray.remove(at: indexPath.row)
-            } else {
-                deleteDict[String(searchArray[indexPath.row])] = nil
-                self.saveData.set(self.deleteDict, forKey: "ToDoList")
-                searchArray.remove(at: indexPath.row)
-                folderNameArray.remove(at: folderNameArray.index(of: searchArray[indexPath.row])!-1)
-            }
-            
-            tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
-            
-            saveData.set(self.folderNameArray, forKey: "folder")
-            
-            search()
-        }
-    }
-    
-    @IBAction func tapScreen(sender: UITapGestureRecognizer) {
-        sender.cancelsTouchesInView = false
-        self.view.endEditing(true)
-    }
-
-    //並び替え関係
-    @IBAction func tapEdit(sender: AnyObject) {
-        if isEditing {
-            super.setEditing(false, animated: true)
-            table.setEditing(false, animated: true)
-            edit = false
-        } else {
-            super.setEditing(true, animated: true)
-            table.setEditing(true, animated: true)
-            table.allowsSelectionDuringEditing = true
-            edit = true
-        }
-    }
-    
-    //セルの移動時に呼ばれる
-    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let movingFolder = folderNameArray[sourceIndexPath.row]
-        folderNameArray.remove(at: sourceIndexPath.row)
-        folderNameArray.insert(movingFolder, at: destinationIndexPath.row)
-        saveData.set(folderNameArray, forKey:"folder")
-    }
+    // MARK: - func
     
     func showalert(message: String) {
         let alert = UIAlertController(
@@ -325,5 +305,18 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }else{
             editButton.isEnabled = true
         }
+    }
+    
+    func deselect() {
+        if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
+            self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
+        }
+    }
+    
+    // MARK: - else
+    
+    @IBAction func tapScreen(sender: UITapGestureRecognizer) {
+        sender.cancelsTouchesInView = false
+        self.view.endEditing(true)
     }
 }
