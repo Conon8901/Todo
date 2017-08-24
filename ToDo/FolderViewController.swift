@@ -168,11 +168,13 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         if isEditing {
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
+            editButton.title = "編集"
             edit = false
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             table.allowsSelectionDuringEditing = true
+            editButton.title = "完了"
             edit = true
         }
     }
