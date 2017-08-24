@@ -135,6 +135,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 saveData.set(String(searchArray[indexPath.row]), forKey: "memo")
             }
             
+            saveData.set(openedFolder, forKey: "foldername")
+            
             let storyboard: UIStoryboard = self.storyboard!
             let nextView = storyboard.instantiateViewController(withIdentifier: "Memo") as! MemoViewController
             self.navigationController?.pushViewController(nextView, animated: true)
@@ -178,24 +180,37 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
             if blank != ""{
                 
-                if self.saveData.object(forKey: "ToDoList") != nil{
-                    self.showDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+                self.sameName = false
+                for i in 0...(self.showDict[self.openedFolder]?.count)!-1{
+                    if self.showDict[self.openedFolder]?[i] == textField.text!{
+                        self.sameName = true
+                    }
                 }
-                
-                if let dict = self.showDict[self.openedFolder] {
-                    self.addArray = dict
+//
+                if self.sameName{
+                    self.showalert(title: "エラー", message: "同名のフォルダがあります")
+                    
+                    self.deselect()
+                    
+                }else{
+                    if self.saveData.object(forKey: "ToDoList") != nil{
+                        self.showDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+                    }
+                    
+                    if let dict = self.showDict[self.openedFolder] {
+                        self.addArray = dict
+                    }
+                    self.addfile = textField.text!
+                    self.addArray.append(self.addfile)
+                    self.showDict[self.openedFolder] = self.addArray
+                    
+                    self.saveData.setValue(self.showDict, forKeyPath: "ToDoList")
+                    
+                    self.saveData.synchronize()
+                    self.table.reloadData()
+                    
+                    self.search()
                 }
-                self.addfile = textField.text!
-                self.addArray.append(self.addfile)
-                self.showDict[self.openedFolder] = self.addArray
-                
-                self.saveData.setValue(self.showDict, forKeyPath: "ToDoList")
-                
-                self.saveData.synchronize()
-                self.table.reloadData()
-                
-                self.search()
-                
             }else{
                 self.showalert(title: "エラー", message: "入力してください")
             }
