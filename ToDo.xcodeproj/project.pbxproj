@@ -15,6 +15,7 @@
 		112E64881EE2D3B80048DB21 /* ToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112E64871EE2D3B80048DB21 /* ToDoTests.swift */; };
 		112E64931EE2D3B80048DB21 /* ToDoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112E64921EE2D3B80048DB21 /* ToDoUITests.swift */; };
 		112E64A11EE2D5680048DB21 /* FileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112E64A01EE2D5680048DB21 /* FileViewController.swift */; };
+		11C2FAFA1F4E9FA30080A9B2 /* MemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C2FAF91F4E9FA30080A9B2 /* MemoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		112E64921EE2D3B80048DB21 /* ToDoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoUITests.swift; sourceTree = "<group>"; };
 		112E64941EE2D3B80048DB21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		112E64A01EE2D5680048DB21 /* FileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileViewController.swift; sourceTree = "<group>"; };
+		11C2FAF91F4E9FA30080A9B2 /* MemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +104,7 @@
 				112E64721EE2D3B80048DB21 /* AppDelegate.swift */,
 				112E64741EE2D3B80048DB21 /* FolderViewController.swift */,
 				112E64A01EE2D5680048DB21 /* FileViewController.swift */,
+				11C2FAF91F4E9FA30080A9B2 /* MemoViewController.swift */,
 				112E64761EE2D3B80048DB21 /* Main.storyboard */,
 				112E64791EE2D3B80048DB21 /* Assets.xcassets */,
 				112E647B1EE2D3B80048DB21 /* LaunchScreen.storyboard */,
@@ -263,6 +266,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11C2FAFA1F4E9FA30080A9B2 /* MemoViewController.swift in Sources */,
 				112E64A11EE2D5680048DB21 /* FileViewController.swift in Sources */,
 				112E64751EE2D3B80048DB21 /* FolderViewController.swift in Sources */,
 				112E64731EE2D3B80048DB21 /* AppDelegate.swift in Sources */,

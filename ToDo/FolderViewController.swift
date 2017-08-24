@@ -10,6 +10,8 @@ import UIKit
 
 class FolderViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
+    // MARK: - declare
+    
     @IBOutlet var table: UITableView!
     @IBOutlet var editButton: UIBarButtonItem!
     @IBOutlet var searchbar: UISearchBar!
@@ -27,6 +29,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     var edit: Bool = false
     var sameName: Bool = false
+    
+    // MARK: - default
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -196,14 +200,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     self.deselect()
                     
                 }else{
-                    if textField.text != "move" && textField.text != "folder" && textField.text != "TodoList" && textField.text != "ToDoList"{
-                        self.folderNameArray[indexPath.row] = textField.text!
-                        self.table.reloadData()
-                    }else{
-                        self.showalert(message: "その名称は使用できません")
-                        
-                        self.deselect()
-                    }
+                    self.folderNameArray[indexPath.row] = textField.text!
+                    self.table.reloadData()
                 }
             }else{
                 self.showalert(message: "入力してください")
@@ -254,17 +252,13 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 if self.sameName{
                     self.showalert(message: "同名のフォルダがあります")
                 }else{
-                    if textField.text != "move" && textField.text != "folder" && textField.text != "TodoList" && textField.text != "ToDoList"{
-                        self.folderNameArray.append(textField.text!)
-                        self.table.reloadData()
-                        
-                        self.saveData.set(self.folderNameArray, forKey: "folder")
-                        self.saveData.synchronize()
-                        
-                        self.search()
-                    }else{
-                        self.showalert(message: "その名称は使用できません")
-                    }
+                    self.folderNameArray.append(textField.text!)
+                    self.table.reloadData()
+                    
+                    self.saveData.set(self.folderNameArray, forKey: "folder")
+                    self.saveData.synchronize()
+                    
+                    self.search()
                 }
             }else{
                 self.showalert(message: "入力してください")

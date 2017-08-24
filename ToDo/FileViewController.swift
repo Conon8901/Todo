@@ -10,6 +10,8 @@ import UIKit
 
 class FileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
+    // MARK: - declare
+    
     @IBOutlet var navTitle: UINavigationBar!
     @IBOutlet var table: UITableView!
     @IBOutlet var editButton: UIBarButtonItem!
@@ -31,6 +33,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var button: Bool = false
     
     @IBOutlet var BackToFolder: UIBarButtonItem!
+    
+    // MARK: - default
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,6 +65,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
         self.navTitle.addGestureRecognizer(longPressGesture)
+        
+//        table.allowsSelection = false//TableView選択不可
     }
    
     override func viewWillAppear(_ animated: Bool) {
@@ -123,6 +129,16 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if edit {
             edit(indexPath: indexPath)
         }else{
+            if(searchbar.text == "") {
+                saveData.set(String(showDict[openedFolder]![indexPath.row]), forKey: "memo")
+            } else {
+                saveData.set(String(searchArray[indexPath.row]), forKey: "memo")
+            }
+            
+            let storyboard: UIStoryboard = self.storyboard!
+            let nextView = storyboard.instantiateViewController(withIdentifier: "Memo") as! MemoViewController
+            self.navigationController?.pushViewController(nextView, animated: true)
+            
             tableView.deselectRow(at: indexPath, animated: true)
         }
     }
@@ -182,8 +198,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
             }else{
                 self.showalert(title: "エラー", message: "入力してください")
-                
-                self.deselect()
             }
         }
         
@@ -245,7 +259,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
-            table.allowsSelectionDuringEditing = true
+//            table.allowsSelectionDuringEditing = true
             edit = true
             BackToFolder.isEnabled = false
         }
