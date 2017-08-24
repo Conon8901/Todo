@@ -269,12 +269,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if isEditing {
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
+            editButton.title = "編集"
             edit = false
             BackToFolder.isEnabled = true
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
-//            table.allowsSelectionDuringEditing = true
+            table.allowsSelectionDuringEditing = true
+            editButton.title = "完了"
             edit = true
             BackToFolder.isEnabled = false
         }
