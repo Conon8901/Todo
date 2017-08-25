@@ -25,12 +25,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        if saveData.object(forKey: "text") != nil{
-//            memoArray = saveData.object(forKey: "text") as! [String : String]
-//        }else{
-//            self.saveData.set(memoArray, forKey: "text")
-//        }
-        
         memoTextView.delegate = self
         
         memoTextView.text = ""

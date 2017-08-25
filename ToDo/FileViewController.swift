@@ -122,6 +122,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             cell?.textLabel?.text = showDict[openedFolder]?[indexPath.row]
         }
         
+        cell?.textLabel?.numberOfLines=0
+        
         return cell!
     }
     
@@ -186,7 +188,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.sameName = true
                     }
                 }
-//
+
                 if self.sameName{
                     self.showalert(title: "エラー", message: "同名のフォルダがあります")
                     
