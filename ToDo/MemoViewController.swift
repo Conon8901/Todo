@@ -47,11 +47,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             memoTextView.text = ""
         }
         
-        if memoTextView.text.isEmpty{
-            placeholder.isHidden = false
-        }else{
-            placeholder.isHidden = true
-        }
+        placeholder.isHidden = memoTextView.text.isEmpty ? false : true
         
         navTitle.topItem?.title = file2
     }
@@ -79,10 +75,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        if memoTextView.text.isEmpty{
-            placeholder.isHidden = false
-        }else{
-            placeholder.isHidden = true
-        }
+        placeholder.isHidden = memoTextView.text.isEmpty ? false : true
     }
 }
