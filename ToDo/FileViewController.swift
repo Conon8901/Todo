@@ -34,11 +34,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBOutlet var BackToFolder: UIBarButtonItem!
     
-    // MARK: - default
+    // MARK: - basics
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         table.dataSource = self
         table.delegate = self
         
@@ -65,8 +65,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
         self.navTitle.addGestureRecognizer(longPressGesture)
-        
-//        table.allowsSelection = false//TableView選択不可
     }
    
     override func viewWillAppear(_ animated: Bool) {
@@ -174,15 +172,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 
     @IBAction func add(sender: AnyObject) {
-        
         let alert = UIAlertController(title: "項目追加", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
-            
             let textField = alert.textFields![0] as UITextField
             let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
             if blank != ""{
-                
                 self.sameName = false
+                
                 for i in 0...(self.showDict[self.openedFolder]?.count)!-1{
                     if self.showDict[self.openedFolder]?[i] == textField.text!{
                         self.sameName = true
@@ -193,7 +189,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.showalert(title: "エラー", message: "同名のフォルダがあります")
                     
                     self.deselect()
-                    
                 }else{
                     if self.saveData.object(forKey: "ToDoList") != nil{
                         self.showDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
@@ -234,7 +229,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func edit(indexPath: IndexPath) {
         let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
-            
             let textField = alert.textFields![0] as UITextField
             
             let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
@@ -251,7 +245,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
-            
             self.deselect()
         }
         
@@ -355,3 +348,4 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.view.endEditing(true)
     }
 }
+

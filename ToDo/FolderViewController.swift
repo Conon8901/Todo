@@ -30,10 +30,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     var edit: Bool = false
     var sameName: Bool = false
     
-    // MARK: - default
+    // MARK: - basics
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         table.dataSource = self
         table.delegate = self
         
@@ -76,7 +77,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
         searchArray.removeAll()
         
         if(searchbar.text == "") {
@@ -128,7 +128,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             let storyboard: UIStoryboard = self.storyboard!
             let nextView = storyboard.instantiateViewController(withIdentifier: "File") as! FileViewController
             self.navigationController?.pushViewController(nextView, animated: true)
-
         }
     }
 
@@ -186,7 +185,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
-            
             let textField = alert.textFields![0] as UITextField
             
             let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
@@ -202,7 +200,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     self.showalert(message: "同名のフォルダがあります")
                     
                     self.deselect()
-                    
                 }else{
                     self.folderNameArray[indexPath.row] = textField.text!
                     self.table.reloadData()
@@ -222,7 +219,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
-            
             self.deselect()
         }
         
@@ -238,10 +234,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     @IBAction func add(sender: AnyObject) {
-        
         let alert = UIAlertController(title: "フォルダ追加", message: "タイトル入力", preferredStyle: .alert)
         let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
-            
             let textField = alert.textFields![0] as UITextField
             let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
             if blank != ""{
@@ -270,7 +264,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
-            
             self.deselect()
         }
         
@@ -318,3 +311,4 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         self.view.endEditing(true)
     }
 }
+

@@ -44,7 +44,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8eg-WV-9OM" id="mpi-P5-sBQ">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -132,7 +132,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yR4-6v-zJc" id="eOL-fz-hxq">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -216,18 +216,6 @@
         <!--Memo View Controller-->
         <scene sceneID="Ngy-da-6rd">
             <objects>
-                <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="vfe-Bd-nmx">
-                    <rectEdge key="edges" left="YES"/>
-                    <connections>
-                        <action selector="panLeft:" destination="3wh-kS-dre" id="nSW-df-lHW"/>
-                    </connections>
-                </screenEdgePanGestureRecognizer>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="6qm-oA-cKM" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="IMI-ca-zZx">
-                    <connections>
-                        <action selector="tapScreenWithSender:" destination="3wh-kS-dre" id="O7V-D2-nC7"/>
-                    </connections>
-                </tapGestureRecognizer>
                 <viewController storyboardIdentifier="Memo" id="3wh-kS-dre" customClass="MemoViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="uqi-or-Sk9"/>
@@ -286,6 +274,18 @@
                         <outlet property="placeholder" destination="pJ7-DL-d2H" id="r1Z-kK-o75"/>
                     </connections>
                 </viewController>
+                <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="vfe-Bd-nmx">
+                    <rectEdge key="edges" left="YES"/>
+                    <connections>
+                        <action selector="panLeft:" destination="3wh-kS-dre" id="nSW-df-lHW"/>
+                    </connections>
+                </screenEdgePanGestureRecognizer>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6qm-oA-cKM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="IMI-ca-zZx">
+                    <connections>
+                        <action selector="tapScreenWithSender:" destination="3wh-kS-dre" id="O7V-D2-nC7"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2128.8000000000002" y="133.5832083958021"/>
         </scene>
