@@ -136,7 +136,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == UITableViewCellEditingStyle.delete {
+        if editingStyle == .delete {
             deleteDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
             
             if(searchbar.text == "") {
@@ -150,7 +150,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 folderNameArray.remove(at: folderNameArray.index(of: searchArray[indexPath.row])!-1)
             }
             
-            tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
+            tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
             
             saveData.set(self.folderNameArray, forKey: "folder")
             
@@ -277,7 +277,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         present(alert, animated: true, completion: nil)
     }
     
-    // MARK: - func
+    // MARK: - method
     
     func showalert(message: String) {
         let alert = UIAlertController(
@@ -291,11 +291,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func search() {
-        if folderNameArray.count == 0{
-            editButton.isEnabled = false
-        }else{
-            editButton.isEnabled = true
-        }
+        editButton.isEnabled = folderNameArray.isEmpty ? false : true
     }
     
     func deselect() {

@@ -12,7 +12,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     // MARK: - declare
     
-    @IBOutlet var navTitle: UINavigationBar!
+    @IBOutlet var navTitle: UINavigationItem!
     @IBOutlet var table: UITableView!
     @IBOutlet var editButton: UIBarButtonItem!
     @IBOutlet var searchbar: UISearchBar!
@@ -62,14 +62,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if showDict[openedFolder] != nil{
             searchArray = showDict[openedFolder]!
         }
-        
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
-        self.navTitle.addGestureRecognizer(longPressGesture)
     }
    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navTitle.topItem?.title = openedFolder
+        navTitle.title = openedFolder
     }
 
     override func didReceiveMemoryWarning() {
@@ -150,9 +147,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == UITableViewCellEditingStyle.delete {
+        if editingStyle == .delete {
             showDict[openedFolder]?.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath as IndexPath], with: UITableViewRowAnimation.automatic)
+            tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
             saveData.set(self.showDict, forKey: "ToDoList")
             
             search()
@@ -278,7 +275,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func allRemove(_ sender: UILongPressGestureRecognizer) {
-        if (sender.state == UIGestureRecognizerState.began) {
+        if (sender.state == .began) {
             let alert = UIAlertController(title: "全削除", message: "本当によろしいですか？", preferredStyle: .alert)
             
             let saveAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) -> Void in
@@ -301,7 +298,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
 
-    // MARK: - func
+    // MARK: - method
     
     func showalert(title: String, message: String) {
         let alert = UIAlertController(
