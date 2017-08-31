@@ -10,7 +10,7 @@ import UIKit
 
 class FolderViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
-    // MARK: - declare
+    // MARK: - Declare
     
     @IBOutlet var table: UITableView!
     @IBOutlet var editButton: UIBarButtonItem!
@@ -20,17 +20,17 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     var addNameArray = [String]()
     var searchArray = [String]()
     
-    var saveData : UserDefaults = UserDefaults.standard
+    var saveData = UserDefaults.standard
     
     let excludes = CharacterSet(charactersIn: "　 ")
     
-    var deleteDict = [String: Array<String>]()
-    var editDict = [String: Array<String>]()
+    var deleteDict = [String:Array<String>]()
+    var editDict = [String:Array<String>]()
     
-    var edit: Bool = false
-    var sameName: Bool = false
+    var edit = false
+    var sameName = false
     
-    // MARK: - basics
+    // MARK: - Basics
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -148,7 +148,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 self.saveData.set(self.deleteDict, forKey: "ToDoList")
                 searchArray.remove(at: indexPath.row)
                 folderNameArray.remove(at: folderNameArray.index(of: searchArray[indexPath.row])!-1)
-            }
+            }//memoarrayからの削除
             
             tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
             
@@ -277,7 +277,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         present(alert, animated: true, completion: nil)
     }
     
-    // MARK: - method
+    // MARK: - Method
     
     func showalert(message: String) {
         let alert = UIAlertController(
@@ -300,7 +300,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    // MARK: - else
+    // MARK: - Else
     
     @IBAction func tapScreen(sender: UITapGestureRecognizer) {
         sender.cancelsTouchesInView = false

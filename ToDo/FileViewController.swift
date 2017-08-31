@@ -10,14 +10,14 @@ import UIKit
 
 class FileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
-    // MARK: - declare
+    // MARK: - Declare
     
-    @IBOutlet var navTitle: UINavigationItem!
     @IBOutlet var table: UITableView!
     @IBOutlet var editButton: UIBarButtonItem!
     @IBOutlet var searchbar: UISearchBar!
+    @IBOutlet var navtitle: UIButton!
     
-    var saveData : UserDefaults = UserDefaults.standard
+    var saveData = UserDefaults.standard
     
     let excludes = CharacterSet(charactersIn: "　 ")
     
@@ -25,16 +25,16 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var addfile = ""
     
     var addArray = [String]()
-    var showDict = [String: Array<String>]()
+    var showDict = [String:Array<String>]()
     var searchArray = [String]()
 
-    var edit: Bool = false
-    var sameName: Bool = false
-    var button: Bool = false
+    var edit = false
+    var sameName = false
+    var button = false
     
     @IBOutlet var BackToFolder: UIBarButtonItem!
     
-    // MARK: - basics
+    // MARK: - Basics
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +49,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         openedFolder = saveData.object(forKey: "move")! as! String
+        print(openedFolder)
         
         if showDict[openedFolder] == nil {
             editButton.isEnabled = false
@@ -62,11 +63,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if showDict[openedFolder] != nil{
             searchArray = showDict[openedFolder]!
         }
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
+        self.navtitle.addGestureRecognizer(longPressGesture)
     }
    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navTitle.title = openedFolder
+        navtitle.setTitle(openedFolder, for: .normal)
     }
 
     override func didReceiveMemoryWarning() {
@@ -148,9 +152,26 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            showDict[openedFolder]?.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
-            saveData.set(self.showDict, forKey: "ToDoList")
+            var text = ""
+            if searchbar.text == ""{
+                text = (showDict[openedFolder]?[indexPath.row])!
+                showDict[openedFolder]?.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
+                saveData.set(self.showDict, forKey: "ToDoList")
+            }else{
+                text = searchArray[indexPath.row]
+                showDict[openedFolder]?.remove(at: (showDict[openedFolder]?.index(of: searchArray[indexPath.row])!)!)
+                searchArray.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
+                saveData.set(self.showDict, forKey: "ToDoList")
+            }
+            
+            if saveData.object(forKey: openedFolder+text) != nil{
+                
+            }
+            print(saveData.object(forKey: openedFolder+text))
+            
+            //memoArrayからの削除
             
             search()
         }
@@ -176,12 +197,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if blank != ""{
                 self.sameName = false
                 
-                for i in 0...(self.showDict[self.openedFolder]?.count)!-1{
-                    if self.showDict[self.openedFolder]?[i] == textField.text!{
-                        self.sameName = true
+                if self.showDict[self.openedFolder]?.isEmpty == false{
+                    for i in 0...(self.showDict[self.openedFolder]?.count)!-1{
+                        if self.showDict[self.openedFolder]?[i] == textField.text!{
+                            self.sameName = true
+                        }
                     }
                 }
-
+                
                 if self.sameName{
                     self.showalert(title: "エラー", message: "同名のフォルダがあります")
                     
@@ -278,7 +301,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if (sender.state == .began) {
             let alert = UIAlertController(title: "全削除", message: "本当によろしいですか？", preferredStyle: .alert)
             
-            let saveAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) -> Void in
+            let saveAction = UIAlertAction(title: "OK", style: .destructive) { (action:UIAlertAction!) -> Void in
                 self.showDict[self.openedFolder] = []
                 
                 self.saveData.set(self.showDict, forKey: "ToDoList")
@@ -286,6 +309,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.table.reloadData()
                 
                 self.editButton.isEnabled = false
+                //memoArrayからの削除
             }
             
             let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
@@ -298,7 +322,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
 
-    // MARK: - method
+    // MARK: - Method
     
     func showalert(title: String, message: String) {
         let alert = UIAlertController(
@@ -330,7 +354,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    // MARK: - else
+    // MARK: - Else
     
     @IBAction func panLeft(_ sender: UIScreenEdgePanGestureRecognizer) {
         backFolder()

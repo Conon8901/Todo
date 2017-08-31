@@ -36,7 +36,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8eg-WV-9OM" id="mpi-P5-sBQ">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -80,7 +80,7 @@
             </objects>
             <point key="canvasLocation" x="815.20000000000005" y="133.5832083958021"/>
         </scene>
-        <!--File-->
+        <!--File View Controller-->
         <scene sceneID="QOp-mh-yap">
             <objects>
                 <viewController storyboardIdentifier="File" id="7DH-dA-Yea" customClass="FileViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
@@ -120,12 +120,21 @@
                             <outletCollection property="gestureRecognizers" destination="Pwg-7m-DeI" appends="YES" id="AjL-Cc-LDI"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="File" id="isx-ny-Hoc">
+                    <navigationItem key="navigationItem" id="isx-ny-Hoc">
+                        <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" title="戻る" style="plain" id="9bt-Wb-H0I">
                             <connections>
-                                <action selector="back" destination="7DH-dA-Yea" id="tC1-xe-2yY"/>
+                                <action selector="back" destination="7DH-dA-Yea" id="ovb-Hq-aOc"/>
                             </connections>
                         </barButtonItem>
+                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="9qV-EE-jIO">
+                            <rect key="frame" x="113" y="6" width="150" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                            <state key="normal" title="File">
+                                <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                            </state>
+                        </button>
                         <rightBarButtonItems>
                             <barButtonItem style="plain" systemItem="add" id="lsO-t3-KtB">
                                 <connections>
@@ -142,7 +151,7 @@
                     <connections>
                         <outlet property="BackToFolder" destination="9bt-Wb-H0I" id="Lxw-Uy-UXI"/>
                         <outlet property="editButton" destination="lKS-zJ-ReQ" id="uQs-4c-a0T"/>
-                        <outlet property="navTitle" destination="isx-ny-Hoc" id="0t6-Zn-BVK"/>
+                        <outlet property="navtitle" destination="9qV-EE-jIO" id="Bsw-24-3Z0"/>
                         <outlet property="searchbar" destination="b1n-bX-yKT" id="96j-R5-aJu"/>
                         <outlet property="table" destination="40m-Kp-Nxk" id="OMa-UA-7ah"/>
                     </connections>
@@ -151,7 +160,7 @@
                 <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="Lft-vg-Z9V">
                     <rectEdge key="edges" left="YES"/>
                     <connections>
-                        <action selector="panLeft:" destination="7DH-dA-Yea" id="iuF-a4-ZWQ"/>
+                        <action selector="panLeft:" destination="7DH-dA-Yea" id="cvZ-M0-6QP"/>
                     </connections>
                 </screenEdgePanGestureRecognizer>
                 <tapGestureRecognizer id="Pwg-7m-DeI">
@@ -214,7 +223,7 @@
                                     <navigationItem title="Memo" id="fEd-Cx-Gr2">
                                         <barButtonItem key="leftBarButtonItem" title="戻る" style="plain" id="CbJ-QZ-LtV">
                                             <connections>
-                                                <action selector="back" destination="3wh-kS-dre" id="rsR-rM-Z58"/>
+                                                <action selector="back" destination="3wh-kS-dre" id="6S5-z0-iyY"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -224,6 +233,7 @@
                                 <rect key="frame" x="67" y="252" width="240" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -236,25 +246,22 @@
                         </connections>
                     </view>
                     <connections>
-                        <outlet property="memoTextView" destination="gC1-Be-zex" id="xXK-bx-cfL"/>
-                        <outlet property="navTitle" destination="f5y-65-C0O" id="WxF-sb-vcz"/>
-                        <outlet property="placeholder" destination="pJ7-DL-d2H" id="r1Z-kK-o75"/>
+                        <outlet property="memoTextView" destination="gC1-Be-zex" id="z7b-ac-tae"/>
+                        <outlet property="navTitle" destination="f5y-65-C0O" id="Gdj-RE-wUf"/>
+                        <outlet property="placeholder" destination="pJ7-DL-d2H" id="0p6-nX-hJd"/>
                     </connections>
                 </viewController>
                 <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="vfe-Bd-nmx">
                     <rectEdge key="edges" left="YES"/>
-                    <connections>
-                        <action selector="panLeft:" destination="3wh-kS-dre" id="nSW-df-lHW"/>
-                    </connections>
                 </screenEdgePanGestureRecognizer>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6qm-oA-cKM" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="IMI-ca-zZx">
                     <connections>
-                        <action selector="tapScreenWithSender:" destination="3wh-kS-dre" id="O7V-D2-nC7"/>
+                        <action selector="tapScreenWithSender:" destination="3wh-kS-dre" id="OhH-gS-GeJ"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3068" y="133.5832083958021"/>
+            <point key="canvasLocation" x="2839" y="134"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="9Md-hl-rWl">
