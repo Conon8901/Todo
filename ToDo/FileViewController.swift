@@ -155,10 +155,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             if searchbar.text == ""{
+                saveData.set("", forKey: openedFolder+(showDict[openedFolder]?[indexPath.row])!)
                 showDict[openedFolder]?.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
                 saveData.set(self.showDict, forKey: "ToDoList")
             }else{
+                saveData.set("", forKey: openedFolder+searchArray[indexPath.row])
                 showDict[openedFolder]?.remove(at: (showDict[openedFolder]?.index(of: searchArray[indexPath.row])!)!)
                 searchArray.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
@@ -289,18 +291,26 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    func allRemove(_ sender: UILongPressGestureRecognizer) {
+    func allRemove(_ sender: UILongPressGestureRecognizer) {//memoの削除
         if (sender.state == .began) {
             let alert = UIAlertController(title: "全削除", message: "本当によろしいですか？", preferredStyle: .alert)
             
             let saveAction = UIAlertAction(title: "OK", style: .destructive) { (action:UIAlertAction!) -> Void in
-                self.showDict[self.openedFolder] = []
-                
-                self.saveData.set(self.showDict, forKey: "ToDoList")
-                
-                self.table.reloadData()
-                
-                self.editButton.isEnabled = false
+                let count = (self.showDict[self.openedFolder]?.count)!
+                if count != 0{
+                    for i in 0...count-1{
+                        self.saveData.set("", forKey: self.openedFolder+(self.showDict[self.openedFolder]?[i])!)
+                    }
+                    
+                    self.showDict[self.openedFolder] = []
+                    self.searchArray = []
+                    
+                    self.saveData.set(self.showDict, forKey: "ToDoList")
+                    
+                    self.table.reloadData()
+                    
+                    self.editButton.isEnabled = false
+                }
             }
             
             let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
@@ -349,6 +359,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBAction func panLeft(_ sender: UIScreenEdgePanGestureRecognizer) {
         backFolder()
+    }
+
+    @IBAction func tapScreen(sender: UITapGestureRecognizer) {
+        sender.cancelsTouchesInView = false
+        self.view.endEditing(true)
     }
 }
 
