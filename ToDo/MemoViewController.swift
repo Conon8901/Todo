@@ -12,7 +12,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - Declare
     
-    @IBOutlet var navTitle: UINavigationBar!
     @IBOutlet var memoTextView: UITextView!
     @IBOutlet var placeholder: UILabel!
     
@@ -53,7 +52,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         placeholder.isHidden = memoTextView.text.isEmpty ? false : true
         
-        navTitle.topItem?.title = file2
+        navigationItem.title = file2
     }
 
     override func didReceiveMemoryWarning() {
@@ -76,15 +75,17 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - Else
     
-//    @IBAction func panLeft(_ sender: UIScreenEdgePanGestureRecognizer) {
-//        print("backWithGesture")
-//        backFolder()
-//    }
-//    
-//    @IBAction func back() {
-//        print("backWithButton")
-//        backFolder()
-//    }
+    /*
+    @IBAction func panLeft(_ sender: UIScreenEdgePanGestureRecognizer) {
+        print("backWithGesture")
+        backFolder()
+    }
+    
+    @IBAction func back() {
+        print("backWithButton")
+        backFolder()
+    }
+    */
     
     //Delete this after solve the problem which it isn't using 'back' method
     override func viewWillDisappear(_ animated: Bool) {

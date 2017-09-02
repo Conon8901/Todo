@@ -66,6 +66,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
         self.navtitle.addGestureRecognizer(longPressGesture)
+    
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: openedFolder, style: .plain, target: nil, action: nil)
     }
    
     override func viewWillAppear(_ animated: Bool) {
@@ -138,7 +140,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             saveData.set(openedFolder, forKey: "foldername")
             
-            let storyboard: UIStoryboard = self.storyboard!
+            let storyboard = self.storyboard!
             let nextView = storyboard.instantiateViewController(withIdentifier: "Memo") as! MemoViewController
             self.navigationController?.pushViewController(nextView, animated: true)
             
@@ -152,26 +154,16 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            var text = ""
             if searchbar.text == ""{
-                text = (showDict[openedFolder]?[indexPath.row])!
                 showDict[openedFolder]?.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
                 saveData.set(self.showDict, forKey: "ToDoList")
             }else{
-                text = searchArray[indexPath.row]
                 showDict[openedFolder]?.remove(at: (showDict[openedFolder]?.index(of: searchArray[indexPath.row])!)!)
                 searchArray.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
                 saveData.set(self.showDict, forKey: "ToDoList")
             }
-            
-            if saveData.object(forKey: openedFolder+text) != nil{
-                
-            }
-            print(saveData.object(forKey: openedFolder+text))
-            
-            //memoArrayからの削除
             
             search()
         }
@@ -286,14 +278,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             table.setEditing(false, animated: true)
             editButton.title = "編集"
             edit = false
-            BackToFolder.isEnabled = true
+            navigationItem.hidesBackButton = false
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             table.allowsSelectionDuringEditing = true
             editButton.title = "完了"
             edit = true
-            BackToFolder.isEnabled = false
+            navigationItem.hidesBackButton = true
         }
     }
     
@@ -309,7 +301,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.table.reloadData()
                 
                 self.editButton.isEnabled = false
-                //memoArrayからの削除
             }
             
             let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
@@ -358,15 +349,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBAction func panLeft(_ sender: UIScreenEdgePanGestureRecognizer) {
         backFolder()
-    }
-    
-    @IBAction func back() {
-        backFolder()
-    }
-    
-    @IBAction func tapScreen(sender: UITapGestureRecognizer) {
-        sender.cancelsTouchesInView = false
-        self.view.endEditing(true)
     }
 }
 
