@@ -196,7 +196,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     }
                 }
                 
-                if self.sameName{
+                if self.sameName, textField.text != self.folderNameArray[indexPath.row]{
                     self.showalert(message: "同名のフォルダがあります")
                     
                     self.deselect()

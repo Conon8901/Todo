@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Folder-->
+        <!--Folders-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController storyboardIdentifier="Folder" id="BYZ-38-t0r" customClass="FolderViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
@@ -46,10 +46,10 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <connections>
-                            <outletCollection property="gestureRecognizers" destination="gfA-c9-yFG" appends="YES" id="jfF-JA-stl"/>
+                            <outletCollection property="gestureRecognizers" destination="f0x-eF-eWW" appends="YES" id="LyC-aY-oQr"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Folder" id="Ml9-jU-I4o">
+                    <navigationItem key="navigationItem" title="Folders" id="Ml9-jU-I4o">
                         <barButtonItem key="leftBarButtonItem" style="plain" id="NUa-FK-I5D"/>
                         <rightBarButtonItems>
                             <barButtonItem style="plain" systemItem="add" id="c4h-3X-LVY">
@@ -72,9 +72,9 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="gfA-c9-yFG">
+                <tapGestureRecognizer id="f0x-eF-eWW">
                     <connections>
-                        <action selector="tapScreenWithSender:" destination="BYZ-38-t0r" id="vLf-oK-ssi"/>
+                        <action selector="tapScreenWithSender:" destination="BYZ-38-t0r" id="AEo-Yp-e4U"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -117,6 +117,7 @@
                         <gestureRecognizers/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Lft-vg-Z9V" appends="YES" id="Mdq-bU-6Kv"/>
+                            <outletCollection property="gestureRecognizers" destination="upi-Sc-Blt" appends="YES" id="VsG-4E-aFO"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="isx-ny-Hoc">
@@ -155,6 +156,11 @@
                         <action selector="panLeft:" destination="7DH-dA-Yea" id="91S-ra-b7B"/>
                     </connections>
                 </screenEdgePanGestureRecognizer>
+                <tapGestureRecognizer id="upi-Sc-Blt">
+                    <connections>
+                        <action selector="tapScreenWithSender:" destination="7DH-dA-Yea" id="qEU-oD-qoR"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2141.5999999999999" y="133.5832083958021"/>
         </scene>
@@ -233,15 +239,15 @@
                         <outlet property="placeholder" destination="pJ7-DL-d2H" id="0p6-nX-hJd"/>
                     </connections>
                 </viewController>
-                <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="vfe-Bd-nmx">
-                    <rectEdge key="edges" left="YES"/>
-                </screenEdgePanGestureRecognizer>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6qm-oA-cKM" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="IMI-ca-zZx">
                     <connections>
                         <action selector="tapScreenWithSender:" destination="3wh-kS-dre" id="OhH-gS-GeJ"/>
                     </connections>
                 </tapGestureRecognizer>
+                <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="vfe-Bd-nmx">
+                    <rectEdge key="edges" left="YES"/>
+                </screenEdgePanGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2837.5999999999999" y="133.5832083958021"/>
         </scene>
