@@ -36,7 +36,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8eg-WV-9OM" id="mpi-P5-sBQ">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -106,7 +106,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yR4-6v-zJc" id="eOL-fz-hxq">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -117,18 +117,11 @@
                         <gestureRecognizers/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="Lft-vg-Z9V" appends="YES" id="Mdq-bU-6Kv"/>
-                            <outletCollection property="gestureRecognizers" destination="Pwg-7m-DeI" appends="YES" id="AjL-Cc-LDI"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="isx-ny-Hoc">
-                        <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" title="戻る" style="plain" id="9bt-Wb-H0I">
-                            <connections>
-                                <action selector="back" destination="7DH-dA-Yea" id="ovb-Hq-aOc"/>
-                            </connections>
-                        </barButtonItem>
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="9qV-EE-jIO">
-                            <rect key="frame" x="113" y="6" width="150" height="33"/>
+                            <rect key="frame" x="112.5" y="5.5" width="150" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                             <state key="normal" title="File">
@@ -149,7 +142,6 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
-                        <outlet property="BackToFolder" destination="9bt-Wb-H0I" id="Lxw-Uy-UXI"/>
                         <outlet property="editButton" destination="lKS-zJ-ReQ" id="uQs-4c-a0T"/>
                         <outlet property="navtitle" destination="9qV-EE-jIO" id="Bsw-24-3Z0"/>
                         <outlet property="searchbar" destination="b1n-bX-yKT" id="96j-R5-aJu"/>
@@ -160,14 +152,9 @@
                 <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="Lft-vg-Z9V">
                     <rectEdge key="edges" left="YES"/>
                     <connections>
-                        <action selector="panLeft:" destination="7DH-dA-Yea" id="cvZ-M0-6QP"/>
+                        <action selector="panLeft:" destination="7DH-dA-Yea" id="91S-ra-b7B"/>
                     </connections>
                 </screenEdgePanGestureRecognizer>
-                <tapGestureRecognizer id="Pwg-7m-DeI">
-                    <connections>
-                        <action selector="tapScreenWithSender:" destination="7DH-dA-Yea" id="GX7-iu-WHj"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2141.5999999999999" y="133.5832083958021"/>
         </scene>
@@ -221,11 +208,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Memo" id="fEd-Cx-Gr2">
-                                        <barButtonItem key="leftBarButtonItem" title="戻る" style="plain" id="CbJ-QZ-LtV">
-                                            <connections>
-                                                <action selector="back" destination="3wh-kS-dre" id="6S5-z0-iyY"/>
-                                            </connections>
-                                        </barButtonItem>
+                                        <barButtonItem key="leftBarButtonItem" title="back" id="B61-q5-jVm"/>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -247,7 +230,6 @@
                     </view>
                     <connections>
                         <outlet property="memoTextView" destination="gC1-Be-zex" id="z7b-ac-tae"/>
-                        <outlet property="navTitle" destination="f5y-65-C0O" id="Gdj-RE-wUf"/>
                         <outlet property="placeholder" destination="pJ7-DL-d2H" id="0p6-nX-hJd"/>
                     </connections>
                 </viewController>
@@ -261,7 +243,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2839" y="134"/>
+            <point key="canvasLocation" x="2837.5999999999999" y="133.5832083958021"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="9Md-hl-rWl">

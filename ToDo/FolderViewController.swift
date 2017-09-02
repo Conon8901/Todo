@@ -125,7 +125,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 saveData.set(String(searchArray[indexPath.row]), forKey: "move")
             }
             
-            let storyboard: UIStoryboard = self.storyboard!
+            let storyboard = self.storyboard!
             let nextView = storyboard.instantiateViewController(withIdentifier: "File") as! FileViewController
             self.navigationController?.pushViewController(nextView, animated: true)
         }
@@ -148,7 +148,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 self.saveData.set(self.deleteDict, forKey: "ToDoList")
                 searchArray.remove(at: indexPath.row)
                 folderNameArray.remove(at: folderNameArray.index(of: searchArray[indexPath.row])!-1)
-            }//memoarrayからの削除
+            }
             
             tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
             
