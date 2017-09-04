@@ -66,6 +66,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navtitle.setTitle(openedFolder, for: .normal)
+        table.reloadData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -118,6 +119,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             cell?.textLabel?.text = searchArray[indexPath.row]
         }else{
             cell?.textLabel?.text = showDict[openedFolder]?[indexPath.row]
+        }
+        
+        let text = (showDict[openedFolder]?[indexPath.row])!
+        if saveData.object(forKey: openedFolder+text) != nil{
+            cell?.detailTextLabel?.text = saveData.object(forKey: openedFolder+text) as! String?
         }
         
         cell?.textLabel?.numberOfLines=0
@@ -197,7 +203,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
                 
                 if self.sameName{
-                    self.showalert(title: "エラー", message: "同名のフォルダがあります")
+                    self.showalert(title: "エラー", message: "同名のファイルがあります")
                     
                     self.deselect()
                 }else{
@@ -244,8 +250,21 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
             if blank != ""{
-                self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
-                self.table.reloadData()
+                self.sameName = false
+                for i in 0...(self.showDict[self.openedFolder]?.count)!-1{
+                    if self.showDict[self.openedFolder]?[i] == textField.text!{
+                        self.sameName = true
+                    }
+                }
+                
+                if self.sameName, textField.text != self.showDict[self.openedFolder]?[indexPath.row]{
+                    self.showalert(title: "エラー", message: "同名のフォルダがあります")
+                    
+                    self.deselect()
+                }else{
+                    self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
+                    self.table.reloadData()
+                }
             }else{
                 self.showalert(title: "エラー", message: "入力してください")
                 
@@ -357,7 +376,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBAction func tapScreen(sender: UITapGestureRecognizer) {
         sender.cancelsTouchesInView = false
         self.view.endEditing(true)
-        print(saveData.object(forKey: "sdgs")!)//クラッシュ
+//        print(saveData.object(forKey: "sdgs")!)//クラッシュ
     }
 }
 
