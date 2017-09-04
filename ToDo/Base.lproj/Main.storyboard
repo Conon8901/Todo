@@ -116,18 +116,20 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <connections>
-                            <outletCollection property="gestureRecognizers" destination="Lft-vg-Z9V" appends="YES" id="Mdq-bU-6Kv"/>
                             <outletCollection property="gestureRecognizers" destination="upi-Sc-Blt" appends="YES" id="VsG-4E-aFO"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="isx-ny-Hoc">
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="9qV-EE-jIO">
-                            <rect key="frame" x="112.5" y="5.5" width="150" height="33"/>
+                            <rect key="frame" x="113" y="6" width="150" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                             <state key="normal" title="File">
                                 <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                             </state>
+                            <connections>
+                                <action selector="buttont" destination="7DH-dA-Yea" eventType="touchUpInside" id="bna-b7-QLj"/>
+                            </connections>
                         </button>
                         <rightBarButtonItems>
                             <barButtonItem style="plain" systemItem="add" id="lsO-t3-KtB">
@@ -150,12 +152,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h1I-b1-o8B" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="Lft-vg-Z9V">
-                    <rectEdge key="edges" left="YES"/>
-                    <connections>
-                        <action selector="panLeft:" destination="7DH-dA-Yea" id="91S-ra-b7B"/>
-                    </connections>
-                </screenEdgePanGestureRecognizer>
                 <tapGestureRecognizer id="upi-Sc-Blt">
                     <connections>
                         <action selector="tapScreenWithSender:" destination="7DH-dA-Yea" id="qEU-oD-qoR"/>
@@ -194,32 +190,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aOX-iZ-wHY">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cap-q6-4Kn">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.97254901959999995" green="0.97254901959999995" blue="0.97254901959999995" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <color key="backgroundColor" red="0.97254901960784312" green="0.97254901960784312" blue="0.97254901960784312" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f5y-65-C0O">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items>
+                                    <navigationItem title="Memo" id="fEd-Cx-Gr2"/>
+                                </items>
+                            </navigationBar>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="メモ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pJ7-DL-d2H">
-                                <rect key="frame" x="72" y="258" width="35" height="21"/>
+                                <rect key="frame" x="72" y="229" width="35" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f5y-65-C0O">
-                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <items>
-                                    <navigationItem title="Memo" id="fEd-Cx-Gr2">
-                                        <barButtonItem key="leftBarButtonItem" title="back" id="B61-q5-jVm"/>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="gC1-Be-zex">
-                                <rect key="frame" x="67" y="252" width="240" height="128"/>
+                                <rect key="frame" x="67" y="223" width="240" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -230,7 +221,6 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <connections>
-                            <outletCollection property="gestureRecognizers" destination="vfe-Bd-nmx" appends="YES" id="ijx-4B-Ekd"/>
                             <outletCollection property="gestureRecognizers" destination="IMI-ca-zZx" appends="YES" id="quJ-h5-stN"/>
                         </connections>
                     </view>
@@ -245,9 +235,6 @@
                         <action selector="tapScreenWithSender:" destination="3wh-kS-dre" id="OhH-gS-GeJ"/>
                     </connections>
                 </tapGestureRecognizer>
-                <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="vfe-Bd-nmx">
-                    <rectEdge key="edges" left="YES"/>
-                </screenEdgePanGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2837.5999999999999" y="133.5832083958021"/>
         </scene>

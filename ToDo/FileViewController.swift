@@ -32,8 +32,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var sameName = false
     var button = false
     
-    @IBOutlet var BackToFolder: UIBarButtonItem!
-    
     // MARK: - Basics
     
     override func viewDidLoad() {
@@ -49,20 +47,15 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         openedFolder = saveData.object(forKey: "move")! as! String
-        print(openedFolder)
-        
-        if showDict[openedFolder] == nil {
-            editButton.isEnabled = false
-        }
         
         search()
+            
+        if showDict[openedFolder] != nil {
+            searchArray = showDict[openedFolder]!
+        }
         
         searchbar.delegate = self
         searchbar.enablesReturnKeyAutomatically = false
-        
-        if showDict[openedFolder] != nil{
-            searchArray = showDict[openedFolder]!
-        }
         
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
         self.navtitle.addGestureRecognizer(longPressGesture)
@@ -74,7 +67,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewWillAppear(animated)
         navtitle.setTitle(openedFolder, for: .normal)
     }
-
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        saveData.setValue(showDict, forKeyPath: "ToDoList")
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -337,16 +334,16 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func search() {
-        if showDict[openedFolder]?.count == 0{
+        let count: Int? = showDict[openedFolder]?.count
+        if count == nil {
             editButton.isEnabled = false
         }else{
-            editButton.isEnabled = true
+            if count! == 0{
+                editButton.isEnabled = false
+            }else{
+                editButton.isEnabled = true
+            }
         }
-    }
-    
-    func backFolder() {
-        saveData.setValue(showDict, forKeyPath: "ToDoList")
-        _ = self.navigationController?.popViewController(animated: true)
     }
     
     func deselect() {
@@ -356,14 +353,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     // MARK: - Else
-    
-    @IBAction func panLeft(_ sender: UIScreenEdgePanGestureRecognizer) {
-        backFolder()
-    }
 
     @IBAction func tapScreen(sender: UITapGestureRecognizer) {
         sender.cancelsTouchesInView = false
         self.view.endEditing(true)
+        print(saveData.object(forKey: "sdgs")!)//クラッシュ
     }
 }
 
