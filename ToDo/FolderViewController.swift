@@ -110,7 +110,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             cell?.textLabel?.text = folderNameArray[indexPath.row]
         }
         
-        cell?.textLabel?.numberOfLines=0
+        cell?.textLabel?.numberOfLines = 0
         
         return cell!
     }
