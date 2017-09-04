@@ -24,7 +24,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     var file3 = ""
     
     // MARK: - Basics
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -50,11 +50,16 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             memoTextView.text = ""
         }
         
-        placeholder.isHidden = memoTextView.text.isEmpty ? false : true
+        placeholderHidden()
         
         navigationItem.title = file2
     }
-
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        memoArray[file3] = memoTextView.text!
+        saveData.set(memoArray[file3], forKey: file3)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -62,36 +67,20 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - TextView
     
     func textViewDidChange(_ textView: UITextView) {
-        placeholder.isHidden = memoTextView.text.isEmpty ? false : true
+        placeholderHidden()
     }
     
     // MARK: - Method
     
-    func backFolder() {
-        memoArray[file3] = memoTextView.text!
-        saveData.set(memoArray[file3], forKey: file3)
-        _ = self.navigationController?.popViewController(animated: true)
+    func placeholderHidden() {
+        if memoTextView.text.isEmpty{
+            placeholder.isHidden = false
+        }else{
+            placeholder.isHidden = true
+        }
     }
     
     // MARK: - Else
-    
-    /*
-    @IBAction func panLeft(_ sender: UIScreenEdgePanGestureRecognizer) {
-        print("backWithGesture")
-        backFolder()
-    }
-    
-    @IBAction func back() {
-        print("backWithButton")
-        backFolder()
-    }
-    */
-    
-    //Delete this after solve the problem which it isn't using 'back' method
-    override func viewWillDisappear(_ animated: Bool) {
-        memoArray[file3] = memoTextView.text!
-        saveData.set(memoArray[file3], forKey: file3)
-    }
     
     @IBAction func tapScreen(sender: UITapGestureRecognizer) {
         self.memoTextView.resignFirstResponder()
