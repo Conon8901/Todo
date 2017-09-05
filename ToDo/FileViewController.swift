@@ -117,13 +117,18 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         if searchbar.text != ""{
             cell?.textLabel?.text = searchArray[indexPath.row]
+            
+            let text = searchArray[indexPath.row]
+            if let subtitle = saveData.object(forKey: openedFolder+text) as! String?{
+                cell?.detailTextLabel?.text = subtitle
+            }
         }else{
             cell?.textLabel?.text = showDict[openedFolder]?[indexPath.row]
-        }
-        
-        let text = (showDict[openedFolder]?[indexPath.row])!
-        if let subtitle = saveData.object(forKey: openedFolder+text) as! String?{
-            cell?.detailTextLabel?.text = subtitle
+            
+            let text = (showDict[openedFolder]?[indexPath.row])!
+            if let subtitle = saveData.object(forKey: openedFolder+text) as! String?{
+                cell?.detailTextLabel?.text = subtitle
+            }
         }
         
         return cell!
