@@ -27,7 +27,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var addArray = [String]()
     var showDict = [String:Array<String>]()
     var searchArray = [String]()
-
+    
     var edit = false
     var sameName = false
     var button = false
@@ -49,7 +49,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         openedFolder = saveData.object(forKey: "move")! as! String
         
         search()
-            
+        
         if showDict[openedFolder] != nil {
             searchArray = showDict[openedFolder]!
         }
@@ -57,12 +57,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         searchbar.delegate = self
         searchbar.enablesReturnKeyAutomatically = false
         
+        editButton.title = NSLocalizedString("編集", comment: "")
+        
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
         self.navtitle.addGestureRecognizer(longPressGesture)
-    
+        
         navigationItem.backBarButtonItem = UIBarButtonItem(title: openedFolder, style: .plain, target: nil, action: nil)
     }
-   
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navtitle.setTitle(openedFolder, for: .normal)
@@ -188,10 +190,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-
+    
     @IBAction func add(sender: AnyObject) {
-        let alert = UIAlertController(title: "項目追加", message: "タイトル入力", preferredStyle: .alert)
-        let saveAction = UIAlertAction(title: "追加", style: .default) { (action:UIAlertAction!) -> Void in
+        let alert = UIAlertController(title: NSLocalizedString("追加", comment: ""), message: NSLocalizedString("タイトル入力", comment: ""), preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
             if blank != ""{
@@ -206,7 +208,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
                 
                 if self.sameName{
-                    self.showalert(title: "エラー", message: "同名のファイルがあります")
+                    self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
                     
                     self.deselect()
                 }else{
@@ -229,11 +231,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.search()
                 }
             }else{
-                self.showalert(title: "エラー", message: "入力してください")
+                self.showalert(message: NSLocalizedString("入力してください", comment: ""))
             }
         }
         
-        let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
         }
         
         alert.addTextField { (textField:UITextField!) -> Void in
@@ -247,8 +249,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func edit(indexPath: IndexPath) {
-        let alert = UIAlertController(title: "名称変更", message: "タイトル入力", preferredStyle: .alert)
-        let saveAction = UIAlertAction(title: "変更", style: .default) { (action:UIAlertAction!) -> Void in
+        let alert = UIAlertController(title: NSLocalizedString("名称変更", comment: ""), message: NSLocalizedString("タイトル入力", comment: ""), preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: NSLocalizedString("変更", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
             let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
@@ -261,7 +263,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
                 
                 if self.sameName, textField.text != self.showDict[self.openedFolder]?[indexPath.row]{
-                    self.showalert(title: "エラー", message: "同名のフォルダがあります")
+                    self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
                     
                     self.deselect()
                 }else{
@@ -279,7 +281,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.table.reloadData()
                 }
             }else{
-                self.showalert(title: "エラー", message: "入力してください")
+                self.showalert(message: NSLocalizedString("入力してください", comment: ""))
                 
                 self.deselect()
             }
@@ -287,7 +289,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.saveData.set(self.showDict, forKey: "ToDoList")
         }
         
-        let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
             self.deselect()
         }
         
@@ -307,14 +309,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if isEditing {
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
-            editButton.title = "編集"
+            editButton.title = NSLocalizedString("編集", comment: "")
             edit = false
             navigationItem.hidesBackButton = false
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             table.allowsSelectionDuringEditing = true
-            editButton.title = "完了"
+            editButton.title = NSLocalizedString("完了", comment: "")
             edit = true
             navigationItem.hidesBackButton = true
         }
@@ -322,7 +324,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func allRemove(_ sender: UILongPressGestureRecognizer) {
         if (sender.state == .began) {
-            let alert = UIAlertController(title: "全削除", message: "本当によろしいですか？", preferredStyle: .alert)
+            let alert = UIAlertController(title: NSLocalizedString("全削除", comment: ""), message: NSLocalizedString("本当によろしいですか？", comment: ""), preferredStyle: .alert)
             
             let saveAction = UIAlertAction(title: "OK", style: .destructive) { (action:UIAlertAction!) -> Void in
                 let count = (self.showDict[self.openedFolder]?.count)!
@@ -342,7 +344,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             }
             
-            let cancelAction = UIAlertAction(title: "キャンセル", style: .default) { (action:UIAlertAction!) -> Void in
+            let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
             }
             
             alert.addAction(saveAction)
@@ -351,12 +353,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             present(alert, animated: true, completion: nil)
         }
     }
-
+    
     // MARK: - Method
     
-    func showalert(title: String, message: String) {
+    func showalert(message: String) {
         let alert = UIAlertController(
-            title: title,
+            title: NSLocalizedString("エラー", comment: ""),
             message: message,
             preferredStyle: .alert)
         
@@ -385,11 +387,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     // MARK: - Else
-
+    
     @IBAction func tapScreen(sender: UITapGestureRecognizer) {
         sender.cancelsTouchesInView = false
         self.view.endEditing(true)
-//        print(saveData.object(forKey: "sdgs")!)//クラッシュ
     }
 }
 

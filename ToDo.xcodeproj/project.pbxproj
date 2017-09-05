@@ -15,6 +15,7 @@
 		112E64881EE2D3B80048DB21 /* ToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112E64871EE2D3B80048DB21 /* ToDoTests.swift */; };
 		112E64931EE2D3B80048DB21 /* ToDoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112E64921EE2D3B80048DB21 /* ToDoUITests.swift */; };
 		112E64A11EE2D5680048DB21 /* FileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112E64A01EE2D5680048DB21 /* FileViewController.swift */; };
+		118D15561F5ED85B0091412B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 118D15581F5ED85B0091412B /* Localizable.strings */; };
 		11C2FAFA1F4E9FA30080A9B2 /* MemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C2FAF91F4E9FA30080A9B2 /* MemoViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +51,9 @@
 		112E64921EE2D3B80048DB21 /* ToDoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoUITests.swift; sourceTree = "<group>"; };
 		112E64941EE2D3B80048DB21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		112E64A01EE2D5680048DB21 /* FileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileViewController.swift; sourceTree = "<group>"; };
+		118D15571F5ED85B0091412B /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		118D155B1F5EE4B20091412B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		118D155C1F5EEA9E0091412B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		11C2FAF91F4E9FA30080A9B2 /* MemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -109,6 +113,7 @@
 				112E64791EE2D3B80048DB21 /* Assets.xcassets */,
 				112E647B1EE2D3B80048DB21 /* LaunchScreen.storyboard */,
 				112E647E1EE2D3B80048DB21 /* Info.plist */,
+				118D15581F5ED85B0091412B /* Localizable.strings */,
 			);
 			path = ToDo;
 			sourceTree = "<group>";
@@ -221,6 +226,8 @@
 			knownRegions = (
 				en,
 				Base,
+				ja,
+				"zh-Hans",
 			);
 			mainGroup = 112E64661EE2D3B80048DB21;
 			productRefGroup = 112E64701EE2D3B80048DB21 /* Products */;
@@ -240,6 +247,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				112E647D1EE2D3B80048DB21 /* LaunchScreen.storyboard in Resources */,
+				118D15561F5ED85B0091412B /* Localizable.strings in Resources */,
 				112E647A1EE2D3B80048DB21 /* Assets.xcassets in Resources */,
 				112E64781EE2D3B80048DB21 /* Main.storyboard in Resources */,
 			);
@@ -321,6 +329,16 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
+		118D15581F5ED85B0091412B /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				118D15571F5ED85B0091412B /* Base */,
+				118D155B1F5EE4B20091412B /* ja */,
+				118D155C1F5EEA9E0091412B /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -328,6 +346,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -377,6 +396,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";

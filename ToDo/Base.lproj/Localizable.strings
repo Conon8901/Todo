@@ -1,0 +1,23 @@
+/* 
+  Localizable.strings
+  ToDo
+
+  Created by 黒岩修 on 2017/09/05.
+  Copyright © 2017年 黒岩修. All rights reserved.
+*/
+
+"フォルダ" = "folders";
+"編集" = "edit";
+"完了" = "done";
+"名称変更" = "CHANGE THE NAME";
+"タイトル入力" = "entering the title";
+"フォルダ追加" = "ADD";
+"変更" = "change";
+"同名のフォルダがあります" = "There's a folder of same title";
+"入力してください" = "Please enter text";
+"キャンセル" = "cancel";
+"追加" = "add";
+"エラー" = "ERROR";
+"同名のファイルがあります" = "There's a file of same title";
+"全削除" = "delete all";
+"本当によろしいですか？" = "Are you sure you want to delete?";
