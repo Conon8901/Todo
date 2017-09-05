@@ -122,7 +122,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         let text = (showDict[openedFolder]?[indexPath.row])!
-        cell?.detailTextLabel?.text = saveData.object(forKey: openedFolder+text) as! String?
+        if let subtitle = saveData.object(forKey: openedFolder+text) as! String?{
+            cell?.detailTextLabel?.text = subtitle
+        }
         
         return cell!
     }
@@ -258,13 +260,17 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     
                     self.deselect()
                 }else{
-//                    let text = (self.showDict[self.openedFolder]?[indexPath.row])!
-//                    print(text)
-//                    
-//                    let formermemo = self.saveData.object(forKey: self.openedFolder+text)
-//                    self.saveData.set(formermemo, forKey: self.openedFolder+text)
+                    let formertext = (self.showDict[self.openedFolder]?[indexPath.row])!
                     
                     self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
+                    
+                    let revisedtext = (self.showDict[self.openedFolder]?[indexPath.row])!
+                    
+                    let formermemo = self.saveData.object(forKey: self.openedFolder+formertext)
+                    
+                    self.saveData.set("", forKey: self.openedFolder+formertext)
+                    self.saveData.set(formermemo, forKey: self.openedFolder+revisedtext)
+                    
                     self.table.reloadData()
                 }
             }else{
@@ -309,7 +315,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    func allRemove(_ sender: UILongPressGestureRecognizer) {//memoの削除
+    func allRemove(_ sender: UILongPressGestureRecognizer) {
         if (sender.state == .began) {
             let alert = UIAlertController(title: "全削除", message: "本当によろしいですか？", preferredStyle: .alert)
             
