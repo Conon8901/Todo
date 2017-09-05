@@ -56,6 +56,33 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         searchbar.enablesReturnKeyAutomatically = false
         
         searchArray = folderNameArray
+        
+        let languageString = NSLocale.preferredLanguages[0]
+        let languageArray = languageString.components(separatedBy: "-")
+        let language = languageArray[0]
+        
+        switch language {
+        case "zh":
+            navigationItem.title = "文件夹"
+        case "en":
+            navigationItem.title = "folder"
+        case "ja":
+            navigationItem.title = "フォルダ"
+        case "hi":
+            navigationItem.title = "फ़ोल्डर"
+        case "pt":
+            navigationItem.title = "pasta"
+        case "de":
+            navigationItem.title = "Ordner"
+        case "ru":
+            navigationItem.title = "папка"
+        case "fr":
+            navigationItem.title = "dossier"
+        case "ko":
+            navigationItem.title = "폴더"
+        default:
+            navigationItem.title = "folder"
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

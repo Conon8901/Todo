@@ -122,11 +122,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         let text = (showDict[openedFolder]?[indexPath.row])!
-        if saveData.object(forKey: openedFolder+text) != nil{
-            cell?.detailTextLabel?.text = saveData.object(forKey: openedFolder+text) as! String?
-        }
-        
-        cell?.textLabel?.numberOfLines=0
+        cell?.detailTextLabel?.text = saveData.object(forKey: openedFolder+text) as! String?
         
         return cell!
     }
@@ -262,6 +258,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     
                     self.deselect()
                 }else{
+//                    let text = (self.showDict[self.openedFolder]?[indexPath.row])!
+//                    print(text)
+//                    
+//                    let formermemo = self.saveData.object(forKey: self.openedFolder+text)
+//                    self.saveData.set(formermemo, forKey: self.openedFolder+text)
+                    
                     self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
                     self.table.reloadData()
                 }
