@@ -17,8 +17,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     var saveData = UserDefaults.standard
     
-    var memoArray = [String:String]()
-    
     var file1 = ""
     var file2 = ""
     var file3 = ""
@@ -56,8 +54,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        memoArray[file3] = memoTextView.text!
-        saveData.set(memoArray[file3], forKey: file3)
+        saveData.set(memoTextView.text!, forKey: file3)
     }
     
     override func didReceiveMemoryWarning() {
