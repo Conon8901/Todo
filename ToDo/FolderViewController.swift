@@ -38,16 +38,16 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.dataSource = self
         table.delegate = self
         
-        if saveData.object(forKey: "folder") != nil{
-            folderNameArray = saveData.object(forKey: "folder") as! [String]
+        if saveData.object(forKey: "@folder") != nil{
+            folderNameArray = saveData.object(forKey: "@folder") as! [String]
         }else{
-            self.saveData.set(self.folderNameArray, forKey: "folder")
+            self.saveData.set(self.folderNameArray, forKey: "@folder")
         }
         
-        if saveData.object(forKey: "ToDoList") != nil{
-            editDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+        if saveData.object(forKey: "@ToDoList") != nil{
+            editDict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
         }else{
-            self.saveData.set(self.editDict, forKey: "ToDoList")
+            self.saveData.set(self.editDict, forKey: "@ToDoList")
         }
         
         search()
@@ -124,9 +124,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             edit(indexPath: indexPath)
         }else{
             if(searchbar.text == "") {
-                saveData.set(String(folderNameArray[indexPath.row]), forKey: "move")
+                saveData.set(String(folderNameArray[indexPath.row]), forKey: "@move")
             } else {
-                saveData.set(String(searchArray[indexPath.row]), forKey: "move")
+                saveData.set(String(searchArray[indexPath.row]), forKey: "@move")
             }
             
             let storyboard = self.storyboard!
@@ -141,22 +141,22 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            deleteDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+            deleteDict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
             
             if(searchbar.text == "") {
                 deleteDict[String(folderNameArray[indexPath.row])] = nil
-                self.saveData.set(self.deleteDict, forKey: "ToDoList")
+                self.saveData.set(self.deleteDict, forKey: "@ToDoList")
                 folderNameArray.remove(at: indexPath.row)
             } else {
                 deleteDict[String(searchArray[indexPath.row])] = nil
-                self.saveData.set(self.deleteDict, forKey: "ToDoList")
+                self.saveData.set(self.deleteDict, forKey: "@ToDoList")
                 searchArray.remove(at: indexPath.row)
                 folderNameArray.remove(at: folderNameArray.index(of: searchArray[indexPath.row])!-1)
             }
             
             tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
             
-            saveData.set(self.folderNameArray, forKey: "folder")
+            saveData.set(self.folderNameArray, forKey: "@folder")
             
             search()
         }
@@ -166,7 +166,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let movingFolder = folderNameArray[sourceIndexPath.row]
         folderNameArray.remove(at: sourceIndexPath.row)
         folderNameArray.insert(movingFolder, at: destinationIndexPath.row)
-        saveData.set(folderNameArray, forKey:"folder")
+        saveData.set(folderNameArray, forKey:"@folder")
     }
     
     @IBAction func tapEdit(sender: AnyObject) {
@@ -206,14 +206,14 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     self.deselect()
                 }else{
                     //memoの書き換え
-                    let files = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+                    let files = self.saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
                     if let fie = files[self.folderNameArray[indexPath.row]]{
                         for i in 0...fie.count-1{
                             let filetext = files[self.folderNameArray[indexPath.row]]?[i]
                             
-                            let data = self.saveData.object(forKey: "@\(self.folderNameArray[indexPath.row]+filetext!)") as! String
+                            let data = self.saveData.object(forKey: self.folderNameArray[indexPath.row]+filetext!) as! String
                             
-                            self.saveData.set(data, forKey: "@\(textField.text!+filetext!)")
+                            self.saveData.set(data, forKey: textField.text!+filetext!)
                         }
                     }
                     
@@ -226,12 +226,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 self.deselect()
             }
             
-            self.saveData.set(self.folderNameArray, forKey: "folder")
+            self.saveData.set(self.folderNameArray, forKey: "@folder")
             
-            self.editDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+            self.editDict = self.saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
             self.editDict[String(self.folderNameArray[indexPath.row])] = self.editDict[beforeAddition!]
             self.editDict[beforeAddition!] = nil
-            self.saveData.set(self.editDict, forKey: "ToDoList")
+            self.saveData.set(self.editDict, forKey: "@ToDoList")
         }
         
         let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
@@ -269,7 +269,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     self.folderNameArray.append(textField.text!)
                     self.table.reloadData()
                     
-                    self.saveData.set(self.folderNameArray, forKey: "folder")
+                    self.saveData.set(self.folderNameArray, forKey: "@folder")
                     self.saveData.synchronize()
                     
                     self.search()

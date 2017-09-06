@@ -40,13 +40,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.dataSource = self
         table.delegate = self
         
-        if saveData.object(forKey: "ToDoList") != nil{
-            showDict = saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+        if saveData.object(forKey: "@ToDoList") != nil{
+            showDict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
         }else{
-            self.saveData.set(self.showDict, forKey: "TodoList")
+            self.saveData.set(self.showDict, forKey: "@TodoList")
         }
         
-        openedFolder = saveData.object(forKey: "move")! as! String
+        openedFolder = saveData.object(forKey: "@move")! as! String
         
         search()
         
@@ -72,7 +72,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        saveData.setValue(showDict, forKeyPath: "ToDoList")
+        saveData.setValue(showDict, forKeyPath: "@ToDoList")
     }
     
     override func didReceiveMemoryWarning() {
@@ -121,14 +121,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             cell?.textLabel?.text = searchArray[indexPath.row]
             
             let text = searchArray[indexPath.row]
-            if let subtitle = saveData.object(forKey: "@\(openedFolder+text)") as! String?{
+            if let subtitle = saveData.object(forKey: openedFolder+text) as! String?{
                 cell?.detailTextLabel?.text = subtitle
             }
         }else{
             cell?.textLabel?.text = showDict[openedFolder]?[indexPath.row]
             
             let text = (showDict[openedFolder]?[indexPath.row])!
-            if let subtitle = saveData.object(forKey: "@\(openedFolder+text)") as! String?{
+            if let subtitle = saveData.object(forKey: openedFolder+text) as! String?{
                 cell?.detailTextLabel?.text = subtitle
             }
         }
@@ -141,12 +141,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             edit(indexPath: indexPath)
         }else{
             if(searchbar.text == "") {
-                saveData.set(String(showDict[openedFolder]![indexPath.row]), forKey: "memo")
+                saveData.set(String(showDict[openedFolder]![indexPath.row]), forKey: "@memo")
             } else {
-                saveData.set(String(searchArray[indexPath.row]), forKey: "memo")
+                saveData.set(String(searchArray[indexPath.row]), forKey: "@memo")
             }
             
-            saveData.set(openedFolder, forKey: "foldername")
+            saveData.set(openedFolder, forKey: "@foldername")
             
             let storyboard = self.storyboard!
             let nextView = storyboard.instantiateViewController(withIdentifier: "Memo") as! MemoViewController
@@ -163,16 +163,16 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             if searchbar.text == ""{
-                saveData.set("", forKey: "@\(openedFolder+(showDict[openedFolder]?[indexPath.row])!)")
+                saveData.set("", forKey: openedFolder+(showDict[openedFolder]?[indexPath.row])!)
                 showDict[openedFolder]?.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
-                saveData.set(self.showDict, forKey: "ToDoList")
+                saveData.set(self.showDict, forKey: "@ToDoList")
             }else{
-                saveData.set("", forKey: "@\(openedFolder+searchArray[indexPath.row])")
+                saveData.set("", forKey: openedFolder+searchArray[indexPath.row])
                 showDict[openedFolder]?.remove(at: (showDict[openedFolder]?.index(of: searchArray[indexPath.row])!)!)
                 searchArray.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
-                saveData.set(self.showDict, forKey: "ToDoList")
+                saveData.set(self.showDict, forKey: "@ToDoList")
             }
             
             search()
@@ -183,7 +183,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let movingFile = showDict[openedFolder]?[sourceIndexPath.row]
         showDict[openedFolder]?.remove(at: sourceIndexPath.row)
         showDict[openedFolder]?.insert(movingFile!, at: destinationIndexPath.row)
-        saveData.setValue(showDict, forKeyPath: "ToDoList")
+        saveData.setValue(showDict, forKeyPath: "@ToDoList")
         table.reloadData()
     }
     
@@ -217,8 +217,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.deselect()
                     }else{
-                        if self.saveData.object(forKey: "ToDoList") != nil{
-                            self.showDict = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+                        if self.saveData.object(forKey: "@ToDoList") != nil{
+                            self.showDict = self.saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
                         }
                         
                         if let dict = self.showDict[self.openedFolder] {
@@ -228,9 +228,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.addArray.append(self.addfile)
                         self.showDict[self.openedFolder] = self.addArray
                         
-                        self.saveData.setValue(self.showDict, forKeyPath: "ToDoList")
+                        self.saveData.setValue(self.showDict, forKeyPath: "@ToDoList")
                         
-                        self.saveData.set("", forKey: "@\(self.openedFolder+textField.text!)")
+                        self.saveData.set("", forKey: self.openedFolder+textField.text!)
                         
                         self.saveData.synchronize()
                         self.table.reloadData()
@@ -286,10 +286,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         let revisedtext = (self.showDict[self.openedFolder]?[indexPath.row])!
                         
-                        let formermemo = self.saveData.object(forKey: "@\(self.openedFolder+formertext)")
+                        let formermemo = self.saveData.object(forKey: self.openedFolder+formertext)
                         
-                        self.saveData.set("", forKey: "@\(self.openedFolder+formertext)")
-                        self.saveData.set(formermemo, forKey: "@\(self.openedFolder+revisedtext)")
+                        self.saveData.set("", forKey: self.openedFolder+formertext)
+                        self.saveData.set(formermemo, forKey: self.openedFolder+revisedtext)
                         
                         self.table.reloadData()
                     }
@@ -300,7 +300,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.deselect()
             }
             
-            self.saveData.set(self.showDict, forKey: "ToDoList")
+            self.saveData.set(self.showDict, forKey: "@ToDoList")
         }
         
         let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
@@ -344,13 +344,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 let count = (self.showDict[self.openedFolder]?.count)!
                 if count != 0{
                     for i in 0...count-1{
-                        self.saveData.set("", forKey: "@\(self.openedFolder+(self.showDict[self.openedFolder]?[i])!)")
+                        self.saveData.set("", forKey: self.openedFolder+(self.showDict[self.openedFolder]?[i])!)
                     }
                     
                     self.showDict[self.openedFolder] = []
                     self.searchArray = []
                     
-                    self.saveData.set(self.showDict, forKey: "ToDoList")
+                    self.saveData.set(self.showDict, forKey: "@ToDoList")
                     
                     self.table.reloadData()
                     
