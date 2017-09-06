@@ -55,8 +55,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         searchbar.delegate = self
         searchbar.enablesReturnKeyAutomatically = false
         
-        searchArray = folderNameArray
-        
         editButton.title = NSLocalizedString("編集", comment: "")
         
         navigationItem.title = NSLocalizedString("フォルダ", comment: "")
@@ -87,7 +85,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             searchArray = folderNameArray
         } else {
             for data in folderNameArray {
-                if data.contains(searchbar.text!) {
+                if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
                     searchArray.append(data)
                 }
             }

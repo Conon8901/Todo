@@ -92,7 +92,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             searchArray = showDict[openedFolder]!
         } else {
             for data in showDict[openedFolder]! {
-                if data.contains(searchbar.text!) {
+                if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
                     searchArray.append(data)
                 }
             }
