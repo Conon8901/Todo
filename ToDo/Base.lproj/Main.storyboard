@@ -143,9 +143,6 @@
                             <state key="normal" title="File">
                                 <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                             </state>
-                            <connections>
-                                <action selector="buttont" destination="7DH-dA-Yea" eventType="touchUpInside" id="bna-b7-QLj"/>
-                            </connections>
                         </button>
                         <rightBarButtonItems>
                             <barButtonItem style="plain" systemItem="add" id="lsO-t3-KtB">

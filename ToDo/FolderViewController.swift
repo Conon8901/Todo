@@ -205,6 +205,18 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     
                     self.deselect()
                 }else{
+                    //memoの書き換え
+                    let files = self.saveData.object(forKey: "ToDoList") as! [String : Array<String>]
+                    if let fie = files[self.folderNameArray[indexPath.row]]{
+                        for i in 0...fie.count-1{
+                            let filetext = files[self.folderNameArray[indexPath.row]]?[i]
+                            
+                            let data = self.saveData.object(forKey: "@\(self.folderNameArray[indexPath.row]+filetext!)") as! String
+                            
+                            self.saveData.set(data, forKey: "@\(textField.text!+filetext!)")
+                        }
+                    }
+                    
                     self.folderNameArray[indexPath.row] = textField.text!
                     self.table.reloadData()
                 }
