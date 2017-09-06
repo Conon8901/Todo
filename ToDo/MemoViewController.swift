@@ -40,12 +40,12 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        file1 = saveData.object(forKey: "foldername") as! String
-        file2 = saveData.object(forKey: "memo") as! String
+        file1 = saveData.object(forKey: "@foldername") as! String
+        file2 = saveData.object(forKey: "@memo") as! String
         file3 = file1+file2
         
-        if saveData.object(forKey: "@\(file3)") != nil{
-            memoTextView.text = saveData.object(forKey: "@\(file3)") as! String!
+        if saveData.object(forKey: file3) != nil{
+            memoTextView.text = saveData.object(forKey: file3) as! String!
         }else{
             memoTextView.text = ""
         }
@@ -56,7 +56,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        saveData.set(memoTextView.text!, forKey: "@\(file3)")
+        saveData.set(memoTextView.text!, forKey: file3)
     }
     
     override func didReceiveMemoryWarning() {
