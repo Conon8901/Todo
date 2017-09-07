@@ -57,6 +57,9 @@
 		118D155E1F600D580091412B /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		118D155F1F6115040091412B /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		118D15601F6177CE0091412B /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		118D15611F617EA60091412B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		118D15621F6193F80091412B /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		118D15631F6199360091412B /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		11C2FAF91F4E9FA30080A9B2 /* MemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -234,6 +237,9 @@
 				ko,
 				es,
 				"pt-BR",
+				ru,
+				de,
+				fr,
 			);
 			mainGroup = 112E64661EE2D3B80048DB21;
 			productRefGroup = 112E64701EE2D3B80048DB21 /* Products */;
@@ -344,6 +350,9 @@
 				118D155E1F600D580091412B /* ko */,
 				118D155F1F6115040091412B /* es */,
 				118D15601F6177CE0091412B /* pt-BR */,
+				118D15611F617EA60091412B /* ru */,
+				118D15621F6193F80091412B /* de */,
+				118D15631F6199360091412B /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
