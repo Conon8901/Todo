@@ -40,7 +40,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        file1 = saveData.object(forKey: "@foldername") as! String
+        file1 = saveData.object(forKey: "@move") as! String
         file2 = saveData.object(forKey: "@memo") as! String
         file3 = file1+file2
         
