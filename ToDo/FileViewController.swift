@@ -68,11 +68,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navtitle.setTitle(openedFolder, for: .normal)
+        showDict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
         table.reloadData()
+        
+        deselect()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        saveData.setValue(showDict, forKeyPath: "@ToDoList")
+        searchbar.resignFirstResponder()
     }
     
     override func didReceiveMemoryWarning() {
@@ -90,7 +93,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         if(searchbar.text == "") {
             searchArray = showDict[openedFolder]!
-        } else {
+        }else{
             for data in showDict[openedFolder]! {
                 if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
                     searchArray.append(data)
@@ -142,17 +145,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }else{
             if(searchbar.text == "") {
                 saveData.set(String(showDict[openedFolder]![indexPath.row]), forKey: "@memo")
-            } else {
+            }else{
                 saveData.set(String(searchArray[indexPath.row]), forKey: "@memo")
             }
-            
-            saveData.set(openedFolder, forKey: "@foldername")
             
             let storyboard = self.storyboard!
             let nextView = storyboard.instantiateViewController(withIdentifier: "Memo") as! MemoViewController
             self.navigationController?.pushViewController(nextView, animated: true)
-            
-            tableView.deselectRow(at: indexPath, animated: true)
         }
     }
     
@@ -160,23 +159,53 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return true
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            if searchbar.text == ""{
-                saveData.set("", forKey: openedFolder+(showDict[openedFolder]?[indexPath.row])!)
-                showDict[openedFolder]?.remove(at: indexPath.row)
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("削除", comment: "")) { (action, index) -> Void in
+     
+            if self.searchbar.text == ""{
+                self.saveData.set("", forKey: self.openedFolder+(self.showDict[self.openedFolder]?[indexPath.row])!)
+                self.showDict[self.openedFolder]?.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
-                saveData.set(self.showDict, forKey: "@ToDoList")
+                self.saveData.set(self.showDict, forKey: "@ToDoList")
             }else{
-                saveData.set("", forKey: openedFolder+searchArray[indexPath.row])
-                showDict[openedFolder]?.remove(at: (showDict[openedFolder]?.index(of: searchArray[indexPath.row])!)!)
-                searchArray.remove(at: indexPath.row)
+                self.saveData.set("", forKey: self.openedFolder+self.searchArray[indexPath.row])
+                self.showDict[self.openedFolder]?.remove(at: (self.showDict[self.openedFolder]?.index(of: self.searchArray[indexPath.row])!)!)
+                self.searchArray.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
-                saveData.set(self.showDict, forKey: "@ToDoList")
+                self.saveData.set(self.showDict, forKey: "@ToDoList")
             }
             
-            search()
+            if self.showDict[self.openedFolder] != nil{
+                if (self.showDict[self.openedFolder]?.count)! < 11{
+                    let offset = CGPoint(x: 0, y: -64)
+                    self.table.setContentOffset(offset, animated: true)
+                }
+            }else{
+                let offset = CGPoint(x: 0, y: -64)
+                self.table.setContentOffset(offset, animated: true)
+            }
+            
+            self.search()
+     
         }
+        deleteButton.backgroundColor = .red
+        
+        let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("移動", comment: "")) { (action, index) -> Void in
+            
+            if self.searchbar.text == ""{
+                self.saveData.set(self.showDict[self.openedFolder]?[indexPath.row], forKey: "@movingfile")
+            }else{
+                self.saveData.set(self.searchArray[indexPath.row], forKey: "@movingfile")
+            }
+            
+            let storyboard = self.storyboard!
+            let nextView = storyboard.instantiateViewController(withIdentifier: "List") as! ListViewController
+            self.present(nextView, animated: true)
+            
+        }
+        moveButton.backgroundColor = .lightGray
+     
+        return [deleteButton, moveButton]
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
@@ -236,6 +265,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.table.reloadData()
                         
                         self.search()
+                        
+                        if (self.showDict[self.openedFolder]?.count)! >= 11{
+                            let offset = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
+                            self.table.setContentOffset(offset, animated: true)
+                        }
                     }
                 }
             }else{
@@ -291,6 +325,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.saveData.set("", forKey: self.openedFolder+formertext)
                         self.saveData.set(formermemo, forKey: self.openedFolder+revisedtext)
                         
+                        self.saveData.set(self.showDict, forKey: "@ToDoList")
+                        
                         self.table.reloadData()
                     }
                 }
@@ -326,7 +362,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             editButton.title = NSLocalizedString("編集", comment: "")
             edit = false
             navigationItem.hidesBackButton = false
-        } else {
+        }else{
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             table.allowsSelectionDuringEditing = true

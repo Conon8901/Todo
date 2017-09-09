@@ -56,6 +56,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        memoTextView.resignFirstResponder()
         saveData.set(memoTextView.text!, forKey: file3)
     }
     
