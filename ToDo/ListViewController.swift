@@ -44,7 +44,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         if(searchbar.text == "") {
             searchArray = listNameArray
-        } else {
+        }else{
             for data in listNameArray {
                 if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
                     searchArray.append(data)
@@ -79,15 +79,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         var dic: [String : Array<String>] = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]!
-        print(dic)
         let dickey = saveData.object(forKey: "@move") as! String
-        print(dickey)
-        let arr = dic[saveData.object(forKey: "@move") as! String]!
-        print(arr)
         let str = saveData.object(forKey: "@movingfile") as! String
-        print(str)
         let mem = saveData.object(forKey: dickey+str) as! String
-        print(mem)
         
         if(searchbar.text == "") {
             saveData.set(mem, forKey: listNameArray[indexPath.row]+str)
@@ -97,7 +91,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 dic[listNameArray[indexPath.row]] = [str]
             }
             dic[dickey]?.remove(at: (dic[dickey]?.index(of: str))!)
-        } else {
+        }else{
             saveData.set(mem, forKey: searchArray[indexPath.row]+str)
             if dic[searchArray[indexPath.row]] != nil{
                 dic[searchArray[indexPath.row]]!.append(str)
@@ -106,9 +100,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             dic[dickey]?.remove(at: (dic[dickey]?.index(of: str))!)
         }
-        print(dic)
+        
         saveData.set(dic, forKey: "@ToDoList")
-        print(saveData.object(forKey: "@ToDoList") as! [String : Array<String>])
         
         self.dismiss(animated: true, completion: nil)
     }
@@ -116,6 +109,4 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBAction func cancel() {
         self.dismiss(animated: true, completion: nil)
     }
-
-    
 }

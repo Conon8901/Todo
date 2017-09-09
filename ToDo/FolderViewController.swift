@@ -63,9 +63,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let indexPathForSelectedRow = table.indexPathForSelectedRow {
-            table.deselectRow(at: indexPathForSelectedRow, animated: true)
-        }
+        deselect()
     }
     
     override func didReceiveMemoryWarning() {
@@ -157,6 +155,15 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             saveData.set(self.folderNameArray, forKey: "@folder")
             
             search()
+            if folderNameArray.isEmpty{
+                let offset = CGPoint(x: 0, y: -64)
+                self.table.setContentOffset(offset, animated: true)
+            }else{
+                if self.folderNameArray.count < 11{
+                    let offset = CGPoint(x: 0, y: -64)
+                    self.table.setContentOffset(offset, animated: true)
+                }
+            }
         }
     }
     
@@ -281,6 +288,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         self.saveData.synchronize()
                         
                         self.search()
+                        
+                        if self.folderNameArray.count >= 11{
+                            let offset = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
+                            self.table.setContentOffset(offset, animated: true)
+                        }
                     }
                 }
             }else{
@@ -310,7 +322,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             message: message,
             preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default))
         
         self.present(alert, animated: true, completion: nil)
     }
