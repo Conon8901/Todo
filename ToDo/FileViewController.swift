@@ -169,7 +169,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.searchArray.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
                 self.saveData.set(self.showDict, forKey: "@ToDoList")
-            }
+            }//Dateの書き換え
             
             if self.showDict[self.openedFolder] != nil{
                 if (self.showDict[self.openedFolder]?.count)! < 11{
@@ -192,7 +192,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.saveData.set(self.showDict[self.openedFolder]?[indexPath.row], forKey: "@movingfile")
             }else{
                 self.saveData.set(self.searchArray[indexPath.row], forKey: "@movingfile")
-            }
+            }//Dateの書き換え
             
             let storyboard = self.storyboard!
             let nextView = storyboard.instantiateViewController(withIdentifier: "List") as! ListViewController
@@ -324,7 +324,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.saveData.set(self.showDict, forKey: "@ToDoList")
                         
                         self.table.reloadData()
-                    }
+                    }//Dateの書き換え
                 }
             }else{
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
