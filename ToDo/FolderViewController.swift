@@ -62,7 +62,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         deselect()
     }
     

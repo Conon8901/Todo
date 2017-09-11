@@ -14,6 +14,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet var memoTextView: UITextView!
     @IBOutlet var placeholder: UILabel!
+    @IBOutlet var fileName: UITextField!
     
     var saveData = UserDefaults.standard
     
@@ -35,6 +36,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         memoTextView.layer.masksToBounds = true
         
         memoTextView.becomeFirstResponder()
+        
+        datePicker.minimumDate = NSDate() as Date
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -50,14 +53,59 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             memoTextView.text = ""
         }
         
+        if saveData.object(forKey: file3+"@") != nil{
+            dateField.text = saveData.object(forKey: file3+"@") as! String!
+            
+            let dateString = dateField.text
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy/MM/dd HH:mm"
+            
+            datePicker.date = dateFormatter.date(from: dateString!)!
+        }else{
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy/MM/dd HH:mm"
+            
+            dateField.text = formatter.string(from: NSDate() as Date)
+        }
+        
         placeholderHidden()
         
-        navigationItem.title = file2
+        //navigationItem.title = file2
+        fileName.text = file2
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         memoTextView.resignFirstResponder()
-        saveData.set(memoTextView.text!, forKey: file3)
+        
+        if fileName.text != ""{
+            var dict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
+            
+            var bool = true
+            
+            for data in dict[file1]!{
+                if data == fileName.text!{
+                    bool = false
+                }
+            }
+            
+            if bool{
+                dict[file1]?[(dict[file1]?.index(of: file2))!] = fileName.text!
+                saveData.set(dict, forKey: "@ToDoList")
+                
+                saveData.set("", forKey: file3)
+                saveData.set(memoTextView.text!, forKey: file1+fileName.text!)
+                
+                saveData.set("", forKey: file3+"@")
+                saveData.set(dateField.text, forKey: file1+fileName.text!+"@")
+            }else{
+                saveData.set(memoTextView.text!, forKey: file3)
+                saveData.set(dateField.text, forKey: file3+"@")
+            }
+        }else{
+            saveData.set(memoTextView.text!, forKey: file3)
+            saveData.set(dateField.text, forKey: file3+"@")
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -85,4 +133,16 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     @IBAction func tapScreen(sender: UITapGestureRecognizer) {
         self.memoTextView.resignFirstResponder()
     }
+    
+    @IBOutlet var dateField: UITextField!
+    @IBOutlet var datePicker: UIDatePicker!
+    
+    @IBAction func changeDate(sender: UIDatePicker) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm"
+        
+        dateField.text = formatter.string(from: sender.date)
+    }
+    
+    
 }

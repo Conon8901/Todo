@@ -74,10 +74,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         deselect()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        searchbar.resignFirstResponder()
-    }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
