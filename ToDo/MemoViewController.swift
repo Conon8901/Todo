@@ -14,7 +14,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet var memoTextView: UITextView!
     @IBOutlet var placeholder: UILabel!
-    @IBOutlet var fileName: UITextField!
+    @IBOutlet var dateSwitch: UISwitch!
     
     var saveData = UserDefaults.standard
     
@@ -57,13 +57,22 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             memoTextView.text = ""
         }
         
+        if saveData.object(forKey: file3+"@ison") != nil{
+            dateSwitch.isOn = saveData.object(forKey: file3+"@ison") as! Bool
+            
+            dateShow()
+        }else{
+            dateSwitch.isOn = false
+        }
+        
         placeholderHidden()
         
         navigationItem.title = file2
-//        fileName.text = file2
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        saveData.set(dateSwitch.isOn, forKey: file3+"@ison")
+        
         memoTextView.resignFirstResponder()
     }
     
@@ -96,79 +105,48 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     @IBOutlet var dateField: UITextField!
     @IBOutlet var datePicker: UIDatePicker!
     @IBOutlet var label: UILabel!
-    @IBOutlet var button: UIButton!
     
     @IBAction func changeDate(sender: UIDatePicker) {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd HH:mm"
         
         dateField.text = formatter.string(from: sender.date)
+        
+        saveData.set(memoTextView.text!, forKey: file3)
+        saveData.set(dateField.text, forKey: file3+"@")
+        saveData.set(datePicker.date, forKey: file3+"@@")
     }
     
     @IBAction func switchChanged(_ sender: UISwitch) {
         if sender.isOn{
-            dateField.isHidden = false
-            datePicker.isHidden = false
-            label.isHidden = false
-            button.isHidden = false
-            
-            datePicker.minimumDate = NSDate() as Date
-            
-            if saveData.object(forKey: file3+"@") != nil{
-                dateField.text = saveData.object(forKey: file3+"@") as! String!
-                
-                datePicker.date = saveData.object(forKey: file3+"@@") as! Date
-                
-                if NSDate() as Date > saveData.object(forKey: file3+"@@") as! Date{
-                    dateField.text = "終了"
-                }
-            }else{
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy/MM/dd HH:mm"
-                
-                dateField.text = formatter.string(from: NSDate() as Date)
-            }
+            dateShow()
         }else{
             dateField.isHidden = true
             datePicker.isHidden = true
             label.isHidden = true
-            button.isHidden = true
         }
     }
     
-    @IBAction func setDate() {
-        if fileName.text != ""{
-            var dict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
+    func dateShow() {
+        dateField.isHidden = false
+        datePicker.isHidden = false
+        label.isHidden = false
+        
+        datePicker.minimumDate = NSDate() as Date
+        
+        if saveData.object(forKey: file3+"@") != nil{
+            dateField.text = saveData.object(forKey: file3+"@") as! String!
             
-            var bool = true
+            datePicker.date = saveData.object(forKey: file3+"@@") as! Date
             
-            for data in dict[file1]!{
-                if data == fileName.text!{
-                    bool = false
-                }
-            }
-            
-            if bool{
-                dict[file1]?[(dict[file1]?.index(of: file2))!] = fileName.text!
-                saveData.set(dict, forKey: "@ToDoList")
-                
-                saveData.set("", forKey: file3)
-                saveData.set(memoTextView.text!, forKey: file1+fileName.text!)
-                
-                saveData.set("", forKey: file3+"@")
-                saveData.set(dateField.text, forKey: file1+fileName.text!+"@")
-                
-                saveData.set(nil, forKey: file3+"@@")
-                saveData.set(datePicker.date, forKey: file1+fileName.text!+"@@")
-            }else{
-                saveData.set(memoTextView.text!, forKey: file3)
-                saveData.set(dateField.text, forKey: file3+"@")
-                saveData.set(datePicker.date, forKey: file3+"@@")
+            if NSDate() as Date >= saveData.object(forKey: file3+"@@") as! Date{
+                dateField.text = NSLocalizedString("終了", comment: "")
             }
         }else{
-            saveData.set(memoTextView.text!, forKey: file3)
-            saveData.set(dateField.text, forKey: file3+"@")
-            saveData.set(datePicker.date, forKey: file3+"@@")
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy/MM/dd HH:mm"
+            
+            dateField.text = formatter.string(from: NSDate() as Date)
         }
     }
 }//削除編集移動時のデータ書き換え
