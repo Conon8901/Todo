@@ -348,7 +348,6 @@
                             <outletCollection property="gestureRecognizers" destination="gNg-7B-E45" appends="YES" id="a93-7v-uLg"/>
                         </connections>
                     </view>
-                    <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="dateField" destination="5cl-b8-eKw" id="6J5-jx-pAr"/>
                         <outlet property="datePicker" destination="aq9-6o-wXO" id="Vg6-iU-Bsm"/>
