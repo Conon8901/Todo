@@ -135,7 +135,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         return true
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {//file,memo,dateの書き換え？
         if editingStyle == .delete {
             deleteDict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
             
@@ -189,7 +189,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    func edit(indexPath: IndexPath) {
+    func edit(indexPath: IndexPath) {//file,memo,dateの書き換え？
         let beforeAddition = String(folderNameArray[indexPath.row])
         
         let alert = UIAlertController(title: NSLocalizedString("名称変更", comment: ""), message: NSLocalizedString("タイトル入力", comment: ""), preferredStyle: .alert)
