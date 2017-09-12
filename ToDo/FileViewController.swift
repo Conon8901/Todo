@@ -280,8 +280,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             textField.textAlignment = NSTextAlignment.left
         }
         
-        alert.addAction(saveAction)
         alert.addAction(cancelAction)
+        alert.addAction(saveAction)
         
         present(alert, animated: true, completion: nil)
     }
@@ -344,8 +344,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             textField.textAlignment = NSTextAlignment.left
         }
         
-        alert.addAction(saveAction)
         alert.addAction(cancelAction)
+        alert.addAction(saveAction)
         
         present(alert, animated: true, completion: nil)
         

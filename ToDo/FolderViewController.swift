@@ -253,8 +253,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             textField.textAlignment = NSTextAlignment.left
         }
         
-        alert.addAction(saveAction)
         alert.addAction(cancelAction)
+        alert.addAction(saveAction)
         
         present(alert, animated: true, completion: nil)
     }
@@ -308,8 +308,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             textField.textAlignment = NSTextAlignment.left
         }
         
-        alert.addAction(saveAction)
         alert.addAction(cancelAction)
+        alert.addAction(saveAction)
         
         present(alert, animated: true, completion: nil)
     }
