@@ -120,14 +120,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             cell?.textLabel?.text = searchArray[indexPath.row]
             
             let text = searchArray[indexPath.row]
-            if let subtitle = saveData.object(forKey: openedFolder+text) as! String?{
+            if let subtitle = saveData.object(forKey: openedFolder+"@"+text) as! String?{
                 cell?.detailTextLabel?.text = subtitle
             }
         }else{
             cell?.textLabel?.text = showDict[openedFolder]?[indexPath.row]
             
             let text = (showDict[openedFolder]?[indexPath.row])!
-            if let subtitle = saveData.object(forKey: openedFolder+text) as! String?{
+            if let subtitle = saveData.object(forKey: openedFolder+"@"+text) as! String?{
                 cell?.detailTextLabel?.text = subtitle
             }
         }
@@ -159,17 +159,26 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("削除", comment: "")) { (action, index) -> Void in
      
             if self.searchbar.text == ""{
-                self.saveData.set("", forKey: self.openedFolder+(self.showDict[self.openedFolder]?[indexPath.row])!)
+                
+                let formerkey = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!
+                
+                self.saveData.set("", forKey: formerkey)
+                self.saveData.set(false, forKey: formerkey+"@ison")
+                self.saveData.set("", forKey: formerkey+"@")
+                self.saveData.set(NSDate(), forKey: formerkey+"@@")
+                
+                self.saveData.set("", forKey: self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!)
                 self.showDict[self.openedFolder]?.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
                 self.saveData.set(self.showDict, forKey: "@ToDoList")
             }else{
-                self.saveData.set("", forKey: self.openedFolder+self.searchArray[indexPath.row])
+///////////////Dateの書き換え//////////////////////////////////////////////////////////////////////////////
+                self.saveData.set("", forKey: self.openedFolder+"@"+self.searchArray[indexPath.row])
                 self.showDict[self.openedFolder]?.remove(at: (self.showDict[self.openedFolder]?.index(of: self.searchArray[indexPath.row])!)!)
                 self.searchArray.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
                 self.saveData.set(self.showDict, forKey: "@ToDoList")
-            }//Dateの書き換え
+            }
             
             if self.showDict[self.openedFolder] != nil{
                 if (self.showDict[self.openedFolder]?.count)! < 11{
@@ -189,10 +198,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("移動", comment: "")) { (action, index) -> Void in
             
             if self.searchbar.text == ""{
+///////////////Dateの書き換え//////////////////////////////////////////////////////////////////////////////
                 self.saveData.set(self.showDict[self.openedFolder]?[indexPath.row], forKey: "@movingfile")
             }else{
+///////////////Dateの書き換え//////////////////////////////////////////////////////////////////////////////
                 self.saveData.set(self.searchArray[indexPath.row], forKey: "@movingfile")
-            }//Dateの書き換え
+            }
             
             let storyboard = self.storyboard!
             let nextView = storyboard.instantiateViewController(withIdentifier: "List") as! ListViewController
@@ -255,7 +266,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.saveData.setValue(self.showDict, forKeyPath: "@ToDoList")
                         
-                        self.saveData.set("", forKey: self.openedFolder+textField.text!)
+                        self.saveData.set("", forKey: self.openedFolder+"@"+textField.text!)
                         
                         self.saveData.synchronize()
                         self.table.reloadData()
@@ -310,21 +321,81 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.deselect()
                     }else{
-                        let formertext = (self.showDict[self.openedFolder]?[indexPath.row])!
-                        
-                        self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
-                        
-                        let revisedtext = (self.showDict[self.openedFolder]?[indexPath.row])!
-                        
-                        let formermemo = self.saveData.object(forKey: self.openedFolder+formertext)
-                        
-                        self.saveData.set("", forKey: self.openedFolder+formertext)
-                        self.saveData.set(formermemo, forKey: self.openedFolder+revisedtext)
-                        
-                        self.saveData.set(self.showDict, forKey: "@ToDoList")
+                        if self.searchbar.text == ""{
+                            
+                            let formerkey = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!
+                            
+                            var memotextview: String?
+                            var dateswitch: Bool?
+                            var datefield: String?
+                            var datepicker: Date?
+                            
+                            if self.saveData.object(forKey: formerkey) != nil{
+                                memotextview = self.saveData.object(forKey: formerkey) as? String
+                            }
+                            if (self.saveData.object(forKey: formerkey+"@ison") != nil){
+                                dateswitch = self.saveData.object(forKey: formerkey+"@ison") as? Bool
+                            }
+                            if (self.saveData.object(forKey: formerkey+"@") != nil){
+                                datefield = self.saveData.object(forKey: formerkey+"@") as? String
+                            }
+                            if (self.saveData.object(forKey: formerkey+"@@") != nil){
+                                datepicker = self.saveData.object(forKey: formerkey+"@@") as? Date
+                            }
+                            
+                            let formertext = (self.showDict[self.openedFolder]?[indexPath.row])!
+                            
+                            self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
+                            
+                            let revisedtext = (self.showDict[self.openedFolder]?[indexPath.row])!
+                            
+                            let formermemo = self.saveData.object(forKey: self.openedFolder+"@"+formertext)
+                            
+                            self.saveData.set("", forKey: self.openedFolder+"@"+formertext)
+                            self.saveData.set(formermemo, forKey: self.openedFolder+"@"+revisedtext)
+                            
+                            self.saveData.set(self.showDict, forKey: "@ToDoList")
+                            
+                            let laterkey = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!
+                            
+                            self.saveData.set("", forKey: formerkey)
+                            self.saveData.set(false, forKey: formerkey+"@ison")
+                            self.saveData.set("", forKey: formerkey+"@")
+                            self.saveData.set(NSDate(), forKey: formerkey+"@@")
+                            
+                            if memotextview != nil{
+                                self.saveData.set(memotextview!, forKey: laterkey)
+                            }
+                            if dateswitch != nil{
+                                self.saveData.set(dateswitch!, forKey: laterkey+"@ison")
+                            }
+                            if datefield != nil{
+                                self.saveData.set(datefield!, forKey: laterkey+"@")
+                            }
+                            if datepicker != nil{
+                                self.saveData.set(datepicker!, forKey: laterkey+"@@")
+                            }
+                        }else{
+//////////////////////////////Dateの書き換え///////////////////////////////////////////////////////////////
+                            
+                            //searcharrayに変更
+//                            let formertext = (self.showDict[self.openedFolder]?[indexPath.row])!
+//                            
+//                            self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
+//                            
+//                            let revisedtext = (self.showDict[self.openedFolder]?[indexPath.row])!
+//                            
+//                            let formermemo = self.saveData.object(forKey: self.openedFolder+"@"+formertext)
+//                            
+//                            self.saveData.set("", forKey: self.openedFolder+"@"+formertext)
+//                            self.saveData.set(formermemo, forKey: self.openedFolder+"@"+revisedtext)
+//                            
+//                            self.saveData.set(self.showDict, forKey: "@ToDoList")
+                            
+                        }
                         
                         self.table.reloadData()
-                    }//Dateの書き換え
+                    }
                 }
             }else{
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
@@ -340,8 +411,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         alert.addTextField { (textField:UITextField!) -> Void in
-            textField.text = self.showDict[self.openedFolder]?[indexPath.row]
+            if self.searchbar.text == ""{
+                textField.text = self.showDict[self.openedFolder]?[indexPath.row]
+            }else{
+                textField.text = self.searchArray[indexPath.row]
+            }
             textField.textAlignment = NSTextAlignment.left
+                
         }
         
         alert.addAction(cancelAction)
@@ -376,7 +452,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 let count = (self.showDict[self.openedFolder]?.count)!
                 if count != 0{
                     for i in 0...count-1{
-                        self.saveData.set("", forKey: self.openedFolder+(self.showDict[self.openedFolder]?[i])!)
+                        self.saveData.set("", forKey: self.openedFolder+"@"+(self.showDict[self.openedFolder]?[i])!)
                     }
                     
                     self.showDict[self.openedFolder] = []
