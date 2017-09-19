@@ -81,7 +81,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         if(searchbar.text == "") {
             searchArray = folderNameArray
-        } else {
+        }else{
             for data in folderNameArray {
                 if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
                     searchArray.append(data)
@@ -121,7 +121,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }else{
             if(searchbar.text == "") {
                 saveData.set(String(folderNameArray[indexPath.row]), forKey: "@move")
-            } else {
+            }else{
                 saveData.set(String(searchArray[indexPath.row]), forKey: "@move")
             }
             
@@ -140,12 +140,20 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             deleteDict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
             
             if(searchbar.text == "") {
-/////////////////////////////////file,memo,dateの書き換え//////////////////////////////////////////////////
+                if deleteDict[folderNameArray[indexPath.row]] != nil{
+                    for file in deleteDict[folderNameArray[indexPath.row]]!{
+                        let key = folderNameArray[indexPath.row]+"@"+file
+                        saveData.set("", forKey: key)
+                        saveData.set(false, forKey: key+"@ison")
+                        saveData.set("", forKey: key+"@")
+                        saveData.set(NSDate(), forKey: key+"@@")
+                    }
+                }
                 deleteDict[String(folderNameArray[indexPath.row])] = nil
                 self.saveData.set(self.deleteDict, forKey: "@ToDoList")
                 folderNameArray.remove(at: indexPath.row)
             }else{
-//////////////////////////////////////////////file,memo,dateの書き換え/////////////////////////////////////
+//////////////////////////////////////////file,memo,dateの書き換え/////////////////////////////////////////
                 deleteDict[String(searchArray[indexPath.row])] = nil
                 self.saveData.set(self.deleteDict, forKey: "@ToDoList")
                 searchArray.remove(at: indexPath.row)
@@ -182,7 +190,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             table.setEditing(false, animated: true)
             editButton.title = NSLocalizedString("編集", comment: "")
             edit = false
-        } else {
+        }else{
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             table.allowsSelectionDuringEditing = true
@@ -218,24 +226,41 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         self.deselect()
                     }else{
                         if self.searchbar.text == ""{
-////////////////////////////dateの保存////////////////////////////////////////////////////////////////////
                             var files = self.saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
                             if let fie = files[self.folderNameArray[indexPath.row]]{
-                                for i in 0...fie.count-1{
-                                    let filetext = files[self.folderNameArray[indexPath.row]]?[i]
-                                    
-                                    let data = self.saveData.object(forKey: self.folderNameArray[indexPath.row]+"@"+filetext!) as! String
-                                    
-                                    self.saveData.set(data, forKey: textField.text!+"@"+filetext!)
+                                if !fie.isEmpty{
+                                    for i in 0...fie.count-1{
+                                        let filetext = files[self.folderNameArray[indexPath.row]]?[i]
+                                        if self.saveData.object(forKey: self.folderNameArray[indexPath.row]+"@"+filetext!) as? String != nil{
+                                            let data = self.saveData.object(forKey: self.folderNameArray[indexPath.row]+"@"+filetext!) as! String
+                                            
+                                            self.saveData.set(data, forKey: textField.text!+"@"+filetext!)
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            if let fie = files[self.folderNameArray[indexPath.row]]{
+                                if !fie.isEmpty{
+                                    for i in 0...fie.count-1{
+                                        let formerkey = self.folderNameArray[indexPath.row]+"@"+fie[i]
+                                        
+                                        self.saveData.set("", forKey: formerkey)
+                                        self.saveData.set(false, forKey: formerkey+"@ison")
+                                        self.saveData.set("", forKey: formerkey+"@")
+                                        self.saveData.set(NSDate(), forKey: formerkey+"@@")
+                                    }
                                 }
                             }
                             
                             var array = [String]()
                             
                             if let fie = files[self.folderNameArray[indexPath.row]]{
-                                for _ in 0...fie.count-1{
-                                    array.append((files[self.folderNameArray[indexPath.row]]?[0])!)
-                                    files[self.folderNameArray[indexPath.row]]?.remove(at: 0)
+                                if !fie.isEmpty{
+                                    for _ in 0...fie.count-1{
+                                        array.append((files[self.folderNameArray[indexPath.row]]?[0])!)
+                                        files[self.folderNameArray[indexPath.row]]?.remove(at: 0)
+                                    }
                                 }
                             }
                             
@@ -243,25 +268,29 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             
                             files[self.folderNameArray[indexPath.row]] = array
                         }else{
-////////////////////////////dateの保存////////////////////////////////////////////////////////////////////
-////////////////////////////searcharray表示時はfolderarrayも変更////////////////////////////////////////////
+////////////////////////////////////////////////dateの保存////////////////////////////////////////////////
+////////////////////////////////////searcharray表示時はfolderarrayも変更////////////////////////////////////
                             var files = self.saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
                             if let fie = files[self.searchArray[indexPath.row]]{
-                                for i in 0...fie.count-1{
-                                    let filetext = files[self.searchArray[indexPath.row]]?[i]
-                                    
-                                    let data = self.saveData.object(forKey: self.searchArray[indexPath.row]+"@"+filetext!) as! String
-                                    
-                                    self.saveData.set(data, forKey: textField.text!+"@"+filetext!)
+                                if !fie.isEmpty{
+                                    for i in 0...fie.count-1{
+                                        let filetext = files[self.searchArray[indexPath.row]]?[i]
+                                        
+                                        let data = self.saveData.object(forKey: self.searchArray[indexPath.row]+"@"+filetext!) as! String
+                                        
+                                        self.saveData.set(data, forKey: textField.text!+"@"+filetext!)
+                                    }
                                 }
                             }
                             
                             var array = [String]()
                             
                             if let fie = files[self.searchArray[indexPath.row]]{
-                                for _ in 0...fie.count-1{
-                                    array.append((files[self.searchArray[indexPath.row]]?[0])!)
-                                    files[self.searchArray[indexPath.row]]?.remove(at: 0)
+                                if !fie.isEmpty{
+                                    for _ in 0...fie.count-1{
+                                        array.append((files[self.searchArray[indexPath.row]]?[0])!)
+                                        files[self.searchArray[indexPath.row]]?.remove(at: 0)
+                                    }
                                 }
                             }
                             
@@ -393,4 +422,3 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
     }
 }
-

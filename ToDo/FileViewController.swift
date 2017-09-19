@@ -172,7 +172,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
                 self.saveData.set(self.showDict, forKey: "@ToDoList")
             }else{
-///////////////Dateの書き換え//////////////////////////////////////////////////////////////////////////////
+                let formerkey = self.openedFolder+"@"+self.searchArray[indexPath.row]
+                
+                self.saveData.set("", forKey: formerkey)
+                self.saveData.set(false, forKey: formerkey+"@ison")
+                self.saveData.set("", forKey: formerkey+"@")
+                self.saveData.set(NSDate(), forKey: formerkey+"@@")
+                
+                
                 self.saveData.set("", forKey: self.openedFolder+"@"+self.searchArray[indexPath.row])
                 self.showDict[self.openedFolder]?.remove(at: (self.showDict[self.openedFolder]?.index(of: self.searchArray[indexPath.row])!)!)
                 self.searchArray.remove(at: indexPath.row)
@@ -198,10 +205,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("移動", comment: "")) { (action, index) -> Void in
             
             if self.searchbar.text == ""{
-///////////////Dateの書き換え//////////////////////////////////////////////////////////////////////////////
                 self.saveData.set(self.showDict[self.openedFolder]?[indexPath.row], forKey: "@movingfile")
             }else{
-///////////////Dateの書き換え//////////////////////////////////////////////////////////////////////////////
                 self.saveData.set(self.searchArray[indexPath.row], forKey: "@movingfile")
             }
             
@@ -376,9 +381,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                                 self.saveData.set(datepicker!, forKey: laterkey+"@@")
                             }
                         }else{
-//////////////////////////////Dateの書き換え///////////////////////////////////////////////////////////////
+//////////////////////////////////////////////Dateの書き換え///////////////////////////////////////////////
                             
-                            //searcharrayに変更
+////////////////////////////////////////////searcharrayに変更/////////////////////////////////////////////
 //                            let formertext = (self.showDict[self.openedFolder]?[indexPath.row])!
 //                            
 //                            self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
@@ -515,4 +520,3 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.view.endEditing(true)
     }
 }
-
