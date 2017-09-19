@@ -42,6 +42,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         dateField.isHidden = true
         datePicker.isHidden = true
         label.isHidden = true
+        
+        placeholder.text = NSLocalizedString("メモ", comment: "")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -155,4 +157,4 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             label.isHidden = true
         }
     }
-}//削除編集移動時のデータ書き換え
+}
