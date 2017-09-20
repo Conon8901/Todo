@@ -143,10 +143,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 if deleteDict[folderNameArray[indexPath.row]] != nil{
                     for file in deleteDict[folderNameArray[indexPath.row]]!{
                         let key = folderNameArray[indexPath.row]+"@"+file
-                        saveData.set("", forKey: key)
-                        saveData.set(false, forKey: key+"@ison")
-                        saveData.set("", forKey: key+"@")
-                        saveData.set(NSDate(), forKey: key+"@@")
+                        saveData.removeObject(forKey: key)
+                        saveData.removeObject(forKey: key+"@ison")
+                        saveData.removeObject(forKey: key+"@")
+                        saveData.removeObject(forKey: key+"@@")
                     }
                 }
                 deleteDict[String(folderNameArray[indexPath.row])] = nil
