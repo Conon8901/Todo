@@ -81,17 +81,13 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         var dic: [String : Array<String>] = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]!
         let folder = saveData.object(forKey: "@move") as! String
         let file = saveData.object(forKey: "@movingfile") as! String
-        let key = folder+"@"+file
-        let memotextview = saveData.object(forKey: key) as! String?
-        let dateswitch = saveData.object(forKey: key+"@ison") as! Bool?
-        let datefield = saveData.object(forKey: key+"@") as! String?
-        let datepicker = saveData.object(forKey: key+"@@") as! Date?
+        let formerkey = folder+"@"+file
+        let memotextview = saveData.object(forKey: formerkey) as! String?
+        let dateswitch = saveData.object(forKey: formerkey+"@ison") as! Bool?
+        let datefield = saveData.object(forKey: formerkey+"@") as! String?
+        let datepicker = saveData.object(forKey: formerkey+"@@") as! Date?
         
         if(searchbar.text == "") {
-            if memotextview != nil{
-                saveData.set(memotextview, forKey: listNameArray[indexPath.row]+"@"+file)
-                saveData.set("", forKey: key)
-            }
             if dic[listNameArray[indexPath.row]] != nil{
                 dic[listNameArray[indexPath.row]]!.append(file)
             }else{
@@ -103,19 +99,19 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             if memotextview != nil{
                 saveData.set(memotextview, forKey: laterkey)
-                saveData.set("", forKey: key)
+                saveData.removeObject(forKey: formerkey)
             }
             if dateswitch != nil{
                 saveData.set(dateswitch, forKey: laterkey+"@ison")
-                saveData.set(false, forKey: key+"@ison")
+                saveData.removeObject(forKey: formerkey+"@ison")
             }
             if datefield != nil{
                 saveData.set(datefield, forKey: laterkey+"@")
-                saveData.set("", forKey: key+"@")
+                saveData.removeObject(forKey: formerkey+"@")
             }
             if datepicker != nil{
                 saveData.set(datepicker, forKey: laterkey+"@@")
-                saveData.set(NSDate(), forKey: key+"@@")
+                saveData.removeObject(forKey: formerkey+"@@")
             }
         }else{
 //////////////////////////////////////////////Dateの書き換え///////////////////////////////////////////////

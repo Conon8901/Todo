@@ -15,6 +15,9 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     @IBOutlet var memoTextView: UITextView!
     @IBOutlet var placeholder: UILabel!
     @IBOutlet var dateSwitch: UISwitch!
+    @IBOutlet var dateField: UITextField!
+    @IBOutlet var datePicker: UIDatePicker!
+    @IBOutlet var label: UILabel!
     
     var saveData = UserDefaults.standard
     
@@ -89,6 +92,30 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         placeholderHidden()
     }
     
+    // MARK: - DatePicker
+    
+    @IBAction func changeDate(sender: UIDatePicker) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm"
+        
+        dateField.text = formatter.string(from: sender.date)
+        
+        saveData.set(dateField.text, forKey: file3+"@")
+        saveData.set(datePicker.date, forKey: file3+"@@")
+    }
+    
+    // MARK: - Switch
+    
+    @IBAction func switchChanged(_ sender: UISwitch) {
+        if sender.isOn{
+            dateShow()
+        }else{
+            dateField.isHidden = true
+            datePicker.isHidden = true
+            label.isHidden = true
+        }
+    }
+    
     // MARK: - Method
     
     func placeholderHidden() {
@@ -132,29 +159,5 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     @IBAction func tapScreen(sender: UITapGestureRecognizer) {
         self.memoTextView.resignFirstResponder()
-    }
-    
-    @IBOutlet var dateField: UITextField!
-    @IBOutlet var datePicker: UIDatePicker!
-    @IBOutlet var label: UILabel!
-    
-    @IBAction func changeDate(sender: UIDatePicker) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd HH:mm"
-        
-        dateField.text = formatter.string(from: sender.date)
-        
-        saveData.set(dateField.text, forKey: file3+"@")
-        saveData.set(datePicker.date, forKey: file3+"@@")
-    }
-    
-    @IBAction func switchChanged(_ sender: UISwitch) {
-        if sender.isOn{
-            dateShow()
-        }else{
-            dateField.isHidden = true
-            datePicker.isHidden = true
-            label.isHidden = true
-        }
     }
 }

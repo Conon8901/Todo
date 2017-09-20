@@ -160,25 +160,23 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
      
             if self.searchbar.text == ""{
                 
-                let formerkey = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!
-                
-                self.saveData.set("", forKey: formerkey)
-                self.saveData.set(false, forKey: formerkey+"@ison")
-                self.saveData.set("", forKey: formerkey+"@")
-                self.saveData.set(NSDate(), forKey: formerkey+"@@")
+                let key = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!
+                self.saveData.removeObject(forKey: key)
+                self.saveData.removeObject(forKey: key+"@ison")
+                self.saveData.removeObject(forKey: key+"@")
+                self.saveData.removeObject(forKey: key+"@@")
                 
                 self.saveData.set("", forKey: self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!)
                 self.showDict[self.openedFolder]?.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
                 self.saveData.set(self.showDict, forKey: "@ToDoList")
             }else{
-                let formerkey = self.openedFolder+"@"+self.searchArray[indexPath.row]
+                let key = self.openedFolder+"@"+self.searchArray[indexPath.row]
                 
-                self.saveData.set("", forKey: formerkey)
-                self.saveData.set(false, forKey: formerkey+"@ison")
-                self.saveData.set("", forKey: formerkey+"@")
-                self.saveData.set(NSDate(), forKey: formerkey+"@@")
-                
+                self.saveData.removeObject(forKey: key)
+                self.saveData.removeObject(forKey: key+"@ison")
+                self.saveData.removeObject(forKey: key+"@")
+                self.saveData.removeObject(forKey: key+"@@")
                 
                 self.saveData.set("", forKey: self.openedFolder+"@"+self.searchArray[indexPath.row])
                 self.showDict[self.openedFolder]?.remove(at: (self.showDict[self.openedFolder]?.index(of: self.searchArray[indexPath.row])!)!)
@@ -356,17 +354,17 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             
                             let formermemo = self.saveData.object(forKey: self.openedFolder+"@"+formertext)
                             
-                            self.saveData.set("", forKey: self.openedFolder+"@"+formertext)
+                            self.saveData.removeObject(forKey: self.openedFolder+"@"+formertext)
                             self.saveData.set(formermemo, forKey: self.openedFolder+"@"+revisedtext)
                             
                             self.saveData.set(self.showDict, forKey: "@ToDoList")
                             
                             let laterkey = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!
                             
-                            self.saveData.set("", forKey: formerkey)
-                            self.saveData.set(false, forKey: formerkey+"@ison")
-                            self.saveData.set("", forKey: formerkey+"@")
-                            self.saveData.set(NSDate(), forKey: formerkey+"@@")
+                            self.saveData.removeObject(forKey: formerkey)
+                            self.saveData.removeObject(forKey: formerkey+"@ison")
+                            self.saveData.removeObject(forKey: formerkey+"@")
+                            self.saveData.removeObject(forKey: formerkey+"@@")
                             
                             if memotextview != nil{
                                 self.saveData.set(memotextview!, forKey: laterkey)
@@ -382,7 +380,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             }
                         }else{
 //////////////////////////////////////////////Dateの書き換え///////////////////////////////////////////////
-                            
+
 ////////////////////////////////////////////searcharrayに変更/////////////////////////////////////////////
 //                            let formertext = (self.showDict[self.openedFolder]?[indexPath.row])!
 //                            
@@ -457,7 +455,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 let count = (self.showDict[self.openedFolder]?.count)!
                 if count != 0{
                     for i in 0...count-1{
-                        self.saveData.set("", forKey: self.openedFolder+"@"+(self.showDict[self.openedFolder]?[i])!)
+                        let key = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[i])!
+                        self.saveData.removeObject(forKey: key)
+                        self.saveData.removeObject(forKey: key+"@ison")
+                        self.saveData.removeObject(forKey: key+"@")
+                        self.saveData.removeObject(forKey: key+"@@")
                     }
                     
                     self.showDict[self.openedFolder] = []
