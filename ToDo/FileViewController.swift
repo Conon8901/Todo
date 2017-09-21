@@ -166,7 +166,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.saveData.removeObject(forKey: key+"@")
                 self.saveData.removeObject(forKey: key+"@@")
                 
-                self.saveData.set("", forKey: self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!)
+                self.saveData.removeObject(forKey: self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!)
                 self.showDict[self.openedFolder]?.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
                 self.saveData.set(self.showDict, forKey: "@ToDoList")
@@ -178,7 +178,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.saveData.removeObject(forKey: key+"@")
                 self.saveData.removeObject(forKey: key+"@@")
                 
-                self.saveData.set("", forKey: self.openedFolder+"@"+self.searchArray[indexPath.row])
+                self.saveData.removeObject(forKey: self.openedFolder+"@"+self.searchArray[indexPath.row])
                 self.showDict[self.openedFolder]?.remove(at: (self.showDict[self.openedFolder]?.index(of: self.searchArray[indexPath.row])!)!)
                 self.searchArray.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
@@ -211,7 +211,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let storyboard = self.storyboard!
             let nextView = storyboard.instantiateViewController(withIdentifier: "List") as! ListViewController
             self.present(nextView, animated: true)
-            
         }
         moveButton.backgroundColor = .lightGray
      
@@ -269,7 +268,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.saveData.setValue(self.showDict, forKeyPath: "@ToDoList")
                         
-                        self.saveData.set("", forKey: self.openedFolder+"@"+textField.text!)
+                        self.saveData.removeObject(forKey: self.openedFolder+"@"+textField.text!)
                         
                         self.saveData.synchronize()
                         self.table.reloadData()
@@ -379,22 +378,40 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                                 self.saveData.set(datepicker!, forKey: laterkey+"@@")
                             }
                         }else{
-//////////////////////////////////////////////Dateの書き換え///////////////////////////////////////////////
-
-////////////////////////////////////////////searcharrayに変更/////////////////////////////////////////////
-//                            let formertext = (self.showDict[self.openedFolder]?[indexPath.row])!
-//                            
-//                            self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
-//                            
-//                            let revisedtext = (self.showDict[self.openedFolder]?[indexPath.row])!
-//                            
-//                            let formermemo = self.saveData.object(forKey: self.openedFolder+"@"+formertext)
-//                            
-//                            self.saveData.set("", forKey: self.openedFolder+"@"+formertext)
-//                            self.saveData.set(formermemo, forKey: self.openedFolder+"@"+revisedtext)
-//                            
-//                            self.saveData.set(self.showDict, forKey: "@ToDoList")
+                            let formertext = self.searchArray[indexPath.row]
                             
+                            let formerkey = self.openedFolder+"@"+self.searchArray[indexPath.row]
+                            
+                            let memotextview = self.saveData.object(forKey: formerkey) as! String?
+                            let dateswitch = self.saveData.object(forKey: formerkey+"@ison") as! Bool?
+                            let datefield = self.saveData.object(forKey: formerkey+"@") as! String?
+                            let datepicker = self.saveData.object(forKey: formerkey+"@@") as! Date?
+                            
+                            self.searchArray[indexPath.row] = textField.text!
+                            
+                            let index = self.showDict[self.openedFolder]?.index(of: formertext)
+                            self.showDict[self.openedFolder]?[index!] = textField.text!
+                            
+                            let laterkey = self.openedFolder+"@"+self.searchArray[indexPath.row]
+                            
+                            if memotextview != nil{
+                                self.saveData.set(memotextview, forKey: laterkey)
+                                self.saveData.removeObject(forKey: formerkey)
+                            }
+                            if dateswitch != nil{
+                                self.saveData.set(dateswitch, forKey: laterkey+"@ison")
+                                self.saveData.removeObject(forKey: formerkey+"@ison")
+                            }
+                            if datefield != nil{
+                                self.saveData.set(datefield, forKey: laterkey+"@")
+                                self.saveData.removeObject(forKey: formerkey+"@")
+                            }
+                            if datepicker != nil{
+                                self.saveData.set(datepicker, forKey: laterkey+"@@")
+                                self.saveData.removeObject(forKey: formerkey+"@@")
+                            }
+                            
+                            self.saveData.set(self.showDict, forKey: "@ToDoList")
                         }
                         
                         self.table.reloadData()
@@ -420,14 +437,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 textField.text = self.searchArray[indexPath.row]
             }
             textField.textAlignment = NSTextAlignment.left
-                
         }
         
         alert.addAction(cancelAction)
         alert.addAction(saveAction)
         
         present(alert, animated: true, completion: nil)
-        
     }
     
     @IBAction func tapEdit(sender: AnyObject) {

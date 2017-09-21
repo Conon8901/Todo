@@ -55,6 +55,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         searchbar.delegate = self
         searchbar.enablesReturnKeyAutomatically = false
         
+        table.keyboardDismissMode = UIScrollViewKeyboardDismissMode.interactive
+        
         editButton.title = NSLocalizedString("編集", comment: "")
         
         navigationItem.title = NSLocalizedString("フォルダ", comment: "")
@@ -153,11 +155,20 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 self.saveData.set(self.deleteDict, forKey: "@ToDoList")
                 folderNameArray.remove(at: indexPath.row)
             }else{
-//////////////////////////////////////////file,memo,dateの書き換え/////////////////////////////////////////
-                deleteDict[String(searchArray[indexPath.row])] = nil
+                if deleteDict[searchArray[indexPath.row]] != nil{
+                    for file in deleteDict[searchArray[indexPath.row]]!{
+                        let key = searchArray[indexPath.row]+"@"+file
+                        saveData.removeObject(forKey: key)
+                        saveData.removeObject(forKey: key+"@ison")
+                        saveData.removeObject(forKey: key+"@")
+                        saveData.removeObject(forKey: key+"@@")
+                    }
+                }
+
+                deleteDict[searchArray[indexPath.row]] = nil
                 self.saveData.set(self.deleteDict, forKey: "@ToDoList")
+                folderNameArray.remove(at: folderNameArray.index(of: searchArray[indexPath.row])!)
                 searchArray.remove(at: indexPath.row)
-                folderNameArray.remove(at: folderNameArray.index(of: searchArray[indexPath.row])!-1)
             }
             
             tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
@@ -227,6 +238,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     }else{
                         if self.searchbar.text == ""{
                             var files = self.saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
+                            
+                            var array = [String]()
+                            
                             if let fie = files[self.folderNameArray[indexPath.row]]{
                                 if !fie.isEmpty{
                                     for i in 0...fie.count-1{
@@ -236,67 +250,94 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                             
                                             self.saveData.set(data, forKey: textField.text!+"@"+filetext!)
                                         }
-                                    }
-                                }
-                            }
-                            
-                            if let fie = files[self.folderNameArray[indexPath.row]]{
-                                if !fie.isEmpty{
-                                    for i in 0...fie.count-1{
+                                        
                                         let formerkey = self.folderNameArray[indexPath.row]+"@"+fie[i]
                                         
-                                        self.saveData.set("", forKey: formerkey)
-                                        self.saveData.set(false, forKey: formerkey+"@ison")
-                                        self.saveData.set("", forKey: formerkey+"@")
-                                        self.saveData.set(NSDate(), forKey: formerkey+"@@")
-                                    }
-                                }
-                            }
-                            
-                            var array = [String]()
-                            
-                            if let fie = files[self.folderNameArray[indexPath.row]]{
-                                if !fie.isEmpty{
-                                    for _ in 0...fie.count-1{
+                                        self.saveData.removeObject(forKey: formerkey)
+                                        self.saveData.removeObject(forKey: formerkey+"@ison")
+                                        self.saveData.removeObject(forKey: formerkey+"@")
+                                        self.saveData.removeObject(forKey: formerkey+"@@")
+                                        
                                         array.append((files[self.folderNameArray[indexPath.row]]?[0])!)
                                         files[self.folderNameArray[indexPath.row]]?.remove(at: 0)
                                     }
                                 }
                             }
-                            
+                                                        
                             self.folderNameArray[indexPath.row] = textField.text!
                             
                             files[self.folderNameArray[indexPath.row]] = array
                         }else{
-////////////////////////////////////////////////dateの保存////////////////////////////////////////////////
-////////////////////////////////////searcharray表示時はfolderarrayも変更////////////////////////////////////
-                            var files = self.saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
-                            if let fie = files[self.searchArray[indexPath.row]]{
+                            var dict = self.saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
+                            
+                            let formertext = self.searchArray[indexPath.row]
+                            
+                            if let fie = dict[formertext]{
                                 if !fie.isEmpty{
-                                    for i in 0...fie.count-1{
-                                        let filetext = files[self.searchArray[indexPath.row]]?[i]
+                                    for data in fie{
+                                        let formerkey = formertext+"@"+data
                                         
-                                        let data = self.saveData.object(forKey: self.searchArray[indexPath.row]+"@"+filetext!) as! String
+                                        var memotextview: String?
+                                        var dateswitch: Bool?
+                                        var datefield: String?
+                                        var datepicker: Date?
                                         
-                                        self.saveData.set(data, forKey: textField.text!+"@"+filetext!)
+                                        if self.saveData.object(forKey: formerkey) != nil{
+                                            memotextview = self.saveData.object(forKey: formerkey) as? String
+                                        }
+                                        if (self.saveData.object(forKey: formerkey+"@ison") != nil){
+                                            dateswitch = self.saveData.object(forKey: formerkey+"@ison") as? Bool
+                                        }
+                                        if (self.saveData.object(forKey: formerkey+"@") != nil){
+                                            datefield = self.saveData.object(forKey: formerkey+"@") as? String
+                                        }
+                                        if (self.saveData.object(forKey: formerkey+"@@") != nil){
+                                            datepicker = self.saveData.object(forKey: formerkey+"@@") as? Date
+                                        }
+                                        
+                                        let laterkey = textField.text!+"@"+data
+                                        
+                                        self.saveData.removeObject(forKey: formerkey)
+                                        self.saveData.removeObject(forKey: formerkey+"@ison")
+                                        self.saveData.removeObject(forKey: formerkey+"@")
+                                        self.saveData.removeObject(forKey: formerkey+"@@")
+                                        
+                                        if memotextview != nil{
+                                            self.saveData.set(memotextview!, forKey: laterkey)
+                                        }
+                                        if dateswitch != nil{
+                                            self.saveData.set(dateswitch!, forKey: laterkey+"@ison")
+                                        }
+                                        if datefield != nil{
+                                            self.saveData.set(datefield!, forKey: laterkey+"@")
+                                        }
+                                        if datepicker != nil{
+                                            self.saveData.set(datepicker!, forKey: laterkey+"@@")
+                                        }
                                     }
                                 }
                             }
                             
                             var array = [String]()
                             
-                            if let fie = files[self.searchArray[indexPath.row]]{
+                            if let fie = dict[self.searchArray[indexPath.row]]{
                                 if !fie.isEmpty{
                                     for _ in 0...fie.count-1{
-                                        array.append((files[self.searchArray[indexPath.row]]?[0])!)
-                                        files[self.searchArray[indexPath.row]]?.remove(at: 0)
+                                        array.append((dict[self.searchArray[indexPath.row]]?[0])!)
+                                        dict[self.searchArray[indexPath.row]]?.remove(at: 0)
                                     }
                                 }
                             }
                             
+                            let index = self.folderNameArray.index(of: self.searchArray[indexPath.row])
+                            
                             self.searchArray[indexPath.row] = textField.text!
                             
-                            files[self.searchArray[indexPath.row]] = array
+                            self.folderNameArray[index!] = textField.text!
+                            
+                            dict[self.searchArray[indexPath.row]] = array
+                            
+                            self.saveData.set(dict, forKey: "@ToDoList")
                         }
                         
                         self.table.reloadData()
@@ -419,6 +460,5 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     @IBAction func tapScreen(sender: UITapGestureRecognizer) {
         sender.cancelsTouchesInView = false
         self.view.endEditing(true)
-        
     }
 }

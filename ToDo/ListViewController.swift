@@ -86,6 +86,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let dateswitch = saveData.object(forKey: formerkey+"@ison") as! Bool?
         let datefield = saveData.object(forKey: formerkey+"@") as! String?
         let datepicker = saveData.object(forKey: formerkey+"@@") as! Date?
+        var laterkey = ""
         
         if(searchbar.text == "") {
             if dic[listNameArray[indexPath.row]] != nil{
@@ -95,26 +96,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             dic[folder]?.remove(at: (dic[folder]?.index(of: file))!)
             
-            let laterkey = listNameArray[indexPath.row]+"@"+file
-            
-            if memotextview != nil{
-                saveData.set(memotextview, forKey: laterkey)
-                saveData.removeObject(forKey: formerkey)
-            }
-            if dateswitch != nil{
-                saveData.set(dateswitch, forKey: laterkey+"@ison")
-                saveData.removeObject(forKey: formerkey+"@ison")
-            }
-            if datefield != nil{
-                saveData.set(datefield, forKey: laterkey+"@")
-                saveData.removeObject(forKey: formerkey+"@")
-            }
-            if datepicker != nil{
-                saveData.set(datepicker, forKey: laterkey+"@@")
-                saveData.removeObject(forKey: formerkey+"@@")
-            }
+            laterkey = listNameArray[indexPath.row]+"@"+file
         }else{
-//////////////////////////////////////////////Dateの書き換え///////////////////////////////////////////////
             saveData.set(memotextview, forKey: searchArray[indexPath.row]+"@"+file)
             if dic[searchArray[indexPath.row]] != nil{
                 dic[searchArray[indexPath.row]]!.append(file)
@@ -122,6 +105,25 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 dic[searchArray[indexPath.row]] = [file]
             }
             dic[folder]?.remove(at: (dic[folder]?.index(of: file))!)
+            
+            laterkey = searchArray[indexPath.row]+"@"+file
+        }
+        
+        if memotextview != nil{
+            saveData.set(memotextview, forKey: laterkey)
+            saveData.removeObject(forKey: formerkey)
+        }
+        if dateswitch != nil{
+            saveData.set(dateswitch, forKey: laterkey+"@ison")
+            saveData.removeObject(forKey: formerkey+"@ison")
+        }
+        if datefield != nil{
+            saveData.set(datefield, forKey: laterkey+"@")
+            saveData.removeObject(forKey: formerkey+"@")
+        }
+        if datepicker != nil{
+            saveData.set(datepicker, forKey: laterkey+"@@")
+            saveData.removeObject(forKey: formerkey+"@@")
         }
         
         saveData.set(dic, forKey: "@ToDoList")
