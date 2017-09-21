@@ -258,12 +258,20 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                         self.saveData.removeObject(forKey: formerkey+"@")
                                         self.saveData.removeObject(forKey: formerkey+"@@")
                                         
+                                        
+                                    }
+                                }
+                            }
+                            
+                            if let fie = files[self.folderNameArray[indexPath.row]]{
+                                if !fie.isEmpty{
+                                    for _ in 0...fie.count-1{
                                         array.append((files[self.folderNameArray[indexPath.row]]?[0])!)
                                         files[self.folderNameArray[indexPath.row]]?.remove(at: 0)
                                     }
                                 }
                             }
-                                                        
+                            
                             self.folderNameArray[indexPath.row] = textField.text!
                             
                             files[self.folderNameArray[indexPath.row]] = array

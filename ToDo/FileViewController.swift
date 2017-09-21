@@ -70,8 +70,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         navtitle.setTitle(openedFolder, for: .normal)
         showDict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
         table.reloadData()
-        
-        deselect()
+        table.selectRow(at: ind, animated: false, scrollPosition: UITableViewScrollPosition.none)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01){
+            self.deselect()
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -134,7 +136,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         return cell!
     }
-    
+    var ind: IndexPath?
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if edit {
             edit(indexPath: indexPath)
@@ -144,7 +146,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }else{
                 saveData.set(String(searchArray[indexPath.row]), forKey: "@memo")
             }
-            
+            ind = indexPath
             let storyboard = self.storyboard!
             let nextView = storyboard.instantiateViewController(withIdentifier: "Memo") as! MemoViewController
             self.navigationController?.pushViewController(nextView, animated: true)
