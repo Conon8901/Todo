@@ -6,5 +6,3 @@
     
 バグ修正
     
-    memo -> file時のdeselect()が見られない
-        file -> folderにはあり
