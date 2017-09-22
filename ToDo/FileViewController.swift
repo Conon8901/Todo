@@ -57,6 +57,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         searchbar.delegate = self
         searchbar.enablesReturnKeyAutomatically = false
         
+        table.keyboardDismissMode = UIScrollViewKeyboardDismissMode.interactive
+        
         editButton.title = NSLocalizedString("編集", comment: "")
         
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
@@ -101,6 +103,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.reloadData()
     }
     
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if table.contentOffset.y >= -64{
+            searchbar.endEditing(true)
+        }
+    }
+    
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -128,8 +136,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }else{
             cell?.textLabel?.text = showDict[openedFolder]?[indexPath.row]
             
-            let text = (showDict[openedFolder]?[indexPath.row])!
-            if let subtitle = saveData.object(forKey: openedFolder+"@"+text) as! String?{
+            let text = (showDict[openedFolder]?[indexPath.row])
+            if let subtitle = saveData.object(forKey: openedFolder+"@"+text!) as! String?{
                 cell?.detailTextLabel?.text = subtitle
             }
         }
@@ -466,27 +474,29 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func allRemove(_ sender: UILongPressGestureRecognizer) {
         if (sender.state == .began) {
-            let alert = UIAlertController(title: NSLocalizedString("全削除", comment: ""), message: NSLocalizedString("本当によろしいですか？", comment: ""), preferredStyle: .alert)
+            let alert = UIAlertController(title: NSLocalizedString("全削除", comment: ""), message: NSLocalizedString("本当によろしいですか？\nこのフォルダの全ファイルを削除します", comment: ""), preferredStyle: .alert)
             
             let saveAction = UIAlertAction(title: "OK", style: .destructive) { (action:UIAlertAction!) -> Void in
-                let count = (self.showDict[self.openedFolder]?.count)!
-                if count != 0{
-                    for i in 0...count-1{
-                        let key = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[i])!
-                        self.saveData.removeObject(forKey: key)
-                        self.saveData.removeObject(forKey: key+"@ison")
-                        self.saveData.removeObject(forKey: key+"@")
-                        self.saveData.removeObject(forKey: key+"@@")
+                if self.showDict[self.openedFolder]?.count != nil{
+                    let count = (self.showDict[self.openedFolder]?.count)!
+                    if count != 0{
+                        for i in 0...count-1{
+                            let key = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[i])!
+                            self.saveData.removeObject(forKey: key)
+                            self.saveData.removeObject(forKey: key+"@ison")
+                            self.saveData.removeObject(forKey: key+"@")
+                            self.saveData.removeObject(forKey: key+"@@")
+                        }
+                        
+                        self.showDict[self.openedFolder] = []
+                        self.searchArray = []
+                        
+                        self.saveData.set(self.showDict, forKey: "@ToDoList")
+                        
+                        self.table.reloadData()
+                        
+                        self.editButton.isEnabled = false
                     }
-                    
-                    self.showDict[self.openedFolder] = []
-                    self.searchArray = []
-                    
-                    self.saveData.set(self.showDict, forKey: "@ToDoList")
-                    
-                    self.table.reloadData()
-                    
-                    self.editButton.isEnabled = false
                 }
             }
             

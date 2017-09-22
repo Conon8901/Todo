@@ -93,6 +93,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.reloadData()
     }
     
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if table.contentOffset.y >= -64{
+            searchbar.endEditing(true)
+        }
+    }
+
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
