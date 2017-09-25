@@ -76,8 +76,32 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
             
         cell?.textLabel?.numberOfLines = 0
-        
+    
+        if cell?.textLabel?.text == saveData.object(forKey: "@move") as? String{
+            cell?.selectionStyle = UITableViewCellSelectionStyle.none
+            cell?.textLabel?.textColor = .lightGray
+        }
+    
         return cell!
+    }
+    
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        
+        if searchbar.text == ""{
+            switch listNameArray[indexPath.row]{
+            case saveData.object(forKey: "@move") as! String:
+                return nil
+            default:
+                return indexPath
+            }
+        }else{
+            switch searchArray[indexPath.row]{
+            case saveData.object(forKey: "@move") as! String:
+                return nil
+            default:
+                return indexPath
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
