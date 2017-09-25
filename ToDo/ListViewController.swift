@@ -168,7 +168,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         var dict = self.saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
                         dict[textField.text!] = []
-                        print(type(of: dict))
                         self.saveData.set(dict, forKey: "@ToDoList")
 
                         self.saveData.synchronize()

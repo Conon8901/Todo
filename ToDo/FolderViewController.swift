@@ -38,6 +38,19 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.dataSource = self
         table.delegate = self
         
+        searchbar.delegate = self
+        searchbar.enablesReturnKeyAutomatically = false
+        
+        table.keyboardDismissMode = UIScrollViewKeyboardDismissMode.interactive
+        
+        editButton.title = NSLocalizedString("編集", comment: "")
+        
+        navigationItem.title = NSLocalizedString("フォルダ", comment: "")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
         if saveData.object(forKey: "@folder") != nil{
             folderNameArray = saveData.object(forKey: "@folder") as! [String]
         }else{
@@ -52,19 +65,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         search()
         
-        searchbar.delegate = self
-        searchbar.enablesReturnKeyAutomatically = false
+        table.reloadData()
         
-        table.keyboardDismissMode = UIScrollViewKeyboardDismissMode.interactive
-        
-        editButton.title = NSLocalizedString("編集", comment: "")
-        
-        navigationItem.title = NSLocalizedString("フォルダ", comment: "")
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
         deselect()
     }
     
