@@ -61,9 +61,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         editButton.title = NSLocalizedString("編集", comment: "")
         
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
-        self.navtitle.addGestureRecognizer(longPressGesture)
-        
         navigationItem.backBarButtonItem = UIBarButtonItem(title: openedFolder, style: .plain, target: nil, action: nil)
     }
     
@@ -72,10 +69,20 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         navtitle.setTitle(openedFolder, for: .normal)
         showDict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
         table.reloadData()
+        
+        if showDict[openedFolder]?.count != 0{
+            navtitle.isEnabled = true
+            let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
+            self.navtitle.addGestureRecognizer(longPressGesture)//delete
+        }else{
+            navtitle.isEnabled = false
+        }
+        
         table.selectRow(at: ind, animated: false, scrollPosition: UITableViewScrollPosition.none)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01){
             self.deselect()
         }
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -180,6 +187,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.showDict[self.openedFolder]?.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
                 self.saveData.set(self.showDict, forKey: "@ToDoList")
+                
+                if self.showDict[self.openedFolder]?.count == 0{
+                    self.navtitle.isEnabled = false
+                    self.navtitle.gestureRecognizers?.removeAll()
+                }
             }else{
                 let key = self.openedFolder+"@"+self.searchArray[indexPath.row]
                 
@@ -193,6 +205,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.searchArray.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
                 self.saveData.set(self.showDict, forKey: "@ToDoList")
+                
+                if self.searchArray.count == 0{
+                    self.navtitle.isEnabled = false
+                    self.navtitle.gestureRecognizers?.removeAll()
+                }
             }
             
             if self.showDict[self.openedFolder] != nil{
@@ -289,6 +306,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             let offset = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
                             self.table.setContentOffset(offset, animated: true)
                         }
+                        
+                        self.navtitle.isEnabled = true
+                        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
+                        self.navtitle.addGestureRecognizer(longPressGesture)
                     }
                 }
             }else{
@@ -496,6 +517,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.table.reloadData()
                         
                         self.editButton.isEnabled = false
+                        
+                        self.navtitle.isEnabled = false
+                        self.navtitle.gestureRecognizers?.removeAll()
                     }
                 }
             }
