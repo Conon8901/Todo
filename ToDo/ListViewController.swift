@@ -17,7 +17,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var searchArray = [String]()
     
     var saveData = UserDefaults.standard
-
+    
+    let excludes = CharacterSet(charactersIn: "　 ")
+    
+    var sameName = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -133,5 +137,81 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBAction func cancel() {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func add() {
+        let alert = UIAlertController(title: NSLocalizedString("フォルダ追加", comment: ""), message: NSLocalizedString("タイトル入力", comment: ""), preferredStyle: .alert)
+        let saveAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
+            let textField = alert.textFields![0] as UITextField
+            let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
+            if blank != ""{
+                self.sameName = false
+                if self.listNameArray.count != 0{
+                    for i in 0...self.listNameArray.count-1{
+                        if self.listNameArray[i] == textField.text!{
+                            self.sameName = true
+                        }
+                    }
+                }
+                if self.sameName{
+                    self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
+                }else{
+                    if (textField.text?.contains("@"))!{
+                        self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
+                        
+                        self.deselect()
+                    }else{
+                        self.listNameArray.append(textField.text!)
+                        self.table.reloadData()
+                        
+                        self.saveData.set(self.listNameArray, forKey: "@folder")
+                        
+                        var dict = self.saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
+                        dict[textField.text!] = []
+                        print(type(of: dict))
+                        self.saveData.set(dict, forKey: "@ToDoList")
+
+                        self.saveData.synchronize()
+                        
+                        if self.listNameArray.count >= 11{
+                            let offset = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
+                            self.table.setContentOffset(offset, animated: true)
+                        }
+                    }
+                }
+            }else{
+                self.showalert(message: NSLocalizedString("入力してください", comment: ""))
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
+            self.deselect()
+        }
+        
+        alert.addTextField { (textField:UITextField!) -> Void in
+            textField.textAlignment = NSTextAlignment.left
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(saveAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func showalert(message: String) {
+        let alert = UIAlertController(
+            title: NSLocalizedString("エラー", comment: ""),
+            message: message,
+            preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func deselect() {
+        if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
+            self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
+        }
     }
 }
