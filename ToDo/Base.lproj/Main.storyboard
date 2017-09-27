@@ -324,14 +324,14 @@
                                 </connections>
                             </switch>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5cl-b8-eKw">
-                                <rect key="frame" x="136" y="377" width="148" height="30"/>
+                                <rect key="frame" x="147" y="377" width="148" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="日時" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A0h-Rs-Qai">
-                                <rect key="frame" x="90" y="382" width="35" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="日時" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A0h-Rs-Qai">
+                                <rect key="frame" x="79" y="382" width="60" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -347,9 +347,9 @@
                     <navigationItem key="navigationItem" title="Memo" id="JIv-pH-Dei"/>
                     <connections>
                         <outlet property="dateField" destination="5cl-b8-eKw" id="aVT-nw-qc3"/>
+                        <outlet property="dateLabel" destination="A0h-Rs-Qai" id="G7w-PY-VCz"/>
                         <outlet property="datePicker" destination="aq9-6o-wXO" id="Vg6-iU-Bsm"/>
                         <outlet property="dateSwitch" destination="HU6-fN-tgQ" id="grg-dZ-GAT"/>
-                        <outlet property="label" destination="A0h-Rs-Qai" id="cVp-Ba-H4l"/>
                         <outlet property="memoTextView" destination="oc5-h8-qBm" id="h20-al-HmZ"/>
                         <outlet property="placeholder" destination="6Ti-oh-VyT" id="mYX-EC-5UX"/>
                     </connections>
@@ -361,7 +361,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3489" y="134"/>
+            <point key="canvasLocation" x="3488.8000000000002" y="133.5832083958021"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="cNz-Bm-z0t">
