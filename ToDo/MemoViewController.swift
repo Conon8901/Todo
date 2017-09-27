@@ -17,7 +17,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     @IBOutlet var dateSwitch: UISwitch!
     @IBOutlet var dateField: UITextField!
     @IBOutlet var datePicker: UIDatePicker!
-    @IBOutlet var label: UILabel!
+    @IBOutlet var dateLabel: UILabel!
     
     var saveData = UserDefaults.standard
     
@@ -44,9 +44,11 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         dateField.isHidden = true
         datePicker.isHidden = true
-        label.isHidden = true
+        dateLabel.isHidden = true
         
         placeholder.text = NSLocalizedString("メモ", comment: "")
+        
+        dateLabel.text = NSLocalizedString("期限", comment: "")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -112,7 +114,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         }else{
             dateField.isHidden = true
             datePicker.isHidden = true
-            label.isHidden = true
+            dateLabel.isHidden = true
         }
     }
     
@@ -130,11 +132,11 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         if dateSwitch.isOn{
             dateField.isHidden = false
             datePicker.isHidden = false
-            label.isHidden = false
+            dateLabel.isHidden = false
         }else{
             dateField.isHidden = true
             datePicker.isHidden = true
-            label.isHidden = true
+            dateLabel.isHidden = true
         }
         
         datePicker.minimumDate = NSDate() as Date
