@@ -10,6 +10,8 @@ import UIKit
 
 class ListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
+    // MARK: - Declare
+    
     @IBOutlet var table: UITableView!
     @IBOutlet var searchbar: UISearchBar!
     
@@ -21,6 +23,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     let excludes = CharacterSet(charactersIn: "　 ")
     
     var sameName = false
+    
+    // MARK: - Basics
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +42,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.didReceiveMemoryWarning()
         
     }
+    
+    // MARK: - SearchBar
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchbar.endEditing(true)
@@ -58,6 +64,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.reloadData()
     }
 
+    // MARK: - TableView
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searchbar.text != ""{
             return searchArray.count
@@ -74,11 +82,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }else{
             cell?.textLabel?.text = listNameArray[indexPath.row]
         }
-            
+        
         cell?.textLabel?.numberOfLines = 0
     
         if cell?.textLabel?.text == saveData.object(forKey: "@move") as? String{
-            cell?.selectionStyle = UITableViewCellSelectionStyle.none
+            cell?.selectionStyle = .none
             cell?.textLabel?.textColor = .lightGray
         }
     
@@ -107,9 +115,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         var dic: [String : Array<String>] = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]!
-        let folder = saveData.object(forKey: "@move") as! String
-        let file = saveData.object(forKey: "@movingfile") as! String
-        let formerkey = folder+"@"+file
+        let fromFolderName = saveData.object(forKey: "@move") as! String
+        let fileName = saveData.object(forKey: "@movingfile") as! String
+        let formerkey = fromFolderName+"@"+fileName
         let memotextview = saveData.object(forKey: formerkey) as! String?
         let dateswitch = saveData.object(forKey: formerkey+"@ison") as! Bool?
         let datefield = saveData.object(forKey: formerkey+"@") as! String?
@@ -118,23 +126,22 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         if(searchbar.text == "") {
             if dic[listNameArray[indexPath.row]] != nil{
-                dic[listNameArray[indexPath.row]]!.append(file)
+                dic[listNameArray[indexPath.row]]!.append(fileName)
             }else{
-                dic[listNameArray[indexPath.row]] = [file]
+                dic[listNameArray[indexPath.row]] = [fileName]
             }
-            dic[folder]?.remove(at: (dic[folder]?.index(of: file))!)
+            dic[fromFolderName]?.remove(at: (dic[fromFolderName]?.index(of: fileName))!)
             
-            laterkey = listNameArray[indexPath.row]+"@"+file
+            laterkey = listNameArray[indexPath.row]+"@"+fileName
         }else{
-            saveData.set(memotextview, forKey: searchArray[indexPath.row]+"@"+file)
             if dic[searchArray[indexPath.row]] != nil{
-                dic[searchArray[indexPath.row]]!.append(file)
+                dic[searchArray[indexPath.row]]!.append(fileName)
             }else{
-                dic[searchArray[indexPath.row]] = [file]
+                dic[searchArray[indexPath.row]] = [fileName]
             }
-            dic[folder]?.remove(at: (dic[folder]?.index(of: file))!)
+            dic[fromFolderName]?.remove(at: (dic[fromFolderName]?.index(of: fileName))!)
             
-            laterkey = searchArray[indexPath.row]+"@"+file
+            laterkey = searchArray[indexPath.row]+"@"+fileName
         }
         
         if memotextview != nil{
@@ -159,16 +166,16 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func cancel() {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
     @IBAction func add() {
         let alert = UIAlertController(title: NSLocalizedString("フォルダ追加", comment: ""), message: NSLocalizedString("タイトル入力", comment: ""), preferredStyle: .alert)
         let saveAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
-            let blank = String(describing: textField.text!).components(separatedBy: self.excludes).joined()
-            if blank != ""{
+            
+            let isBlank = String(describing: textField.text!).components(separatedBy: self.excludes).joined() == ""
+            
+            if isBlank{
+                self.showalert(message: NSLocalizedString("入力してください", comment: ""))
+            }else{
                 self.sameName = false
                 if self.listNameArray.count != 0{
                     for i in 0...self.listNameArray.count-1{
@@ -193,22 +200,19 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         var dict = self.saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
                         dict[textField.text!] = []
                         self.saveData.set(dict, forKey: "@ToDoList")
-
+                        
                         self.saveData.synchronize()
                         
                         if self.listNameArray.count >= 11{
-                            let offset = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
-                            self.table.setContentOffset(offset, animated: true)
+                            let coordinates = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
+                            self.table.setContentOffset(coordinates, animated: true)
                         }
                     }
                 }
-            }else{
-                self.showalert(message: NSLocalizedString("入力してください", comment: ""))
             }
         }
         
         let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
-            self.deselect()
         }
         
         alert.addTextField { (textField:UITextField!) -> Void in
@@ -220,6 +224,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         present(alert, animated: true, completion: nil)
     }
+    
+    // MARK: - Method
     
     func showalert(message: String) {
         let alert = UIAlertController(
@@ -236,5 +242,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
             self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
         }
+    }
+    
+    // MARK: - Else
+    
+    @IBAction func cancel() {
+        self.dismiss(animated: true, completion: nil)
     }
 }
