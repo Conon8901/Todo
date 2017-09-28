@@ -58,17 +58,17 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         file2 = saveData.object(forKey: "@memo") as! String
         file3 = file1+"@"+file2
         
-        if saveData.object(forKey: file3) != nil{
+        if saveData.object(forKey: file3) != nil {
             memoTextView.text = saveData.object(forKey: file3) as! String!
-        }else{
+        } else {
             memoTextView.text = ""
         }
         
-        if saveData.object(forKey: file3+"@ison") != nil{
+        if saveData.object(forKey: file3+"@ison") != nil {
             dateSwitch.isOn = saveData.object(forKey: file3+"@ison") as! Bool
             
             dateShow()
-        }else{
+        } else {
             dateSwitch.isOn = false
         }
         
@@ -109,9 +109,9 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - Switch
     
     @IBAction func switchChanged(_ sender: UISwitch) {
-        if sender.isOn{
+        if sender.isOn {
             dateShow()
-        }else{
+        } else {
             dateField.isHidden = true
             datePicker.isHidden = true
             dateLabel.isHidden = true
@@ -121,19 +121,19 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - Method
     
     func placeholderHidden() {
-        if memoTextView.text.isEmpty{
+        if memoTextView.text.isEmpty {
             placeholder.isHidden = false
-        }else{
+        } else {
             placeholder.isHidden = true
         }
     }
     
     func dateShow() {
-        if dateSwitch.isOn{
+        if dateSwitch.isOn {
             dateField.isHidden = false
             datePicker.isHidden = false
             dateLabel.isHidden = false
-        }else{
+        } else {
             dateField.isHidden = true
             datePicker.isHidden = true
             dateLabel.isHidden = true
@@ -141,15 +141,15 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         datePicker.minimumDate = NSDate() as Date
         
-        if saveData.object(forKey: file3+"@") != nil, saveData.object(forKey: file3+"@@") != nil{
+        if saveData.object(forKey: file3+"@") != nil, saveData.object(forKey: file3+"@@") != nil {
             dateField.text = saveData.object(forKey: file3+"@") as! String!
             
             datePicker.date = saveData.object(forKey: file3+"@@") as! Date
             
-            if NSDate() as Date >= saveData.object(forKey: file3+"@@") as! Date{
+            if NSDate() as Date >= saveData.object(forKey: file3+"@@") as! Date {
                 dateField.text = NSLocalizedString("終了", comment: "")
             }
-        }else{
+        } else {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy/MM/dd HH:mm"
             
