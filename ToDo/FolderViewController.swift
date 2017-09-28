@@ -24,8 +24,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     var deleteDict = [String:Array<String>]()
     var editDict = [String:Array<String>]()
     
-    let excludes = CharacterSet(charactersIn: "　 ")
-    
     var edit = false
     var sameName = false
     
@@ -216,7 +214,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let saveAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = String(describing: textField.text!).components(separatedBy: self.excludes).joined() == ""
+            let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined() == ""
             
             if isBlank{
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
@@ -276,7 +274,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let saveAction = UIAlertAction(title: NSLocalizedString("変更", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = String(describing: textField.text!).components(separatedBy: self.excludes).joined() == ""
+            let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined() == ""
             
             if isBlank{
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))

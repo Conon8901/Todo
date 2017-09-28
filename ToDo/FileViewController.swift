@@ -23,8 +23,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var showDict = [String:Array<String>]()
     var searchArray = [String]()
     
-    let excludes = CharacterSet(charactersIn: "　 ")
-    
     var openedFolder = ""
     
     var edit = false
@@ -263,7 +261,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let saveAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = String(describing: textField.text!).components(separatedBy: self.excludes).joined() == ""
+            let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined() == ""
             
             if isBlank{
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
@@ -337,7 +335,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let saveAction = UIAlertAction(title: NSLocalizedString("変更", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = String(describing: textField.text!).components(separatedBy: self.excludes).joined() == ""
+            let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined() == ""
             
             if isBlank{
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
