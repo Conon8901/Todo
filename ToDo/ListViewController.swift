@@ -20,8 +20,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var saveData = UserDefaults.standard
     
-    let excludes = CharacterSet(charactersIn: "　 ")
-    
     var sameName = false
     
     // MARK: - Basics
@@ -171,7 +169,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let saveAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = String(describing: textField.text!).components(separatedBy: self.excludes).joined() == ""
+            let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined() == ""
             
             if isBlank{
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
