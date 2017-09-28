@@ -52,7 +52,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         if(searchbar.text == "") {
             searchArray = listNameArray
-        }else{
+        } else {
             for data in listNameArray {
                 if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
                     searchArray.append(data)
@@ -65,9 +65,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchbar.text != ""{
+        if searchbar.text != "" {
             return searchArray.count
-        }else{
+        } else {
             return listNameArray.count
         }
     }
@@ -75,15 +75,15 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "List")
         
-        if searchbar.text != ""{
+        if searchbar.text != "" {
             cell?.textLabel?.text = searchArray[indexPath.row]
-        }else{
+        } else {
             cell?.textLabel?.text = listNameArray[indexPath.row]
         }
         
         cell?.textLabel?.numberOfLines = 0
     
-        if cell?.textLabel?.text == saveData.object(forKey: "@move") as? String{
+        if cell?.textLabel?.text == saveData.object(forKey: "@move") as? String {
             cell?.selectionStyle = .none
             cell?.textLabel?.textColor = .lightGray
         }
@@ -93,15 +93,15 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         
-        if searchbar.text == ""{
-            switch listNameArray[indexPath.row]{
+        if searchbar.text == "" {
+            switch listNameArray[indexPath.row] {
             case saveData.object(forKey: "@move") as! String:
                 return nil
             default:
                 return indexPath
             }
-        }else{
-            switch searchArray[indexPath.row]{
+        } else {
+            switch searchArray[indexPath.row] {
             case saveData.object(forKey: "@move") as! String:
                 return nil
             default:
@@ -123,18 +123,18 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         var laterkey = ""
         
         if(searchbar.text == "") {
-            if dic[listNameArray[indexPath.row]] != nil{
+            if dic[listNameArray[indexPath.row]] != nil {
                 dic[listNameArray[indexPath.row]]!.append(fileName)
-            }else{
+            } else {
                 dic[listNameArray[indexPath.row]] = [fileName]
             }
             dic[fromFolderName]?.remove(at: (dic[fromFolderName]?.index(of: fileName))!)
             
             laterkey = listNameArray[indexPath.row]+"@"+fileName
-        }else{
-            if dic[searchArray[indexPath.row]] != nil{
+        } else {
+            if dic[searchArray[indexPath.row]] != nil {
                 dic[searchArray[indexPath.row]]!.append(fileName)
-            }else{
+            } else {
                 dic[searchArray[indexPath.row]] = [fileName]
             }
             dic[fromFolderName]?.remove(at: (dic[fromFolderName]?.index(of: fileName))!)
@@ -142,19 +142,19 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             laterkey = searchArray[indexPath.row]+"@"+fileName
         }
         
-        if memotextview != nil{
+        if memotextview != nil {
             saveData.set(memotextview, forKey: laterkey)
             saveData.removeObject(forKey: formerkey)
         }
-        if dateswitch != nil{
+        if dateswitch != nil {
             saveData.set(dateswitch, forKey: laterkey+"@ison")
             saveData.removeObject(forKey: formerkey+"@ison")
         }
-        if datefield != nil{
+        if datefield != nil {
             saveData.set(datefield, forKey: laterkey+"@")
             saveData.removeObject(forKey: formerkey+"@")
         }
-        if datepicker != nil{
+        if datepicker != nil {
             saveData.set(datepicker, forKey: laterkey+"@@")
             saveData.removeObject(forKey: formerkey+"@@")
         }
@@ -171,25 +171,25 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined() == ""
             
-            if isBlank{
+            if isBlank {
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
-            }else{
+            } else {
                 self.sameName = false
-                if self.listNameArray.count != 0{
-                    for i in 0...self.listNameArray.count-1{
-                        if self.listNameArray[i] == textField.text!{
+                if self.listNameArray.count != 0 {
+                    for i in 0...self.listNameArray.count-1 {
+                        if self.listNameArray[i] == textField.text! {
                             self.sameName = true
                         }
                     }
                 }
-                if self.sameName{
+                if self.sameName {
                     self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
-                }else{
-                    if (textField.text?.contains("@"))!{
+                } else {
+                    if (textField.text?.contains("@"))! {
                         self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
                         
                         self.deselect()
-                    }else{
+                    } else {
                         self.listNameArray.append(textField.text!)
                         self.table.reloadData()
                         
@@ -201,7 +201,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.saveData.synchronize()
                         
-                        if self.listNameArray.count >= 11{
+                        if self.listNameArray.count >= 11 {
                             let coordinates = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
                             self.table.setContentOffset(coordinates, animated: true)
                         }
