@@ -25,7 +25,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var openedFolder = ""
     
-    var edit = false
     var sameName = false
     
     var ind: IndexPath?
@@ -44,7 +43,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.saveData.set(self.showDict, forKey: "@TodoList")
         }
         
-        openedFolder = saveData.object(forKey: "@move")! as! String
+        openedFolder = saveData.object(forKey: "@move") as! String
         
         search()
         
@@ -72,6 +71,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         navtitle.setTitle(openedFolder, for: .normal)
         
+        if saveData.object(forKey: "@fromListView") != nil{
+            showDict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
+            saveData.removeObject(forKey: "@fromListView")
+        }
+        
         table.reloadData()
         
         if showDict[openedFolder]?.count != 0, showDict[openedFolder]?.count != nil {
@@ -80,6 +84,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.navtitle.addGestureRecognizer(longPressGesture)
         } else {
             navtitle.isEnabled = false
+            self.navtitle.gestureRecognizers?.removeAll()
         }
         
         table.selectRow(at: ind, animated: false, scrollPosition: UITableViewScrollPosition.none)
@@ -158,7 +163,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if edit {
+        if isEditing {
             edit(indexPath: indexPath)
         } else {
             if searchbar.text == "" {
@@ -358,39 +363,33 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             
                             let formerkey = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!
                             
-                            var memotextview: String?
-                            var dateswitch: Bool?
-                            var datefield: String?
-                            var datepicker: Date?
-                            
-                            memotextview = self.saveData.object(forKey: formerkey) as? String
-                            
-                            dateswitch = self.saveData.object(forKey: formerkey+"@ison") as? Bool
-                            
-                            datefield = self.saveData.object(forKey: formerkey+"@") as? String
-                            
-                            datepicker = self.saveData.object(forKey: formerkey+"@@") as? Date
+                            let memotextview = self.saveData.object(forKey: formerkey) as? String
+                            let dateswitch = self.saveData.object(forKey: formerkey+"@ison") as? Bool
+                            let datefield = self.saveData.object(forKey: formerkey+"@") as? String
+                            let datepicker = self.saveData.object(forKey: formerkey+"@@") as? Date
                             
                             self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
                             
-                            self.saveData.set(self.showDict, forKey: "@ToDoList")
-                            
                             let laterkey = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!
-                            
-                            self.removeAllObject(key: formerkey)
                             
                             if memotextview != nil {
                                 self.saveData.set(memotextview!, forKey: laterkey)
+                                self.saveData.removeObject(forKey: formerkey)
                             }
                             if dateswitch != nil {
                                 self.saveData.set(dateswitch!, forKey: laterkey+"@ison")
+                                self.saveData.removeObject(forKey: formerkey+"@ison")
                             }
                             if datefield != nil {
                                 self.saveData.set(datefield!, forKey: laterkey+"@")
+                                self.saveData.removeObject(forKey: formerkey+"@")
                             }
                             if datepicker != nil {
                                 self.saveData.set(datepicker!, forKey: laterkey+"@@")
+                                self.saveData.removeObject(forKey: formerkey+"@@")
                             }
+                            
+                            self.saveData.set(self.showDict, forKey: "@ToDoList")
                         } else {
                             let fileName = self.searchArray[indexPath.row]
                             
@@ -460,13 +459,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
             editButton.title = NSLocalizedString("編集", comment: "")
-            edit = false
             navigationItem.hidesBackButton = false
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             editButton.title = NSLocalizedString("完了", comment: "")
-            edit = true
             navigationItem.hidesBackButton = true
         }
     }
@@ -523,9 +520,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func search() {
-        let count: Int? = showDict[openedFolder]?.count
-        if count != nil {
-            if count! == 0 {
+        let numberOfFiles: Int? = showDict[openedFolder]?.count
+        if numberOfFiles != nil {
+            if numberOfFiles! == 0 {
                 editButton.isEnabled = false
             } else {
                 editButton.isEnabled = true

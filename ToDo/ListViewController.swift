@@ -50,7 +50,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchArray.removeAll()
         
-        if(searchbar.text == "") {
+        if searchbar.text == "" {
             searchArray = listNameArray
         } else {
             for data in listNameArray {
@@ -92,19 +92,18 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        let folderName = saveData.object(forKey: "@move") as! String
         
         if searchbar.text == "" {
-            switch listNameArray[indexPath.row] {
-            case saveData.object(forKey: "@move") as! String:
+            if listNameArray[indexPath.row] == folderName{
                 return nil
-            default:
+            }else{
                 return indexPath
             }
         } else {
-            switch searchArray[indexPath.row] {
-            case saveData.object(forKey: "@move") as! String:
+            if searchArray[indexPath.row] == folderName{
                 return nil
-            default:
+            }else{
                 return indexPath
             }
         }
@@ -122,7 +121,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let datepicker = saveData.object(forKey: formerkey+"@@") as! Date?
         var laterkey = ""
         
-        if(searchbar.text == "") {
+        if searchbar.text == "" {
             if dic[listNameArray[indexPath.row]] != nil {
                 dic[listNameArray[indexPath.row]]!.append(fileName)
             } else {
@@ -160,6 +159,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         saveData.set(dic, forKey: "@ToDoList")
+        
+        saveData.set(true, forKey: "@fromListView")
         
         self.dismiss(animated: true, completion: nil)
     }
