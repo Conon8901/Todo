@@ -6,6 +6,6 @@
     
 コード修正
     
-    コード順
-    コード改行
-    命名
+    新規クラスに置いとく
+        showdict
+        openedFolder

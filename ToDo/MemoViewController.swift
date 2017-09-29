@@ -21,9 +21,9 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     var saveData = UserDefaults.standard
     
-    var file1 = ""
-    var file2 = ""
-    var file3 = ""
+    var folderName = ""
+    var fileName = ""
+    var key = ""
     
     // MARK: - Basics
     
@@ -54,18 +54,18 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        file1 = saveData.object(forKey: "@move") as! String
-        file2 = saveData.object(forKey: "@memo") as! String
-        file3 = file1+"@"+file2
+        folderName = saveData.object(forKey: "@move") as! String
+        fileName = saveData.object(forKey: "@memo") as! String
+        key = folderName+"@"+fileName
         
-        if saveData.object(forKey: file3) != nil {
-            memoTextView.text = saveData.object(forKey: file3) as! String!
+        if saveData.object(forKey: key) != nil {
+            memoTextView.text = saveData.object(forKey: key) as! String!
         } else {
             memoTextView.text = ""
         }
         
-        if saveData.object(forKey: file3+"@ison") != nil {
-            dateSwitch.isOn = saveData.object(forKey: file3+"@ison") as! Bool
+        if saveData.object(forKey: key+"@ison") != nil {
+            dateSwitch.isOn = saveData.object(forKey: key+"@ison") as! Bool
             
             dateShow()
         } else {
@@ -74,12 +74,12 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         placeholderHidden()
         
-        navigationItem.title = file2
+        navigationItem.title = fileName
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        saveData.set(memoTextView.text!, forKey: file3)
-        saveData.set(dateSwitch.isOn, forKey: file3+"@ison")
+        saveData.set(memoTextView.text!, forKey: key)
+        saveData.set(dateSwitch.isOn, forKey: key+"@ison")
         
         memoTextView.resignFirstResponder()
     }
@@ -98,12 +98,13 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     @IBAction func changeDate(sender: UIDatePicker) {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd HH:mm"
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
         
         dateField.text = formatter.string(from: sender.date)
         
-        saveData.set(dateField.text, forKey: file3+"@")
-        saveData.set(datePicker.date, forKey: file3+"@@")
+        saveData.set(dateField.text, forKey: key+"@")
+        saveData.set(datePicker.date, forKey: key+"@@")
     }
     
     // MARK: - Switch
@@ -141,17 +142,18 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         datePicker.minimumDate = NSDate() as Date
         
-        if saveData.object(forKey: file3+"@") != nil, saveData.object(forKey: file3+"@@") != nil {
-            dateField.text = saveData.object(forKey: file3+"@") as! String!
+        if saveData.object(forKey: key+"@") != nil, saveData.object(forKey: key+"@@") != nil {
+            dateField.text = saveData.object(forKey: key+"@") as! String!
             
-            datePicker.date = saveData.object(forKey: file3+"@@") as! Date
+            datePicker.date = saveData.object(forKey: key+"@@") as! Date
             
-            if NSDate() as Date >= saveData.object(forKey: file3+"@@") as! Date {
+            if NSDate() as Date >= saveData.object(forKey: key+"@@") as! Date {
                 dateField.text = NSLocalizedString("終了", comment: "")
             }
         } else {
             let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy/MM/dd HH:mm"
+            formatter.dateStyle = .short
+            formatter.timeStyle = .short
             
             dateField.text = formatter.string(from: NSDate() as Date)
         }

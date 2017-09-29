@@ -24,7 +24,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     var deleteDict = [String:Array<String>]()
     var editDict = [String:Array<String>]()
     
-    var edit = false
     var sameName = false
     
     // MARK: - Basics
@@ -81,7 +80,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchArray.removeAll()
         
-        if(searchbar.text == "") {
+        if searchbar.text == "" {
             searchArray = folderNameArray
         } else {
             for data in folderNameArray {
@@ -125,7 +124,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if edit {
+        if isEditing {
             edit(indexPath: indexPath)
         } else {
             if searchbar.text == "" {
@@ -152,7 +151,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         if editingStyle == .delete {
             deleteDict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
             
-            if(searchbar.text == "") {
+            if searchbar.text == "" {
                 if deleteDict[folderNameArray[indexPath.row]] != nil {
                     for file in deleteDict[folderNameArray[indexPath.row]]! {
                         removeAllObject(key: folderNameArray[indexPath.row]+"@"+file)
@@ -312,18 +311,20 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                         
                                         if memoTextView != nil {
                                             self.saveData.set(memoTextView!, forKey: laterkey)
+                                            self.saveData.removeObject(forKey: formerkey)
                                         }
                                         if dateSwitch != nil {
                                             self.saveData.set(dateSwitch!, forKey: laterkey+"@ison")
+                                            self.saveData.removeObject(forKey: formerkey+"@ison")
                                         }
                                         if dateField != nil {
                                             self.saveData.set(dateField!, forKey: laterkey+"@")
+                                            self.saveData.removeObject(forKey: formerkey+"@")
                                         }
                                         if datePicker != nil {
                                             self.saveData.set(datePicker!, forKey: laterkey+"@@")
+                                            self.saveData.removeObject(forKey: formerkey+"@@")
                                         }
-                                        
-                                        self.removeAllObject(key: formerkey)
                                     }
                                 }
                             }
@@ -331,7 +332,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             if let content = dict[self.folderNameArray[indexPath.row]] {
                                 if !content.isEmpty {
                                     for _ in 0...content.count-1 {
-                                        contentsOfFolder.append((dict[self.folderNameArray[indexPath.row]]?[0])!)
+                                       contentsOfFolder.append((content[0]))
                                         dict[self.folderNameArray[indexPath.row]]?.remove(at: 0)
                                     }
                                 }
@@ -363,19 +364,21 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                         
                                         let laterkey = textField.text!+"@"+data
                                         
-                                        self.removeAllObject(key: formerkey)
-                                        
                                         if memotextview != nil {
                                             self.saveData.set(memotextview!, forKey: laterkey)
+                                            self.saveData.removeObject(forKey: formerkey)
                                         }
                                         if dateswitch != nil {
                                             self.saveData.set(dateswitch!, forKey: laterkey+"@ison")
+                                            self.saveData.removeObject(forKey: formerkey+"@ison")
                                         }
                                         if datefield != nil {
                                             self.saveData.set(datefield!, forKey: laterkey+"@")
+                                            self.saveData.removeObject(forKey: formerkey+"@")
                                         }
                                         if datepicker != nil {
                                             self.saveData.set(datepicker!, forKey: laterkey+"@@")
+                                            self.saveData.removeObject(forKey: formerkey+"@@")
                                         }
                                     }
                                 }
@@ -386,7 +389,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             if let content = dict[self.searchArray[indexPath.row]] {
                                 if !content.isEmpty {
                                     for _ in 0...content.count-1 {
-                                        contentsOfFolder.append((dict[self.searchArray[indexPath.row]]?[0])!)
+                                        contentsOfFolder.append((content[0]))
                                         dict[self.searchArray[indexPath.row]]?.remove(at: 0)
                                     }
                                 }
@@ -438,12 +441,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
             editButton.title = NSLocalizedString("編集", comment: "")
-            edit = false
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             editButton.title = NSLocalizedString("完了", comment: "")
-            edit = true
         }
     }
     
