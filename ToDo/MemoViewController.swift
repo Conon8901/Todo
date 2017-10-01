@@ -38,9 +38,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         memoTextView.layer.cornerRadius = 6
         memoTextView.layer.masksToBounds = true
         
-        memoTextView.becomeFirstResponder()
-        
         datePicker.minimumDate = NSDate() as Date
+        datePicker.maximumDate = NSDate(timeInterval: 60*60*24*10000, since: NSDate() as Date) as Date
         
         dateField.isHidden = true
         datePicker.isHidden = true
@@ -80,6 +79,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         saveData.set(memoTextView.text!, forKey: key)
         saveData.set(dateSwitch.isOn, forKey: key+"@ison")
+        saveData.set(dateField.text, forKey: key+"@")
+        saveData.set(datePicker.date, forKey: key+"@@")
         
         memoTextView.resignFirstResponder()
     }
@@ -94,7 +95,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         placeholderHidden()
     }
     
-    // MARK: - DatePicker
+    // MARK: DatePicker
     
     @IBAction func changeDate(sender: UIDatePicker) {
         let formatter = DateFormatter()
@@ -102,12 +103,9 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         formatter.timeStyle = .short
         
         dateField.text = formatter.string(from: sender.date)
-        
-        saveData.set(dateField.text, forKey: key+"@")
-        saveData.set(datePicker.date, forKey: key+"@@")
     }
     
-    // MARK: - Switch
+    // MARK: Switch
     
     @IBAction func switchChanged(_ sender: UISwitch) {
         if sender.isOn {

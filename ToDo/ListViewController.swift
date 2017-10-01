@@ -40,27 +40,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.didReceiveMemoryWarning()
         
     }
-    
-    // MARK: - SearchBar
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchbar.endEditing(true)
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        searchArray.removeAll()
-        
-        if searchbar.text == "" {
-            searchArray = listNameArray
-        } else {
-            for data in listNameArray {
-                if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
-                    searchArray.append(data)
-                }
-            }
-        }
-        table.reloadData()
-    }
 
     // MARK: - TableView
     
@@ -222,6 +201,27 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         alert.addAction(saveAction)
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    // MARK: - SearchBar
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchbar.endEditing(true)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchArray.removeAll()
+        
+        if searchbar.text == "" {
+            searchArray = listNameArray
+        } else {
+            for data in listNameArray {
+                if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(data)
+                }
+            }
+        }
+        table.reloadData()
     }
     
     // MARK: - Method
