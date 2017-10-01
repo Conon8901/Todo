@@ -226,6 +226,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                 let coordinates = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
                                 self.table.setContentOffset(coordinates, animated: true)
                             }
+                            
+                            self.search()
+                            self.table.reloadData()
                         }
                     }
                 }
@@ -370,6 +373,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                         }
                                     }
                                 }
+                                
+                                self.search()
+                                self.table.reloadData()
                             }
                             
                             var contentsOfFolder = [String]()
@@ -451,16 +457,15 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        searchArray.removeAll()
-        
         if searchbar.text == "" {
+            searchArray.removeAll()
             searchArray = folderNameArray
         } else {
             search()
         }
         
         table.reloadData()
-    }//folder追加時に表示し直し
+    }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
         switch selectedScope {
@@ -477,7 +482,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         if searchBar.text != ""{
-            searchArray.removeAll()
             search()
             table.reloadData()
         }
@@ -526,6 +530,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func search() {
+        searchArray.removeAll()
+        
         for data in folderNameArray {
             switch selectingScopeBarTitleIndex {
             case 0:
