@@ -26,17 +26,21 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <searchBar key="tableHeaderView" contentMode="redraw" id="cGk-2t-q1i">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" showsScopeBar="YES" id="cIE-X2-7Ia">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="88"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     <textInputTraits key="textInputTraits"/>
+                                    <scopeButtonTitles>
+                                        <string>Title</string>
+                                        <string>Title</string>
+                                    </scopeButtonTitles>
                                 </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Folder" rowHeight="50" id="8eg-WV-9OM">
                                         <rect key="frame" x="0.0" y="72" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8eg-WV-9OM" id="mpi-P5-sBQ">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -67,7 +71,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="editButton" destination="brS-NQ-fPn" id="2j5-Kl-gB4"/>
-                        <outlet property="searchbar" destination="cGk-2t-q1i" id="eBV-iG-UEx"/>
+                        <outlet property="searchbar" destination="cIE-X2-7Ia" id="rDk-gJ-pYb"/>
                         <outlet property="table" destination="ykn-f0-c68" id="SVj-xQ-GsE"/>
                     </connections>
                 </viewController>
@@ -96,10 +100,14 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <searchBar key="tableHeaderView" contentMode="redraw" text="" id="b1n-bX-yKT">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" text="" showsScopeBar="YES" id="b1n-bX-yKT">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="88"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     <textInputTraits key="textInputTraits"/>
+                                    <scopeButtonTitles>
+                                        <string>Title</string>
+                                        <string>Title</string>
+                                    </scopeButtonTitles>
                                 </searchBar>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="File" textLabel="ONS-y6-wd4" detailTextLabel="dUP-6E-MvD" rowHeight="50" style="IBUITableViewCellStyleSubtitle" id="yR4-6v-zJc">
@@ -137,7 +145,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="isx-ny-Hoc">
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="9qV-EE-jIO">
-                            <rect key="frame" x="112.5" y="5.5" width="150" height="33"/>
+                            <rect key="frame" x="113" y="6" width="150" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                             <state key="normal" title="File">
@@ -308,9 +316,6 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <date key="date" timeIntervalSinceReferenceDate="526810307.10774302">
                                     <!--2017-09-11 08:11:47 +0000-->
-                                </date>
-                                <date key="maximumDate" timeIntervalSinceReferenceDate="1167577199">
-                                    <!--2037-12-31 14:59:59 +0000-->
                                 </date>
                                 <connections>
                                     <action selector="changeDateWithSender:" destination="cFD-wo-LKb" eventType="valueChanged" id="lvM-FH-p5M"/>

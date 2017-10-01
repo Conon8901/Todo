@@ -19,15 +19,15 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var saveData = UserDefaults.standard
     
-    var addArray = [String]()
     var showDict = [String:Array<String>]()
     var searchArray = [String]()
+    var addArray = [String]()
     
     var openedFolder = ""
     
     var sameName = false
     
-    var ind: IndexPath?
+    var selectingScopeBarTitleIndex = 0
     
     // MARK: - Basics
     
@@ -45,7 +45,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         openedFolder = saveData.object(forKey: "@move") as! String
         
-        search()
+        checkIsArrayIsEmpty()
         
         if showDict[openedFolder] != nil {
             searchArray = showDict[openedFolder]!
@@ -60,6 +60,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
+        
+        let partial = NSLocalizedString("部分", comment: "")
+        let exact = NSLocalizedString("完全", comment: "")
+        let forward = NSLocalizedString("前方", comment: "")
+        let backward = NSLocalizedString("後方", comment: "")
+        
+        searchbar.scopeButtonTitles = [partial, exact, forward, backward]
         
         editButton.title = NSLocalizedString("編集", comment: "")
         
@@ -86,44 +93,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             navtitle.isEnabled = false
             self.navtitle.gestureRecognizers?.removeAll()
         }
-        
-        table.selectRow(at: ind, animated: false, scrollPosition: UITableViewScrollPosition.none)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            self.deselect()
-        }
-        
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-    }
-    
-    // MARK: - SearchBar
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchbar.endEditing(true)
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        searchArray.removeAll()
-        
-        if searchbar.text == "" {
-            searchArray = showDict[openedFolder]!
-        } else {
-            for data in showDict[openedFolder]! {
-                if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
-                    searchArray.append(data)
-                }
-            }
-        }
-        
-        table.reloadData()
-    }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if table.contentOffset.y >= -64 {
-            searchbar.endEditing(true)
-        }
     }
     
     // MARK: - TableView
@@ -171,8 +144,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             } else {
                 saveData.set(searchArray[indexPath.row], forKey: "@memo")
             }
-            
-            ind = indexPath
             
             let storyboard = self.storyboard!
             let nextView = storyboard.instantiateViewController(withIdentifier: "Memo") as! MemoViewController
@@ -227,7 +198,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.table.setContentOffset(coordinates, animated: true)
             }
             
-            self.search()
+            self.checkIsArrayIsEmpty()
         }
         deleteButton.backgroundColor = .red
         
@@ -251,7 +222,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let movingFile = showDict[openedFolder]?[sourceIndexPath.row]
         showDict[openedFolder]?.remove(at: sourceIndexPath.row)
         showDict[openedFolder]?.insert(movingFile!, at: destinationIndexPath.row)
-        saveData.setValue(showDict, forKeyPath: "@ToDoList")
+        saveData.set(showDict, forKey: "@ToDoList")
         table.reloadData()
     }
     
@@ -297,16 +268,23 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.addArray.append(textField.text!)
                         self.showDict[self.openedFolder] = self.addArray
                         
-                        self.saveData.setValue(self.showDict, forKeyPath: "@ToDoList")
+                        self.saveData.set(self.showDict, forKey: "@ToDoList")
                         
                         self.saveData.synchronize()
                         self.table.reloadData()
                         
-                        self.search()
+                        self.checkIsArrayIsEmpty()
                         
-                        if (self.showDict[self.openedFolder]?.count)! >= 11 {
-                            let coordinates = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
-                            self.table.setContentOffset(coordinates, animated: true)
+                        if self.searchbar.text == "" {
+                            if (self.showDict[self.openedFolder]?.count)! >= 11 {
+                                let coordinates = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
+                                self.table.setContentOffset(coordinates, animated: true)
+                            }
+                        } else {
+                            if self.searchArray.count >= 11 {
+                                let coordinates = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
+                                self.table.setContentOffset(coordinates, animated: true)
+                            }
                         }
                         
                         self.navtitle.isEnabled = true
@@ -506,6 +484,66 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
+    // MARK: - SearchBar
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchbar.endEditing(true)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
+    }
+
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchArray.removeAll()
+        
+        if searchbar.text == "" {
+            searchArray = showDict[openedFolder]!
+        } else {
+            search()
+        }
+        
+        table.reloadData()
+    }//folder追加時に表示し直し
+    
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        switch selectedScope {
+        case 0:
+            selectingScopeBarTitleIndex = 0
+        case 1:
+            selectingScopeBarTitleIndex = 1
+        case 2:
+            selectingScopeBarTitleIndex = 2
+        case 3:
+            selectingScopeBarTitleIndex = 3
+        default:
+            break
+        }
+        
+        if searchBar.text != ""{
+            searchArray.removeAll()
+            search()
+            table.reloadData()
+        }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        table.reloadData()
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if table.contentOffset.y >= -64 {
+            searchbar.endEditing(true)
+        }
+    }
+    
     // MARK: - Method
     
     func showalert(message: String) {
@@ -519,7 +557,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.present(alert, animated: true, completion: nil)
     }
     
-    func search() {
+    func checkIsArrayIsEmpty() {
         let numberOfFiles: Int? = showDict[openedFolder]?.count
         if numberOfFiles != nil {
             if numberOfFiles! == 0 {
@@ -543,6 +581,31 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         saveData.removeObject(forKey: key+"@ison")
         saveData.removeObject(forKey: key+"@")
         saveData.removeObject(forKey: key+"@@")
+    }
+    
+    func search() {
+        for data in showDict[openedFolder]! {
+            switch selectingScopeBarTitleIndex {
+            case 0:
+                if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(data)
+                }
+            case 1:
+                if data.lowercased(with: NSLocale.current) == searchbar.text!.lowercased(with: NSLocale.current) {
+                    searchArray.append(data)
+                }
+            case 2:
+                if data.lowercased(with: NSLocale.current).hasPrefix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(data)
+                }
+            case 3:
+                if data.lowercased(with: NSLocale.current).hasSuffix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(data)
+                }
+            default:
+                break
+            }
+        }
     }
     
     // MARK: - Else

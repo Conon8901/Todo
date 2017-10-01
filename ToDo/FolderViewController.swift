@@ -19,12 +19,14 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     var saveData = UserDefaults.standard
     
     var folderNameArray = [String]()
-    var addNameArray = [String]()
     var searchArray = [String]()
+    var addNameArray = [String]()
     var deleteDict = [String:Array<String>]()
     var editDict = [String:Array<String>]()
     
     var sameName = false
+    
+    var selectingScopeBarTitleIndex = 0
     
     // MARK: - Basics
     
@@ -39,6 +41,13 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
+        
+        let partial = NSLocalizedString("部分", comment: "")
+        let exact = NSLocalizedString("完全", comment: "")
+        let forward = NSLocalizedString("前方", comment: "")
+        let backward = NSLocalizedString("後方", comment: "")
+        
+        searchbar.scopeButtonTitles = [partial, exact, forward, backward]
         
         editButton.title = NSLocalizedString("編集", comment: "")
         
@@ -60,7 +69,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             self.saveData.set(self.editDict, forKey: "@ToDoList")
         }
         
-        search()
+        checkIsArrayIsEmpty()
         
         table.reloadData()
         
@@ -69,34 +78,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-    }
-    
-    // MARK: - SearchBar
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchbar.endEditing(true)
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        searchArray.removeAll()
-        
-        if searchbar.text == "" {
-            searchArray = folderNameArray
-        } else {
-            for data in folderNameArray {
-                if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
-                    searchArray.append(data)
-                }
-            }
-        }
-        
-        table.reloadData()
-    }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if table.contentOffset.y >= -64 {
-            searchbar.endEditing(true)
-        }
     }
     
     // MARK: - TableView
@@ -178,7 +159,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             saveData.set(self.folderNameArray, forKey: "@folder")
             
-            search()
+            checkIsArrayIsEmpty()
             
             if folderNameArray.isEmpty {
                 let coordinates = CGPoint(x: 0, y: -64)
@@ -233,11 +214,18 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         self.saveData.set(self.folderNameArray, forKey: "@folder")
                         self.saveData.synchronize()
                         
-                        self.search()
+                        self.checkIsArrayIsEmpty()
                         
-                        if self.folderNameArray.count >= 11 {
-                            let coordinates = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
-                            self.table.setContentOffset(coordinates, animated: true)
+                        if self.searchbar.text == "" {
+                            if self.folderNameArray.count >= 10 {
+                                let coordinates = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
+                                self.table.setContentOffset(coordinates, animated: true)
+                            }
+                        } else {
+                            if self.searchArray.count >= 10 {
+                                let coordinates = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
+                                self.table.setContentOffset(coordinates, animated: true)
+                            }
                         }
                     }
                 }
@@ -448,6 +436,65 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
+    // MARK: - SearchBar
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchbar.endEditing(true)
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchArray.removeAll()
+        
+        if searchbar.text == "" {
+            searchArray = folderNameArray
+        } else {
+            search()
+        }
+        
+        table.reloadData()
+    }//folder追加時に表示し直し
+    
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        switch selectedScope {
+        case 0:
+            selectingScopeBarTitleIndex = 0
+        case 1:
+            selectingScopeBarTitleIndex = 1
+        case 2:
+            selectingScopeBarTitleIndex = 2
+        case 3:
+            selectingScopeBarTitleIndex = 3
+        default:
+            break
+        }
+        
+        if searchBar.text != ""{
+            searchArray.removeAll()
+            search()
+            table.reloadData()
+        }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        table.reloadData()
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if table.contentOffset.y >= -64 {
+            searchbar.endEditing(true)
+        }
+    }
+    
     // MARK: - Method
     
     func showalert(message: String) {
@@ -461,7 +508,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         self.present(alert, animated: true, completion: nil)
     }
     
-    func search() {
+    func checkIsArrayIsEmpty() {
         editButton.isEnabled = folderNameArray.isEmpty ? false : true
     }
     
@@ -476,6 +523,31 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         saveData.removeObject(forKey: key+"@ison")
         saveData.removeObject(forKey: key+"@")
         saveData.removeObject(forKey: key+"@@")
+    }
+    
+    func search() {
+        for data in folderNameArray {
+            switch selectingScopeBarTitleIndex {
+            case 0:
+                if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(data)
+                }
+            case 1:
+                if data.lowercased(with: NSLocale.current) == searchbar.text!.lowercased(with: NSLocale.current) {
+                    searchArray.append(data)
+                }
+            case 2:
+                if data.lowercased(with: NSLocale.current).hasPrefix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(data)
+                }
+            case 3:
+                if data.lowercased(with: NSLocale.current).hasSuffix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(data)
+                }
+            default:
+                break
+            }
+        }
     }
     
     // MARK: - Else
