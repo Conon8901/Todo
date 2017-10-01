@@ -285,6 +285,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                                 let coordinates = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
                                 self.table.setContentOffset(coordinates, animated: true)
                             }
+                            
+                            self.search()
+                            self.table.reloadData()
                         }
                         
                         self.navtitle.isEnabled = true
@@ -403,6 +406,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             }
                             
                             self.saveData.set(self.showDict, forKey: "@ToDoList")
+                            
+                            self.search()
+                            self.table.reloadData()
                         }
                         
                         self.table.reloadData()
@@ -500,16 +506,15 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        searchArray.removeAll()
-        
         if searchbar.text == "" {
+            searchArray.removeAll()
             searchArray = showDict[openedFolder]!
         } else {
             search()
         }
         
         table.reloadData()
-    }//folder追加時に表示し直し
+    }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
         switch selectedScope {
@@ -526,7 +531,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         if searchBar.text != ""{
-            searchArray.removeAll()
             search()
             table.reloadData()
         }
@@ -584,6 +588,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func search() {
+        searchArray.removeAll()
+        
         for data in showDict[openedFolder]! {
             switch selectingScopeBarTitleIndex {
             case 0:
