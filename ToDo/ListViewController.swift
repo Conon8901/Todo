@@ -62,7 +62,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         cell?.textLabel?.numberOfLines = 0
     
-        if cell?.textLabel?.text == saveData.object(forKey: "@move") as? String {
+        if cell?.textLabel?.text == saveData.object(forKey: "@move") as! String? {
             cell?.selectionStyle = .none
             cell?.textLabel?.textColor = .lightGray
         }
@@ -215,9 +215,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if searchbar.text == "" {
             searchArray = listNameArray
         } else {
-            for data in listNameArray {
-                if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
-                    searchArray.append(data)
+            for folderName in listNameArray {
+                if folderName.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(folderName)
                 }
             }
         }

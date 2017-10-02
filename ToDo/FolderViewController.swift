@@ -26,8 +26,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     var sameName = false
     
-    var selectingScopeBarTitleIndex = 0
-    
     // MARK: - Basics
     
     override func viewDidLoad() {
@@ -42,12 +40,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
         
-        let partial = NSLocalizedString("部分", comment: "")
+        let broad = NSLocalizedString("部分", comment: "")
         let exact = NSLocalizedString("完全", comment: "")
         let forward = NSLocalizedString("前方", comment: "")
         let backward = NSLocalizedString("後方", comment: "")
         
-        searchbar.scopeButtonTitles = [partial, exact, forward, backward]
+        searchbar.scopeButtonTitles = [broad, exact, forward, backward]
         
         editButton.title = NSLocalizedString("編集", comment: "")
         
@@ -72,8 +70,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         checkIsArrayIsEmpty()
         
         table.reloadData()
-        
-        deselect()
     }
     
     override func didReceiveMemoryWarning() {
@@ -134,8 +130,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             if searchbar.text == "" {
                 if deleteDict[folderNameArray[indexPath.row]] != nil {
-                    for file in deleteDict[folderNameArray[indexPath.row]]! {
-                        removeAllObject(key: folderNameArray[indexPath.row]+"@"+file)
+                    for fileName in deleteDict[folderNameArray[indexPath.row]]! {
+                        removeAllObject(key: folderNameArray[indexPath.row]+"@"+fileName)
                     }
                 }
                 
@@ -144,8 +140,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 folderNameArray.remove(at: indexPath.row)
             } else {
                 if deleteDict[searchArray[indexPath.row]] != nil {
-                    for file in deleteDict[searchArray[indexPath.row]]! {
-                        removeAllObject(key: searchArray[indexPath.row]+"@"+file)
+                    for fileName in deleteDict[searchArray[indexPath.row]]! {
+                        removeAllObject(key: searchArray[indexPath.row]+"@"+fileName)
                     }
                 }
                 
@@ -292,30 +288,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                 if !content.isEmpty {
                                     for i in 0...content.count-1 {
                                         let formerkey = self.folderNameArray[indexPath.row]+"@"+content[i]
-                                        
-                                        let memoTextView = self.saveData.object(forKey: formerkey) as? String
-                                        let dateSwitch = self.saveData.object(forKey: formerkey+"@ison") as? Bool
-                                        let dateField = self.saveData.object(forKey: formerkey+"@") as? String
-                                        let datePicker = self.saveData.object(forKey: formerkey+"@@") as? Date
-                                        
                                         let laterkey = textField.text!+"@"+content[i]
                                         
-                                        if memoTextView != nil {
-                                            self.saveData.set(memoTextView!, forKey: laterkey)
-                                            self.saveData.removeObject(forKey: formerkey)
-                                        }
-                                        if dateSwitch != nil {
-                                            self.saveData.set(dateSwitch!, forKey: laterkey+"@ison")
-                                            self.saveData.removeObject(forKey: formerkey+"@ison")
-                                        }
-                                        if dateField != nil {
-                                            self.saveData.set(dateField!, forKey: laterkey+"@")
-                                            self.saveData.removeObject(forKey: formerkey+"@")
-                                        }
-                                        if datePicker != nil {
-                                            self.saveData.set(datePicker!, forKey: laterkey+"@@")
-                                            self.saveData.removeObject(forKey: formerkey+"@@")
-                                        }
+                                        self.resave(formerkey: formerkey, laterkey: laterkey)
                                     }
                                 }
                             }
@@ -345,32 +320,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             
                             if let content = dict[folderName] {
                                 if !content.isEmpty {
-                                    for data in content {
-                                        let formerkey = folderName+"@"+data
+                                    for fileName in content {
+                                        let formerkey = folderName+"@"+fileName
+                                        let laterkey = textField.text!+"@"+fileName
                                         
-                                        let memotextview = self.saveData.object(forKey: formerkey) as? String
-                                        let dateswitch = self.saveData.object(forKey: formerkey+"@ison") as? Bool
-                                        let datefield = self.saveData.object(forKey: formerkey+"@") as? String
-                                        let datepicker = self.saveData.object(forKey: formerkey+"@@") as? Date
-                                        
-                                        let laterkey = textField.text!+"@"+data
-                                        
-                                        if memotextview != nil {
-                                            self.saveData.set(memotextview!, forKey: laterkey)
-                                            self.saveData.removeObject(forKey: formerkey)
-                                        }
-                                        if dateswitch != nil {
-                                            self.saveData.set(dateswitch!, forKey: laterkey+"@ison")
-                                            self.saveData.removeObject(forKey: formerkey+"@ison")
-                                        }
-                                        if datefield != nil {
-                                            self.saveData.set(datefield!, forKey: laterkey+"@")
-                                            self.saveData.removeObject(forKey: formerkey+"@")
-                                        }
-                                        if datepicker != nil {
-                                            self.saveData.set(datepicker!, forKey: laterkey+"@@")
-                                            self.saveData.removeObject(forKey: formerkey+"@@")
-                                        }
+                                        self.resave(formerkey: formerkey, laterkey: laterkey)
                                     }
                                 }
                                 
@@ -389,16 +343,15 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                 }
                             }
                             
-                            let index = self.folderNameArray.index(of: self.searchArray[indexPath.row])
-                            
                             self.searchArray[indexPath.row] = textField.text!
                             
+                            let index = self.folderNameArray.index(of: self.searchArray[indexPath.row])
                             self.folderNameArray[index!] = textField.text!
                             
                             dict[self.searchArray[indexPath.row]] = contentsOfFolder
                             
                             dict[beforetitle] = nil
-
+                            
                             self.saveData.set(dict, forKey: "@ToDoList")
                         }
                         
@@ -468,23 +421,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        switch selectedScope {
-        case 0:
-            selectingScopeBarTitleIndex = 0
-        case 1:
-            selectingScopeBarTitleIndex = 1
-        case 2:
-            selectingScopeBarTitleIndex = 2
-        case 3:
-            selectingScopeBarTitleIndex = 3
-        default:
-            break
-        }
-        
         if searchBar.text != ""{
             search()
             table.reloadData()
         }
+        
+        searchBar.becomeFirstResponder()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -532,27 +474,51 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     func search() {
         searchArray.removeAll()
         
-        for data in folderNameArray {
-            switch selectingScopeBarTitleIndex {
+        for folderName in folderNameArray {
+            switch searchbar.selectedScopeButtonIndex {
             case 0:
-                if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
-                    searchArray.append(data)
+                if folderName.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(folderName)
                 }
             case 1:
-                if data.lowercased(with: NSLocale.current) == searchbar.text!.lowercased(with: NSLocale.current) {
-                    searchArray.append(data)
+                if folderName.lowercased(with: NSLocale.current) == searchbar.text!.lowercased(with: NSLocale.current) {
+                    searchArray.append(folderName)
                 }
             case 2:
-                if data.lowercased(with: NSLocale.current).hasPrefix(searchbar.text!.lowercased(with: NSLocale.current)) {
-                    searchArray.append(data)
+                if folderName.lowercased(with: NSLocale.current).hasPrefix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(folderName)
                 }
             case 3:
-                if data.lowercased(with: NSLocale.current).hasSuffix(searchbar.text!.lowercased(with: NSLocale.current)) {
-                    searchArray.append(data)
+                if folderName.lowercased(with: NSLocale.current).hasSuffix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(folderName)
                 }
             default:
                 break
             }
+        }
+    }
+    
+    func resave(formerkey: String, laterkey: String) {
+        let memoTextView = self.saveData.object(forKey: formerkey) as! String?
+        let dateSwitch = self.saveData.object(forKey: formerkey+"@ison") as! Bool?
+        let dateField = self.saveData.object(forKey: formerkey+"@") as! String?
+        let datePicker = self.saveData.object(forKey: formerkey+"@@") as! Date?
+        
+        if memoTextView != nil {
+            self.saveData.set(memoTextView!, forKey: laterkey)
+            self.saveData.removeObject(forKey: formerkey)
+        }
+        if dateSwitch != nil {
+            self.saveData.set(dateSwitch!, forKey: laterkey+"@ison")
+            self.saveData.removeObject(forKey: formerkey+"@ison")
+        }
+        if dateField != nil {
+            self.saveData.set(dateField!, forKey: laterkey+"@")
+            self.saveData.removeObject(forKey: formerkey+"@")
+        }
+        if datePicker != nil {
+            self.saveData.set(datePicker!, forKey: laterkey+"@@")
+            self.saveData.removeObject(forKey: formerkey+"@@")
         }
     }
     

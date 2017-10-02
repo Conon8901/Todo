@@ -27,8 +27,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var sameName = false
     
-    var selectingScopeBarTitleIndex = 0
-    
     // MARK: - Basics
     
     override func viewDidLoad() {
@@ -61,12 +59,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
         
-        let partial = NSLocalizedString("部分", comment: "")
+        let broad = NSLocalizedString("部分", comment: "")
         let exact = NSLocalizedString("完全", comment: "")
         let forward = NSLocalizedString("前方", comment: "")
         let backward = NSLocalizedString("後方", comment: "")
         
-        searchbar.scopeButtonTitles = [partial, exact, forward, backward]
+        searchbar.scopeButtonTitles = [broad, exact, forward, backward]
         
         editButton.title = NSLocalizedString("編集", comment: "")
         
@@ -85,7 +83,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         table.reloadData()
         
-        if showDict[openedFolder]?.count != 0, showDict[openedFolder]?.count != nil {
+        if showDict[openedFolder]?.count != 0 {
             navtitle.isEnabled = true
             let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
             self.navtitle.addGestureRecognizer(longPressGesture)
@@ -200,6 +198,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             self.checkIsArrayIsEmpty()
         }
+        
         deleteButton.backgroundColor = .red
         
         let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("移動", comment: "")) { (action, index) -> Void in
@@ -213,6 +212,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let nextView = storyboard.instantiateViewController(withIdentifier: "List") as! ListViewController
             self.present(nextView, animated: true)
         }
+        
         moveButton.backgroundColor = .lightGray
      
         return [deleteButton, moveButton]
@@ -343,67 +343,25 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         if self.searchbar.text == "" {
                             
                             let formerkey = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!
+                            let laterkey = self.openedFolder+"@"+textField.text!
                             
-                            let memotextview = self.saveData.object(forKey: formerkey) as? String
-                            let dateswitch = self.saveData.object(forKey: formerkey+"@ison") as? Bool
-                            let datefield = self.saveData.object(forKey: formerkey+"@") as? String
-                            let datepicker = self.saveData.object(forKey: formerkey+"@@") as? Date
+                            self.resave(formerkey: formerkey, laterkey: laterkey)
                             
                             self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
-                            
-                            let laterkey = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!
-                            
-                            if memotextview != nil {
-                                self.saveData.set(memotextview!, forKey: laterkey)
-                                self.saveData.removeObject(forKey: formerkey)
-                            }
-                            if dateswitch != nil {
-                                self.saveData.set(dateswitch!, forKey: laterkey+"@ison")
-                                self.saveData.removeObject(forKey: formerkey+"@ison")
-                            }
-                            if datefield != nil {
-                                self.saveData.set(datefield!, forKey: laterkey+"@")
-                                self.saveData.removeObject(forKey: formerkey+"@")
-                            }
-                            if datepicker != nil {
-                                self.saveData.set(datepicker!, forKey: laterkey+"@@")
-                                self.saveData.removeObject(forKey: formerkey+"@@")
-                            }
                             
                             self.saveData.set(self.showDict, forKey: "@ToDoList")
                         } else {
                             let fileName = self.searchArray[indexPath.row]
                             
                             let formerkey = self.openedFolder+"@"+self.searchArray[indexPath.row]
+                            let laterkey = self.openedFolder+"@"+textField.text!
                             
-                            let memotextview = self.saveData.object(forKey: formerkey) as! String?
-                            let dateswitch = self.saveData.object(forKey: formerkey+"@ison") as! Bool?
-                            let datefield = self.saveData.object(forKey: formerkey+"@") as! String?
-                            let datepicker = self.saveData.object(forKey: formerkey+"@@") as! Date?
+                            self.resave(formerkey: formerkey, laterkey: laterkey)
                             
                             self.searchArray[indexPath.row] = textField.text!
                             
                             let index = self.showDict[self.openedFolder]?.index(of: fileName)
                             self.showDict[self.openedFolder]?[index!] = textField.text!
-                            
-                            let laterkey = self.openedFolder+"@"+self.searchArray[indexPath.row]
-                            
-                            if memotextview != nil {
-                                self.saveData.set(memotextview, forKey: laterkey)
-                                self.saveData.removeObject(forKey: formerkey)
-                            }
-                            if dateswitch != nil {
-                                self.saveData.set(dateswitch, forKey: laterkey+"@ison")
-                                self.saveData.removeObject(forKey: formerkey+"@ison")
-                            }
-                            if datefield != nil {
-                                self.saveData.set(datefield, forKey: laterkey+"@")
-                                self.saveData.removeObject(forKey: formerkey+"@")
-                            }
-                            if datepicker != nil {
-                                self.saveData.set(datepicker, forKey: laterkey+"@@")
-                                self.saveData.removeObject(forKey: formerkey+"@@")
-                            }
                             
                             self.saveData.set(self.showDict, forKey: "@ToDoList")
                             
@@ -517,23 +475,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        switch selectedScope {
-        case 0:
-            selectingScopeBarTitleIndex = 0
-        case 1:
-            selectingScopeBarTitleIndex = 1
-        case 2:
-            selectingScopeBarTitleIndex = 2
-        case 3:
-            selectingScopeBarTitleIndex = 3
-        default:
-            break
-        }
-        
         if searchBar.text != ""{
             search()
             table.reloadData()
         }
+        
+        searchBar.becomeFirstResponder()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -590,27 +537,51 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func search() {
         searchArray.removeAll()
         
-        for data in showDict[openedFolder]! {
-            switch selectingScopeBarTitleIndex {
+        for fileName in showDict[openedFolder]! {
+            switch searchbar.selectedScopeButtonIndex {
             case 0:
-                if data.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
-                    searchArray.append(data)
+                if fileName.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(fileName)
                 }
             case 1:
-                if data.lowercased(with: NSLocale.current) == searchbar.text!.lowercased(with: NSLocale.current) {
-                    searchArray.append(data)
+                if fileName.lowercased(with: NSLocale.current) == searchbar.text!.lowercased(with: NSLocale.current) {
+                    searchArray.append(fileName)
                 }
             case 2:
-                if data.lowercased(with: NSLocale.current).hasPrefix(searchbar.text!.lowercased(with: NSLocale.current)) {
-                    searchArray.append(data)
+                if fileName.lowercased(with: NSLocale.current).hasPrefix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(fileName)
                 }
             case 3:
-                if data.lowercased(with: NSLocale.current).hasSuffix(searchbar.text!.lowercased(with: NSLocale.current)) {
-                    searchArray.append(data)
+                if fileName.lowercased(with: NSLocale.current).hasSuffix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(fileName)
                 }
             default:
                 break
             }
+        }
+    }
+    
+    func resave(formerkey: String, laterkey: String) {
+        let memoTextView = self.saveData.object(forKey: formerkey) as! String?
+        let dateSwitch = self.saveData.object(forKey: formerkey+"@ison") as! Bool?
+        let dateField = self.saveData.object(forKey: formerkey+"@") as! String?
+        let datePicker = self.saveData.object(forKey: formerkey+"@@") as! Date?
+        
+        if memoTextView != nil {
+            self.saveData.set(memoTextView!, forKey: laterkey)
+            self.saveData.removeObject(forKey: formerkey)
+        }
+        if dateSwitch != nil {
+            self.saveData.set(dateSwitch!, forKey: laterkey+"@ison")
+            self.saveData.removeObject(forKey: formerkey+"@ison")
+        }
+        if dateField != nil {
+            self.saveData.set(dateField!, forKey: laterkey+"@")
+            self.saveData.removeObject(forKey: formerkey+"@")
+        }
+        if datePicker != nil {
+            self.saveData.set(datePicker!, forKey: laterkey+"@@")
+            self.saveData.removeObject(forKey: formerkey+"@@")
         }
     }
     
