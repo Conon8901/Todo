@@ -59,12 +59,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
         
-        let broad = NSLocalizedString("部分", comment: "")
+        let partial = NSLocalizedString("部分", comment: "")
         let exact = NSLocalizedString("完全", comment: "")
         let forward = NSLocalizedString("前方", comment: "")
         let backward = NSLocalizedString("後方", comment: "")
         
-        searchbar.scopeButtonTitles = [broad, exact, forward, backward]
+        searchbar.scopeButtonTitles = [partial, exact, forward, backward]
         
         editButton.title = NSLocalizedString("編集", comment: "")
         
@@ -478,9 +478,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if searchBar.text != ""{
             search()
             table.reloadData()
+            searchBar.becomeFirstResponder()
         }
-        
-        searchBar.becomeFirstResponder()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
