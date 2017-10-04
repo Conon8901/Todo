@@ -21,8 +21,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     var folderNameArray = [String]()
     var searchArray = [String]()
     var addNameArray = [String]()
-    var deleteDict = [String:Array<String>]()
-    var editDict = [String:Array<String>]()
+    var deleteDict = [String : Array<String>]()
+    var editDict = [String : Array<String>]()
     
     var sameName = false
     
@@ -116,7 +116,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    func tableView(_ tableView: UITableView,canEditRowAt indexPath: IndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
@@ -173,16 +173,16 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let movingFolder = folderNameArray[sourceIndexPath.row]
         folderNameArray.remove(at: sourceIndexPath.row)
         folderNameArray.insert(movingFolder, at: destinationIndexPath.row)
-        saveData.set(folderNameArray, forKey:"@folder")
+        saveData.set(folderNameArray, forKey: "@folder")
     }
     
     @IBAction func add(sender: AnyObject) {
         let alert = UIAlertController(title: NSLocalizedString("フォルダ追加", comment: ""), message: NSLocalizedString("タイトル入力", comment: ""), preferredStyle: .alert)
         
-        let saveAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
+        let addAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined() == ""
+            let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined().isEmpty
             
             if isBlank {
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
@@ -231,15 +231,15 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             }
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
         }
         
-        alert.addTextField { (textField:UITextField!) -> Void in
+        alert.addTextField { (textField: UITextField!) -> Void in
             textField.textAlignment = .left
         }
         
         alert.addAction(cancelAction)
-        alert.addAction(saveAction)
+        alert.addAction(addAction)
         
         present(alert, animated: true, completion: nil)
     }
@@ -249,10 +249,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         let alert = UIAlertController(title: NSLocalizedString("名称変更", comment: ""), message: NSLocalizedString("タイトル入力", comment: ""), preferredStyle: .alert)
         
-        let saveAction = UIAlertAction(title: NSLocalizedString("変更", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
+        let changeAction = UIAlertAction(title: NSLocalizedString("変更", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined() == ""
+            let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined().isEmpty
             
             if isBlank {
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
@@ -363,11 +363,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             self.saveData.set(self.folderNameArray, forKey: "@folder")
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
             self.deselect()
         }
         
-        alert.addTextField { (textField:UITextField!) -> Void in
+        alert.addTextField { (textField: UITextField!) -> Void in
             if self.searchbar.text == "" {
                 textField.text = self.folderNameArray[indexPath.row]
             } else {
@@ -378,7 +378,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         alert.addAction(cancelAction)
-        alert.addAction(saveAction)
+        alert.addAction(changeAction)
         
         present(alert, animated: true, completion: nil)
     }
@@ -421,7 +421,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        if searchBar.text != ""{
+        if searchBar.text != "" {
             search()
             table.reloadData()
             searchBar.becomeFirstResponder()
@@ -435,7 +435,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if table.contentOffset.y >= -64 {
+        if table.contentOffset.y < -64{
             searchbar.endEditing(true)
         }
     }

@@ -74,15 +74,15 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let folderName = saveData.object(forKey: "@move") as! String
         
         if searchbar.text == "" {
-            if listNameArray[indexPath.row] == folderName{
+            if listNameArray[indexPath.row] == folderName {
                 return nil
-            }else{
+            } else {
                 return indexPath
             }
         } else {
-            if searchArray[indexPath.row] == folderName{
+            if searchArray[indexPath.row] == folderName {
                 return nil
-            }else{
+            } else {
                 return indexPath
             }
         }
@@ -146,7 +146,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBAction func add() {
         let alert = UIAlertController(title: NSLocalizedString("フォルダ追加", comment: ""), message: NSLocalizedString("タイトル入力", comment: ""), preferredStyle: .alert)
-        let saveAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
+        let saveAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
             let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined() == ""
@@ -190,10 +190,10 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
         }
         
-        alert.addTextField { (textField:UITextField!) -> Void in
+        alert.addTextField { (textField: UITextField!) -> Void in
             textField.textAlignment = NSTextAlignment.left
         }
         

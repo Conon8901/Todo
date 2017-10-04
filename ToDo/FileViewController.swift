@@ -19,7 +19,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var saveData = UserDefaults.standard
     
-    var showDict = [String:Array<String>]()
+    var showDict = [String : Array<String>]()
     var searchArray = [String]()
     var addArray = [String]()
     
@@ -76,7 +76,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         navtitle.setTitle(openedFolder, for: .normal)
         
-        if saveData.object(forKey: "@fromListView") != nil{
+        if saveData.object(forKey: "@fromListView") != nil {
             showDict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
             saveData.removeObject(forKey: "@fromListView")
         }
@@ -149,7 +149,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    func tableView(_ tableView: UITableView,canEditRowAt indexPath: IndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
@@ -229,10 +229,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBAction func add(sender: AnyObject) {
         let alert = UIAlertController(title: NSLocalizedString("追加", comment: ""), message: NSLocalizedString("タイトル入力", comment: ""), preferredStyle: .alert)
         
-        let saveAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
+        let addAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined() == ""
+            let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined().isEmpty
             
             if isBlank {
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
@@ -298,25 +298,25 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
         }
         
-        alert.addTextField { (textField:UITextField!) -> Void in
+        alert.addTextField { (textField: UITextField!) -> Void in
             textField.textAlignment = .left
         }
         
         alert.addAction(cancelAction)
-        alert.addAction(saveAction)
+        alert.addAction(addAction)
         
         present(alert, animated: true, completion: nil)
     }
     
     func edit(indexPath: IndexPath) {
         let alert = UIAlertController(title: NSLocalizedString("名称変更", comment: ""), message: NSLocalizedString("タイトル入力", comment: ""), preferredStyle: .alert)
-        let saveAction = UIAlertAction(title: NSLocalizedString("変更", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
+        let changeAction = UIAlertAction(title: NSLocalizedString("変更", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined() == ""
+            let isBlank = textField.text!.components(separatedBy: CharacterSet.whitespaces).joined().isEmpty
             
             if isBlank {
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
@@ -341,7 +341,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.deselect()
                     } else {
                         if self.searchbar.text == "" {
-                            
                             let formerkey = self.openedFolder+"@"+(self.showDict[self.openedFolder]?[indexPath.row])!
                             let laterkey = self.openedFolder+"@"+textField.text!
                             
@@ -377,11 +376,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.saveData.set(self.showDict, forKey: "@ToDoList")
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
             self.deselect()
         }
         
-        alert.addTextField { (textField:UITextField!) -> Void in
+        alert.addTextField { (textField: UITextField!) -> Void in
             if self.searchbar.text == "" {
                 textField.text = self.showDict[self.openedFolder]?[indexPath.row]
             } else {
@@ -391,7 +390,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         alert.addAction(cancelAction)
-        alert.addAction(saveAction)
+        alert.addAction(changeAction)
         
         present(alert, animated: true, completion: nil)
     }
@@ -414,7 +413,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if (sender.state == .began) {
             let alert = UIAlertController(title: NSLocalizedString("全削除", comment: ""), message: NSLocalizedString("本当によろしいですか？\nこのフォルダの全ファイルを削除します", comment: ""), preferredStyle: .alert)
             
-            let saveAction = UIAlertAction(title: "OK", style: .destructive) { (action:UIAlertAction!) -> Void in
+            let deleteAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
                 if self.showDict[self.openedFolder]?.count != nil {
                     let filescount = (self.showDict[self.openedFolder]?.count)!
                     if filescount != 0 {
@@ -438,10 +437,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             }
             
-            let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .default) { (action:UIAlertAction!) -> Void in
+            let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
             }
             
-            alert.addAction(saveAction)
+            alert.addAction(deleteAction)
             alert.addAction(cancelAction)
             
             present(alert, animated: true, completion: nil)
@@ -475,7 +474,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        if searchBar.text != ""{
+        if searchBar.text != "" {
             search()
             table.reloadData()
             searchBar.becomeFirstResponder()
@@ -489,7 +488,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if table.contentOffset.y >= -64 {
+        if table.contentOffset.y < -64{
             searchbar.endEditing(true)
         }
     }
@@ -502,7 +501,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             message: message,
             preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default))
         
         self.present(alert, animated: true, completion: nil)
     }
