@@ -14,6 +14,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBOutlet var table: UITableView!
     @IBOutlet var searchbar: UISearchBar!
+    @IBOutlet var navigationbar: UINavigationBar!
     
     var listNameArray = [String]()
     var searchArray = [String]()
@@ -34,30 +35,41 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         searchbar.delegate = self
         searchbar.enablesReturnKeyAutomatically = false
+        
+        table.keyboardDismissMode = .interactive
+        table.allowsSelectionDuringEditing = true
+        
+        let partial = NSLocalizedString("部分", comment: "")
+        let exact = NSLocalizedString("完全", comment: "")
+        let forward = NSLocalizedString("前方", comment: "")
+        let backward = NSLocalizedString("後方", comment: "")
+        
+        searchbar.scopeButtonTitles = [partial, exact, forward, backward]
+        
+        navigationbar.topItem?.title = NSLocalizedString("フォルダ", comment: "")
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
     }
 
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchbar.text != "" {
-            return searchArray.count
-        } else {
+        if searchbar.text == "" {
             return listNameArray.count
+        } else {
+            return searchArray.count
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "List")
         
-        if searchbar.text != "" {
-            cell?.textLabel?.text = searchArray[indexPath.row]
-        } else {
+        if searchbar.text == "" {
             cell?.textLabel?.text = listNameArray[indexPath.row]
+        } else {
+            cell?.textLabel?.text = searchArray[indexPath.row]
         }
         
         cell?.textLabel?.numberOfLines = 0
@@ -90,31 +102,32 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        var dic: [String : Array<String>] = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]!
+        var dic: [String : Array<String>] = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
         let fromFolderName = saveData.object(forKey: "@move") as! String
         let fileName = saveData.object(forKey: "@movingfile") as! String
         let formerkey = fromFolderName+"@"+fileName
         let memotextview = saveData.object(forKey: formerkey) as! String?
         let dateswitch = saveData.object(forKey: formerkey+"@ison") as! Bool?
-        let datefield = saveData.object(forKey: formerkey+"@") as! String?
-        let datepicker = saveData.object(forKey: formerkey+"@@") as! Date?
+        let datepicker = saveData.object(forKey: formerkey+"@date") as! Date?
         var laterkey = ""
         
         if searchbar.text == "" {
-            if dic[listNameArray[indexPath.row]] != nil {
-                dic[listNameArray[indexPath.row]]!.append(fileName)
-            } else {
+            if dic[listNameArray[indexPath.row]] == nil {
                 dic[listNameArray[indexPath.row]] = [fileName]
+            } else {
+                dic[listNameArray[indexPath.row]]!.append(fileName)
             }
+            
             dic[fromFolderName]?.remove(at: (dic[fromFolderName]?.index(of: fileName))!)
             
             laterkey = listNameArray[indexPath.row]+"@"+fileName
         } else {
-            if dic[searchArray[indexPath.row]] != nil {
-                dic[searchArray[indexPath.row]]!.append(fileName)
-            } else {
+            if dic[searchArray[indexPath.row]] == nil {
                 dic[searchArray[indexPath.row]] = [fileName]
+            } else {
+                dic[searchArray[indexPath.row]]!.append(fileName)
             }
+            
             dic[fromFolderName]?.remove(at: (dic[fromFolderName]?.index(of: fileName))!)
             
             laterkey = searchArray[indexPath.row]+"@"+fileName
@@ -128,13 +141,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             saveData.set(dateswitch, forKey: laterkey+"@ison")
             saveData.removeObject(forKey: formerkey+"@ison")
         }
-        if datefield != nil {
-            saveData.set(datefield, forKey: laterkey+"@")
-            saveData.removeObject(forKey: formerkey+"@")
-        }
         if datepicker != nil {
-            saveData.set(datepicker, forKey: laterkey+"@@")
-            saveData.removeObject(forKey: formerkey+"@@")
+            saveData.set(datepicker, forKey: laterkey+"@date")
+            saveData.removeObject(forKey: formerkey+"@date")
         }
         
         saveData.set(dic, forKey: "@ToDoList")
@@ -162,6 +171,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         }
                     }
                 }
+                
                 if self.sameName {
                     self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
                 } else {
@@ -209,19 +219,43 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         searchbar.endEditing(true)
     }
     
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
+    }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        searchArray.removeAll()
-        
         if searchbar.text == "" {
+            searchArray.removeAll()
             searchArray = listNameArray
         } else {
-            for folderName in listNameArray {
-                if folderName.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
-                    searchArray.append(folderName)
-                }
-            }
+            search()
         }
+        
         table.reloadData()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        if searchBar.text != "" {
+            search()
+            table.reloadData()
+            searchBar.becomeFirstResponder()
+        }
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        table.reloadData()
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if table.contentOffset.y < -64{
+            searchbar.endEditing(true)
+        }
     }
     
     // MARK: - Method
@@ -240,6 +274,33 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func deselect() {
         if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
             self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
+        }
+    }
+    
+    func search() {
+        searchArray.removeAll()
+        
+        for folderName in listNameArray {
+            switch searchbar.selectedScopeButtonIndex {
+            case 0:
+                if folderName.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(folderName)
+                }
+            case 1:
+                if folderName.lowercased(with: NSLocale.current) == searchbar.text!.lowercased(with: NSLocale.current) {
+                    searchArray.append(folderName)
+                }
+            case 2:
+                if folderName.lowercased(with: NSLocale.current).hasPrefix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(folderName)
+                }
+            case 3:
+                if folderName.lowercased(with: NSLocale.current).hasSuffix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                    searchArray.append(folderName)
+                }
+            default:
+                break
+            }
         }
     }
     
