@@ -35,10 +35,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.dataSource = self
         table.delegate = self
         
-        if saveData.object(forKey: "@ToDoList") != nil {
-            showDict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
-        } else {
+        if saveData.object(forKey: "@ToDoList") == nil {
             self.saveData.set(self.showDict, forKey: "@TodoList")
+        } else {
+            showDict = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
         }
         
         openedFolder = saveData.object(forKey: "@move") as! String
@@ -83,13 +83,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         table.reloadData()
         
-        if showDict[openedFolder]?.count != 0 {
+        if showDict[openedFolder]?.count == 0 {
+            navtitle.isEnabled = false
+            self.navtitle.gestureRecognizers?.removeAll()
+        } else {
             navtitle.isEnabled = true
             let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
             self.navtitle.addGestureRecognizer(longPressGesture)
-        } else {
-            navtitle.isEnabled = false
-            self.navtitle.gestureRecognizers?.removeAll()
         }
     }
     
@@ -100,32 +100,32 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchbar.text != "" {
-            return searchArray.count
-        } else {
+        if searchbar.text == "" {
             if showDict[openedFolder] != nil {
                 return showDict[openedFolder]!.count
             } else {
                 return 0
             }
+        } else {
+            return searchArray.count
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "File")
         
-        if searchbar.text != "" {
-            cell?.textLabel?.text = searchArray[indexPath.row]
-            
-            let fileName = searchArray[indexPath.row]
-            if let subtitle = saveData.object(forKey: openedFolder+"@"+fileName) as! String? {
-                cell?.detailTextLabel?.text = subtitle
-            }
-        } else {
+        if searchbar.text == "" {
             cell?.textLabel?.text = showDict[openedFolder]?[indexPath.row]
             
             let fileName = showDict[openedFolder]?[indexPath.row]
             if let subtitle = saveData.object(forKey: openedFolder+"@"+fileName!) as! String? {
+                cell?.detailTextLabel?.text = subtitle
+            }
+        } else {
+            cell?.textLabel?.text = searchArray[indexPath.row]
+            
+            let fileName = searchArray[indexPath.row]
+            if let subtitle = saveData.object(forKey: openedFolder+"@"+fileName) as! String? {
                 cell?.detailTextLabel?.text = subtitle
             }
         }
@@ -186,14 +186,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             }
             
-            if self.showDict[self.openedFolder] != nil {
+            if self.showDict[self.openedFolder] == nil {
+                let coordinates = CGPoint(x: 0, y: -64)
+                self.table.setContentOffset(coordinates, animated: true)
+            } else {
                 if (self.showDict[self.openedFolder]?.count)! < 11 {
                     let coordinates = CGPoint(x: 0, y: -64)
                     self.table.setContentOffset(coordinates, animated: true)
                 }
-            } else {
-                let coordinates = CGPoint(x: 0, y: -64)
-                self.table.setContentOffset(coordinates, animated: true)
             }
             
             self.checkIsArrayIsEmpty()
@@ -324,14 +324,17 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.deselect()
             } else {
                 self.sameName = false
+                
                 for i in 0...(self.showDict[self.openedFolder]?.count)!-1 {
                     if self.showDict[self.openedFolder]?[i] == textField.text! {
                         self.sameName = true
                     }
                 }
                 
-                if self.sameName, textField.text != self.showDict[self.openedFolder]?[indexPath.row] {
-                    self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
+                if self.sameName{
+                    if textField.text != self.showDict[self.openedFolder]?[indexPath.row]{
+                        self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
+                    }
                     
                     self.deselect()
                 } else {
@@ -410,7 +413,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func allRemove(_ sender: UILongPressGestureRecognizer) {
-        if (sender.state == .began) {
+        if sender.state == .began {
             let alert = UIAlertController(title: NSLocalizedString("全削除", comment: ""), message: NSLocalizedString("本当によろしいですか？\nこのフォルダの全ファイルを削除します", comment: ""), preferredStyle: .alert)
             
             let deleteAction = UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
@@ -508,14 +511,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func checkIsArrayIsEmpty() {
         let numberOfFiles: Int? = showDict[openedFolder]?.count
-        if numberOfFiles != nil {
+        if numberOfFiles == nil {
+            editButton.isEnabled = false
+        } else {
             if numberOfFiles! == 0 {
                 editButton.isEnabled = false
             } else {
                 editButton.isEnabled = true
             }
-        } else {
-            editButton.isEnabled = false
         }
     }
     
@@ -528,8 +531,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func removeAllObject(key: String) {
         saveData.removeObject(forKey: key)
         saveData.removeObject(forKey: key+"@ison")
-        saveData.removeObject(forKey: key+"@")
-        saveData.removeObject(forKey: key+"@@")
+        saveData.removeObject(forKey: key+"@date")
     }
     
     func search() {
@@ -562,8 +564,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func resave(formerkey: String, laterkey: String) {
         let memoTextView = self.saveData.object(forKey: formerkey) as! String?
         let dateSwitch = self.saveData.object(forKey: formerkey+"@ison") as! Bool?
-        let dateField = self.saveData.object(forKey: formerkey+"@") as! String?
-        let datePicker = self.saveData.object(forKey: formerkey+"@@") as! Date?
+        let datePicker = self.saveData.object(forKey: formerkey+"@date") as! Date?
         
         if memoTextView != nil {
             self.saveData.set(memoTextView!, forKey: laterkey)
@@ -573,13 +574,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.saveData.set(dateSwitch!, forKey: laterkey+"@ison")
             self.saveData.removeObject(forKey: formerkey+"@ison")
         }
-        if dateField != nil {
-            self.saveData.set(dateField!, forKey: laterkey+"@")
-            self.saveData.removeObject(forKey: formerkey+"@")
-        }
         if datePicker != nil {
-            self.saveData.set(datePicker!, forKey: laterkey+"@@")
-            self.saveData.removeObject(forKey: formerkey+"@@")
+            self.saveData.set(datePicker!, forKey: laterkey+"@date")
+            self.saveData.removeObject(forKey: formerkey+"@date")
         }
     }
     

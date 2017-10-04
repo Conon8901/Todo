@@ -57,18 +57,18 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         fileName = saveData.object(forKey: "@memo") as! String
         key = folderName+"@"+fileName
         
-        if saveData.object(forKey: key) != nil {
-            memoTextView.text = saveData.object(forKey: key) as! String!
-        } else {
+        if saveData.object(forKey: key) == nil {
             memoTextView.text = ""
+        } else {
+            memoTextView.text = saveData.object(forKey: key) as! String
         }
         
-        if saveData.object(forKey: key+"@ison") != nil {
+        if saveData.object(forKey: key+"@ison") == nil {
+            dateSwitch.isOn = false
+        } else {
             dateSwitch.isOn = saveData.object(forKey: key+"@ison") as! Bool
             
             dateShow()
-        } else {
-            dateSwitch.isOn = false
         }
         
         placeholderHidden()
@@ -79,8 +79,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         saveData.set(memoTextView.text!, forKey: key)
         saveData.set(dateSwitch.isOn, forKey: key+"@ison")
-        saveData.set(dateField.text, forKey: key+"@")
-        saveData.set(datePicker.date, forKey: key+"@@")
+        saveData.set(datePicker.date, forKey: key+"@date")
+        saveData.removeObject(forKey: key+"@@")
         
         memoTextView.resignFirstResponder()
     }
@@ -140,13 +140,17 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         datePicker.minimumDate = NSDate() as Date
         
-        if saveData.object(forKey: key+"@") != nil, saveData.object(forKey: key+"@@") != nil {
-            dateField.text = saveData.object(forKey: key+"@") as! String!
+        if saveData.object(forKey: key+"@date") != nil {
+            datePicker.date = saveData.object(forKey: key+"@date") as! Date
             
-            datePicker.date = saveData.object(forKey: key+"@@") as! Date
-            
-            if NSDate() as Date >= saveData.object(forKey: key+"@@") as! Date {
+            if NSDate() as Date > saveData.object(forKey: key+"@date") as! Date {
                 dateField.text = NSLocalizedString("終了", comment: "")
+            }else{
+                let formatter = DateFormatter()
+                formatter.dateStyle = .short
+                formatter.timeStyle = .short
+                
+                dateField.text = formatter.string(from: datePicker.date)
             }
         } else {
             let formatter = DateFormatter()
