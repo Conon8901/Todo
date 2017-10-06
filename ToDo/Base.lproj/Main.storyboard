@@ -40,7 +40,7 @@
                                         <rect key="frame" x="0.0" y="72" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8eg-WV-9OM" id="mpi-P5-sBQ">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -58,13 +58,13 @@
                         <rightBarButtonItems>
                             <barButtonItem style="plain" systemItem="add" id="c4h-3X-LVY">
                                 <connections>
-                                    <action selector="addWithSender:" destination="BYZ-38-t0r" id="HRh-B2-DFq"/>
+                                    <action selector="add" destination="BYZ-38-t0r" id="AhT-nd-oXo"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="編集" style="plain" id="brS-NQ-fPn">
                                 <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
-                                    <action selector="tapEditWithSender:" destination="BYZ-38-t0r" id="2N7-1Q-CC9"/>
+                                    <action selector="tapEdit" destination="BYZ-38-t0r" id="XsM-WA-eWb"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -145,7 +145,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="isx-ny-Hoc">
                         <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="9qV-EE-jIO">
-                            <rect key="frame" x="113" y="6" width="150" height="33"/>
+                            <rect key="frame" x="112.5" y="5.5" width="150" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                             <state key="normal" title="File">
@@ -155,12 +155,12 @@
                         <rightBarButtonItems>
                             <barButtonItem style="plain" systemItem="add" id="lsO-t3-KtB">
                                 <connections>
-                                    <action selector="addWithSender:" destination="7DH-dA-Yea" id="uhq-55-LFI"/>
+                                    <action selector="add" destination="7DH-dA-Yea" id="Bng-x2-eTQ"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="編集" style="plain" id="lKS-zJ-ReQ">
                                 <connections>
-                                    <action selector="tapEditWithSender:" destination="7DH-dA-Yea" id="4Lk-yD-bQZ"/>
+                                    <action selector="tapEdit" destination="7DH-dA-Yea" id="seh-dt-zJE"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -224,7 +224,7 @@
                                     <navigationItem title="Folder" id="bAx-dF-8fG">
                                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="H9F-Dt-Y7b">
                                             <connections>
-                                                <action selector="cancel" destination="tW4-FO-QSh" id="Lah-Kr-mhK"/>
+                                                <action selector="tapCancel" destination="tW4-FO-QSh" id="qhm-wq-MiX"/>
                                             </connections>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Kut-HV-kor">
@@ -323,14 +323,14 @@
                                     <!--2017-09-11 08:11:47 +0000-->
                                 </date>
                                 <connections>
-                                    <action selector="changeDateWithSender:" destination="cFD-wo-LKb" eventType="valueChanged" id="lvM-FH-p5M"/>
+                                    <action selector="changeDate" destination="cFD-wo-LKb" eventType="valueChanged" id="4ch-3i-wr4"/>
                                 </connections>
                             </datePicker>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="HU6-fN-tgQ">
                                 <rect key="frame" x="163" y="318" width="51" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
-                                    <action selector="switchChanged:" destination="cFD-wo-LKb" eventType="valueChanged" id="y4E-LS-non"/>
+                                    <action selector="switchChanged" destination="cFD-wo-LKb" eventType="valueChanged" id="zdc-gd-1bW"/>
                                 </connections>
                             </switch>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5cl-b8-eKw">
@@ -367,7 +367,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r6V-NM-7Yf" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="gNg-7B-E45">
                     <connections>
-                        <action selector="tapScreenWithSender:" destination="cFD-wo-LKb" id="CLI-rC-oOG"/>
+                        <action selector="tapScreen" destination="cFD-wo-LKb" id="NJ5-kX-FMu"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

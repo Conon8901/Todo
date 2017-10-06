@@ -21,6 +21,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     var saveData = UserDefaults.standard
     
+    let formatter = DateFormatter()
+    
     var folderName = ""
     var fileName = ""
     var key = ""
@@ -41,9 +43,10 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         datePicker.minimumDate = NSDate() as Date
         datePicker.maximumDate = NSDate(timeInterval: 60*60*24*10000, since: NSDate() as Date) as Date
         
-        dateField.isHidden = true
-        datePicker.isHidden = true
-        dateLabel.isHidden = true
+        hidesDateComponents(true)
+        
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
         
         placeholder.text = NSLocalizedString("メモ", comment: "")
         
@@ -53,8 +56,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        folderName = saveData.object(forKey: "@move") as! String
-        fileName = saveData.object(forKey: "@memo") as! String
+        folderName = saveData.object(forKey: "@folderName") as! String
+        fileName = saveData.object(forKey: "@fileName") as! String
         key = folderName+"@"+fileName
         
         if saveData.object(forKey: key) == nil {
@@ -68,10 +71,10 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         } else {
             dateSwitch.isOn = saveData.object(forKey: key+"@ison") as! Bool
             
-            dateShow()
+            setDate()
         }
         
-        placeholderHidden()
+        hidesPlaceHolder()
         
         navigationItem.title = fileName
     }
@@ -92,34 +95,28 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - TextView
     
     func textViewDidChange(_ textView: UITextView) {
-        placeholderHidden()
+        hidesPlaceHolder()
     }
     
     // MARK: DatePicker
     
-    @IBAction func changeDate(sender: UIDatePicker) {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
-        
-        dateField.text = formatter.string(from: sender.date)
+    @IBAction func changeDate() {
+        dateField.text = formatter.string(from: datePicker.date)
     }
     
     // MARK: Switch
     
-    @IBAction func switchChanged(_ sender: UISwitch) {
-        if sender.isOn {
-            dateShow()
+    @IBAction func switchChanged() {
+        if dateSwitch.isOn {
+            setDate()
         } else {
-            dateField.isHidden = true
-            datePicker.isHidden = true
-            dateLabel.isHidden = true
+            hidesDateComponents(true)
         }
     }
     
     // MARK: - Method
     
-    func placeholderHidden() {
+    func hidesPlaceHolder() {
         if memoTextView.text.isEmpty {
             placeholder.isHidden = false
         } else {
@@ -127,20 +124,18 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    func dateShow() {
+    func setDate() {
         if dateSwitch.isOn {
-            dateField.isHidden = false
-            datePicker.isHidden = false
-            dateLabel.isHidden = false
+            hidesDateComponents(false)
         } else {
-            dateField.isHidden = true
-            datePicker.isHidden = true
-            dateLabel.isHidden = true
+            hidesDateComponents(true)
         }
         
         datePicker.minimumDate = NSDate() as Date
         
-        if saveData.object(forKey: key+"@date") != nil {
+        if saveData.object(forKey: key+"@date") == nil {
+            dateField.text = formatter.string(from: NSDate() as Date)
+        } else {
             datePicker.date = saveData.object(forKey: key+"@date") as! Date
             
             var difference = ""
@@ -217,27 +212,23 @@ class MemoViewController: UIViewController, UITextViewDelegate {
                 }
             }
             
-            if difference != "" {
-                dateField.text = difference
-            } else {
-                let formatter = DateFormatter()
-                formatter.dateStyle = .short
-                formatter.timeStyle = .short
-                
+            if difference == "" {
                 dateField.text = formatter.string(from: datePicker.date)
+            } else {
+                dateField.text = difference
             }
-        } else {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .short
-            formatter.timeStyle = .short
-            
-            dateField.text = formatter.string(from: NSDate() as Date)
         }
+    }
+    
+    func hidesDateComponents(_ bool: Bool) {
+        dateField.isHidden = bool
+        datePicker.isHidden = bool
+        dateLabel.isHidden = bool
     }
     
     // MARK: - Else
     
-    @IBAction func tapScreen(sender: UITapGestureRecognizer) {
+    @IBAction func tapScreen() {
         self.memoTextView.resignFirstResponder()
     }
 }
