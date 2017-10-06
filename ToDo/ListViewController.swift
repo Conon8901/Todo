@@ -31,7 +31,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.dataSource = self
         table.delegate = self
         
-        listNameArray = saveData.object(forKey: "@folder") as! [String]
+        listNameArray = saveData.object(forKey: "@folders") as! [String]
         
         searchbar.delegate = self
         searchbar.enablesReturnKeyAutomatically = false
@@ -74,7 +74,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         cell?.textLabel?.numberOfLines = 0
     
-        if cell?.textLabel?.text == saveData.object(forKey: "@move") as! String? {
+        if cell?.textLabel?.text == saveData.object(forKey: "@folderName") as! String? {
             cell?.selectionStyle = .none
             cell?.textLabel?.textColor = .lightGray
         }
@@ -83,7 +83,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        let folderName = saveData.object(forKey: "@move") as! String
+        let folderName = saveData.object(forKey: "@folderName") as! String
         
         if searchbar.text == "" {
             if listNameArray[indexPath.row] == folderName {
@@ -101,10 +101,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
-        var dic: [String : Array<String>] = saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
-        let fromFolderName = saveData.object(forKey: "@move") as! String
-        let fileName = saveData.object(forKey: "@movingfile") as! String
+        var dic: [String : Array<String>] = saveData.object(forKey: "@dictData") as! [String : Array<String>]
+        let fromFolderName = saveData.object(forKey: "@folderName") as! String
+        let fileName = saveData.object(forKey: "@movingFileName") as! String
         let formerkey = fromFolderName+"@"+fileName
         let memotextview = saveData.object(forKey: formerkey) as! String?
         let dateswitch = saveData.object(forKey: formerkey+"@ison") as! Bool?
@@ -137,18 +136,20 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             saveData.set(memotextview, forKey: laterkey)
             saveData.removeObject(forKey: formerkey)
         }
+        
         if dateswitch != nil {
             saveData.set(dateswitch, forKey: laterkey+"@ison")
             saveData.removeObject(forKey: formerkey+"@ison")
         }
+        
         if datepicker != nil {
             saveData.set(datepicker, forKey: laterkey+"@date")
             saveData.removeObject(forKey: formerkey+"@date")
         }
         
-        saveData.set(dic, forKey: "@ToDoList")
+        saveData.set(dic, forKey: "@dictData")
         
-        saveData.set(true, forKey: "@fromListView")
+        saveData.set(true, forKey: "@isFromListView")
         
         self.dismiss(animated: true, completion: nil)
     }
@@ -183,17 +184,15 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.listNameArray.append(textField.text!)
                         self.table.reloadData()
                         
-                        self.saveData.set(self.listNameArray, forKey: "@folder")
+                        self.saveData.set(self.listNameArray, forKey: "@folders")
                         
-                        var dict = self.saveData.object(forKey: "@ToDoList") as! [String : Array<String>]
+                        var dict = self.saveData.object(forKey: "@dictData") as! [String : Array<String>]
                         dict[textField.text!] = []
-                        self.saveData.set(dict, forKey: "@ToDoList")
-                        
-                        self.saveData.synchronize()
+                        self.saveData.set(dict, forKey: "@dictData")
                         
                         if self.listNameArray.count >= 11 {
-                            let coordinates = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
-                            self.table.setContentOffset(coordinates, animated: true)
+                            let location = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
+                            self.table.setContentOffset(location, animated: true)
                         }
                     }
                 }
@@ -253,7 +252,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if table.contentOffset.y < -64{
+        if table.contentOffset.y < -64 {
             searchbar.endEditing(true)
         }
     }
@@ -306,7 +305,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     // MARK: - Else
     
-    @IBAction func cancel() {
+    @IBAction func tapCancel() {
         self.dismiss(animated: true, completion: nil)
     }
 }
