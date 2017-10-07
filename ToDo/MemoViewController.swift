@@ -228,7 +228,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     func localizeYear(_ difference: String, _ nowyear: Int, _ savedyear: Int) -> String {
         if nowyear-savedyear == 1 {
-            return String(format: NSLocalizedString("年前単", comment: ""), nowyear-savedyear)
+            return NSLocalizedString("年前単", comment: "")
         } else {
             return String(format: NSLocalizedString("年前複", comment: ""), nowyear-savedyear)
         }
