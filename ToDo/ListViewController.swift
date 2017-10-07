@@ -13,15 +13,15 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - Declare
     
     @IBOutlet var table: UITableView!
-    @IBOutlet var searchbar: UISearchBar!
-    @IBOutlet var navigationbar: UINavigationBar!
+    @IBOutlet var searchBar: UISearchBar!
+    @IBOutlet var navBar: UINavigationBar!
     
     var listNameArray = [String]()
     var searchArray = [String]()
     
     var saveData = UserDefaults.standard
     
-    var sameName = false
+    var isSameName = false
     
     // MARK: - Basics
     
@@ -33,8 +33,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         listNameArray = saveData.object(forKey: "@folders") as! [String]
         
-        searchbar.delegate = self
-        searchbar.enablesReturnKeyAutomatically = false
+        searchBar.delegate = self
+        searchBar.enablesReturnKeyAutomatically = false
         
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
@@ -44,9 +44,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let forward = NSLocalizedString("前方", comment: "")
         let backward = NSLocalizedString("後方", comment: "")
         
-        searchbar.scopeButtonTitles = [partial, exact, forward, backward]
+        searchBar.scopeButtonTitles = [partial, exact, forward, backward]
         
-        navigationbar.topItem?.title = NSLocalizedString("フォルダ", comment: "")
+        navBar.topItem?.title = NSLocalizedString("フォルダ", comment: "")
     }
 
     override func didReceiveMemoryWarning() {
@@ -56,7 +56,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchbar.text == "" {
+        if searchBar.text == "" {
             return listNameArray.count
         } else {
             return searchArray.count
@@ -66,7 +66,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "List")
         
-        if searchbar.text == "" {
+        if searchBar.text == "" {
             cell?.textLabel?.text = listNameArray[indexPath.row]
         } else {
             cell?.textLabel?.text = searchArray[indexPath.row]
@@ -85,7 +85,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         let folderName = saveData.object(forKey: "@folderName") as! String
         
-        if searchbar.text == "" {
+        if searchBar.text == "" {
             if listNameArray[indexPath.row] == folderName {
                 return nil
             } else {
@@ -110,7 +110,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let datepicker = saveData.object(forKey: formerkey+"@date") as! Date?
         var laterkey = ""
         
-        if searchbar.text == "" {
+        if searchBar.text == "" {
             if dic[listNameArray[indexPath.row]] == nil {
                 dic[listNameArray[indexPath.row]] = [fileName]
             } else {
@@ -164,16 +164,16 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if isBlank {
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
             } else {
-                self.sameName = false
+                self.isSameName = false
                 if self.listNameArray.count != 0 {
                     for i in 0...self.listNameArray.count-1 {
                         if self.listNameArray[i] == textField.text! {
-                            self.sameName = true
+                            self.isSameName = true
                         }
                     }
                 }
                 
-                if self.sameName {
+                if self.isSameName {
                     self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
                 } else {
                     if (textField.text?.contains("@"))! {
@@ -203,7 +203,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         alert.addTextField { (textField: UITextField!) -> Void in
-            textField.textAlignment = NSTextAlignment.left
+            textField.textAlignment = .left
         }
         
         alert.addAction(cancelAction)
@@ -212,10 +212,10 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         present(alert, animated: true, completion: nil)
     }
     
-    // MARK: - SearchBar
+    // MARK: - searchBar
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchbar.endEditing(true)
+        searchBar.endEditing(true)
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -227,7 +227,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchbar.text == "" {
+        if searchBar.text == "" {
             searchArray.removeAll()
             searchArray = listNameArray
         } else {
@@ -253,7 +253,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if table.contentOffset.y < -64 {
-            searchbar.endEditing(true)
+            searchBar.endEditing(true)
         }
     }
     
@@ -280,21 +280,21 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         searchArray.removeAll()
         
         for folderName in listNameArray {
-            switch searchbar.selectedScopeButtonIndex {
+            switch searchBar.selectedScopeButtonIndex {
             case 0:
-                if folderName.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
+                if folderName.lowercased(with: NSLocale.current).contains(searchBar.text!.lowercased(with: NSLocale.current)) {
                     searchArray.append(folderName)
                 }
             case 1:
-                if folderName.lowercased(with: NSLocale.current) == searchbar.text!.lowercased(with: NSLocale.current) {
+                if folderName.lowercased(with: NSLocale.current) == searchBar.text!.lowercased(with: NSLocale.current) {
                     searchArray.append(folderName)
                 }
             case 2:
-                if folderName.lowercased(with: NSLocale.current).hasPrefix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                if folderName.lowercased(with: NSLocale.current).hasPrefix(searchBar.text!.lowercased(with: NSLocale.current)) {
                     searchArray.append(folderName)
                 }
             case 3:
-                if folderName.lowercased(with: NSLocale.current).hasSuffix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                if folderName.lowercased(with: NSLocale.current).hasSuffix(searchBar.text!.lowercased(with: NSLocale.current)) {
                     searchArray.append(folderName)
                 }
             default:
