@@ -23,8 +23,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     let formatter = DateFormatter()
     
-    var folderName = ""
-    var fileName = ""
     var key = ""
     
     // MARK: - Basics
@@ -56,8 +54,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        folderName = saveData.object(forKey: "@folderName") as! String
-        fileName = saveData.object(forKey: "@fileName") as! String
+        let folderName = saveData.object(forKey: "@folderName") as! String
+        let fileName = saveData.object(forKey: "@fileName") as! String
         key = folderName+"@"+fileName
         
         if saveData.object(forKey: key) == nil {
@@ -83,7 +81,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         saveData.set(memoTextView.text!, forKey: key)
         saveData.set(dateSwitch.isOn, forKey: key+"@ison")
         saveData.set(datePicker.date, forKey: key+"@date")
-        saveData.removeObject(forKey: key+"@@")
         
         memoTextView.resignFirstResponder()
     }
