@@ -40,8 +40,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         memoTextView.layer.cornerRadius = 6
         memoTextView.layer.masksToBounds = true
         
-        datePicker.minimumDate = NSDate() as Date
-        datePicker.maximumDate = NSDate(timeInterval: 60*60*24*10000, since: NSDate() as Date) as Date
+        datePicker.minimumDate = Date()
+        datePicker.maximumDate = Date(timeInterval: 60*60*24*10000, since: Date())
         
         hidesDateComponents(true)
         
@@ -131,10 +131,10 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             hidesDateComponents(true)
         }
         
-        datePicker.minimumDate = NSDate() as Date
+        datePicker.minimumDate = Date()
         
         if saveData.object(forKey: key+"@date") == nil {
-            dateField.text = formatter.string(from: NSDate() as Date)
+            dateField.text = formatter.string(from: Date())
         } else {
             datePicker.date = saveData.object(forKey: key+"@date") as! Date
             
@@ -154,18 +154,18 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             
             if nowyear > savedyear {
                 if (12*(nowyear-savedyear)+nowmonth)-savedmonth >= 12 {
-                    difference = String(format: NSLocalizedString("年前", comment: ""), nowyear-savedyear)
+                    difference = localizeYear(difference, nowyear, savedyear)
                 } else {
                     if (30*(nowmonth-savedmonth)+nowday)-savedday >= 30 {
-                        difference = String(format: NSLocalizedString("ヶ月前", comment: ""), nowmonth-savedmonth)
+                        difference = localizeMonth(difference, nowmonth, savedmonth)
                     } else {
                         if (24*(nowday-savedday)+nowhour)-savedhour >= 24 {
-                            difference = String(format: NSLocalizedString("日前", comment: ""), nowday-savedday)
+                            difference = localizeDay(difference, nowday, savedday)
                         } else {
                             if (60*(nowhour-savedhour)+nowminute)-savedminute >= 60 {
-                                difference = String(format: NSLocalizedString("時間前", comment: ""), nowhour-savedhour)
+                                difference = localizeHour(difference, nowhour, savedhour)
                             } else {
-                                difference = String(format: NSLocalizedString("分前", comment: ""), nowminute-savedminute)
+                                difference = localizeMinute(difference, nowminute, savedminute)
                             }
                         }
                     }
@@ -173,39 +173,39 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             } else {
                 if nowmonth > savedmonth {
                     if (30*(nowmonth-savedmonth)+nowday)-savedday >= 30 {
-                        difference = String(format: NSLocalizedString("ヶ月前", comment: ""), nowmonth-savedmonth)
+                        difference = localizeMonth(difference, nowmonth, savedmonth)
                     } else {
                         if (24*(nowday-savedday)+nowhour)-savedhour >= 24 {
-                            difference = String(format: NSLocalizedString("日前", comment: ""), nowday-savedday)
+                            difference = localizeDay(difference, nowday, savedday)
                         } else {
                             if (60*(nowhour-savedhour)+nowminute)-savedminute >= 60 {
-                                difference = String(format: NSLocalizedString("時間前", comment: ""), nowhour-savedhour)
+                                difference = localizeHour(difference, nowhour, savedhour)
                             } else {
-                                difference = String(format: NSLocalizedString("分前", comment: ""), nowminute-savedminute)
+                                difference = localizeMinute(difference, nowminute, savedminute)
                             }
                         }
                     }
                 } else {
                     if nowday > savedday {
                         if (24*(nowday-savedday)+nowhour)-savedhour >= 24 {
-                            difference = String(format: NSLocalizedString("日前", comment: ""), nowday-savedday)
+                            difference = localizeDay(difference, nowday, savedday)
                         } else {
                             if (60*(nowhour-savedhour)+nowminute)-savedminute >= 60 {
-                                difference = String(format: NSLocalizedString("時間前", comment: ""), nowhour-savedhour)
+                                difference = localizeHour(difference, nowhour, savedhour)
                             } else {
-                                difference = String(format: NSLocalizedString("分前", comment: ""), nowminute-savedminute)
+                                difference = localizeMinute(difference, nowminute, savedminute)
                             }
                         }
                     } else {
                         if nowhour > savedhour {
                             if (60*(nowhour-savedhour)+nowminute)-savedminute >= 60 {
-                                difference = String(format: NSLocalizedString("時間前", comment: ""), nowhour-savedhour)
+                                difference = localizeHour(difference, nowhour, savedhour)
                             } else {
-                                difference = String(format: NSLocalizedString("分前", comment: ""), nowminute-savedminute)
+                                difference = localizeMinute(difference, nowminute, savedminute)
                             }
                         } else {
                             if nowminute > savedminute {
-                                difference = String(format: NSLocalizedString("分前", comment: ""), nowminute-savedminute)
+                                difference = localizeMinute(difference, nowminute, savedminute)
                             }
                         }
                     }
@@ -224,6 +224,46 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         dateField.isHidden = bool
         datePicker.isHidden = bool
         dateLabel.isHidden = bool
+    }
+    
+    func localizeYear(_ difference: String, _ nowyear: Int, _ savedyear: Int) -> String {
+        if nowyear-savedyear == 1 {
+            return String(format: NSLocalizedString("年前単", comment: ""), nowyear-savedyear)
+        } else {
+            return String(format: NSLocalizedString("年前複", comment: ""), nowyear-savedyear)
+        }
+    }
+    
+    func localizeMonth(_ difference: String, _ nowmonth: Int, _ savedmonth: Int) -> String {
+        if nowmonth-savedmonth == 1 {
+            return String(format: NSLocalizedString("月前単", comment: ""), nowmonth-savedmonth)
+        } else {
+            return String(format: NSLocalizedString("月前複", comment: ""), nowmonth-savedmonth)
+        }
+    }
+    
+    func localizeDay(_ difference: String, _ nowday: Int, _ savedday: Int) -> String {
+        if nowday-savedday == 1 {
+            return String(format: NSLocalizedString("月前単", comment: ""), nowday-savedday)
+        } else {
+            return String(format: NSLocalizedString("月前複", comment: ""), nowday-savedday)
+        }
+    }
+    
+    func localizeHour(_ difference: String, _ nowhour: Int, _ savedhour: Int) -> String {
+        if nowhour-savedhour == 1 {
+            return String(format: NSLocalizedString("時間前単", comment: ""), nowhour-savedhour)
+        } else {
+            return String(format: NSLocalizedString("時間前複", comment: ""), nowhour-savedhour)
+        }
+    }
+    
+    func localizeMinute(_ difference: String, _ nowminute: Int, _ savedminute: Int) -> String {
+        if nowminute-savedminute == 1 {
+            return String(format: NSLocalizedString("分前単", comment: ""), nowminute-savedminute)
+        } else {
+            return String(format: NSLocalizedString("分前複", comment: ""), nowminute-savedminute)
+        }
     }
     
     // MARK: - Else

@@ -14,7 +14,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     @IBOutlet var table: UITableView!
     @IBOutlet var editButton: UIBarButtonItem!
-    @IBOutlet var searchbar: UISearchBar!
+    @IBOutlet var searchBar: UISearchBar!
     
     var saveData = UserDefaults.standard
     
@@ -23,7 +23,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     var addNameArray = [String]()
     
-    var sameName = false
+    var isSameName = false
     
     // MARK: - Basics
     
@@ -33,8 +33,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.dataSource = self
         table.delegate = self
         
-        searchbar.delegate = self
-        searchbar.enablesReturnKeyAutomatically = false
+        searchBar.delegate = self
+        searchBar.enablesReturnKeyAutomatically = false
         
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
@@ -44,7 +44,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let forward = NSLocalizedString("前方", comment: "")
         let backward = NSLocalizedString("後方", comment: "")
         
-        searchbar.scopeButtonTitles = [partial, exact, forward, backward]
+        searchBar.scopeButtonTitles = [partial, exact, forward, backward]
         
         editButton.title = NSLocalizedString("編集", comment: "")
         
@@ -72,7 +72,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchbar.text == "" {
+        if searchBar.text == "" {
             return folderNameArray.count
         } else {
             return searchArray.count
@@ -82,7 +82,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Folder")
         
-        if searchbar.text == "" {
+        if searchBar.text == "" {
             cell?.textLabel?.text = folderNameArray[indexPath.row]
         } else {
             cell?.textLabel?.text = searchArray[indexPath.row]
@@ -109,15 +109,15 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     
                     self.deselect()
                 } else {
-                    self.sameName = false
+                    self.isSameName = false
                     
                     for i in 0...self.folderNameArray.count-1 {
                         if self.folderNameArray[i] == textField.text! {
-                            self.sameName = true
+                            self.isSameName = true
                         }
                     }
                     
-                    if self.sameName {
+                    if self.isSameName {
                         if textField.text != self.folderNameArray[indexPath.row] {
                             self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
                         }
@@ -129,13 +129,13 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             
                             self.deselect()
                         } else {
-                            if self.searchbar.text == "" {
+                            if self.searchBar.text == "" {
                                 beforetitle = self.folderNameArray[indexPath.row]
                                 
-                                var dict = [String : Array<String>]()
+                                var dict = [String: Array<String>]()
                                 
                                 if self.saveData.object(forKey: "@dictData") != nil {
-                                    dict = self.saveData.object(forKey: "@dictData") as! [String : Array<String>]
+                                    dict = self.saveData.object(forKey: "@dictData") as! [String: Array<String>]
                                     
                                     var contentsOfFolder = [String]()
                                     
@@ -170,10 +170,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             } else {
                                 beforetitle = self.searchArray[indexPath.row]
                                 
-                                var dict = [String : Array<String>]()
+                                var dict = [String: Array<String>]()
                                 
                                 if self.saveData.object(forKey: "@dictData") != nil {
-                                    dict = self.saveData.object(forKey: "@dictData") as! [String : Array<String>]
+                                    dict = self.saveData.object(forKey: "@dictData") as! [String: Array<String>]
                                     
                                     let folderName = self.searchArray[indexPath.row]
                                     
@@ -228,7 +228,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             }
             
             alert.addTextField { (textField: UITextField!) -> Void in
-                if self.searchbar.text == "" {
+                if self.searchBar.text == "" {
                     textField.text = self.folderNameArray[indexPath.row]
                 } else {
                     textField.text = self.searchArray[indexPath.row]
@@ -242,7 +242,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             present(alert, animated: true, completion: nil)
         } else {
-            if searchbar.text == "" {
+            if searchBar.text == "" {
                 saveData.set(folderNameArray[indexPath.row], forKey: "@folderName")
             } else {
                 saveData.set(searchArray[indexPath.row], forKey: "@folderName")
@@ -264,11 +264,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            var deleteDict = [String : Array<String>]()
+            var deleteDict = [String: Array<String>]()
             
-            if searchbar.text == "" {
+            if searchBar.text == "" {
                 if saveData.object(forKey: "@dictData") != nil {
-                    deleteDict = saveData.object(forKey: "@dictData") as! [String : Array<String>]
+                    deleteDict = saveData.object(forKey: "@dictData") as! [String: Array<String>]
                     if deleteDict[folderNameArray[indexPath.row]] != nil {
                         for fileName in deleteDict[folderNameArray[indexPath.row]]! {
                             removeAllObject(key: folderNameArray[indexPath.row]+"@"+fileName)
@@ -282,7 +282,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 folderNameArray.remove(at: indexPath.row)
             } else {
                 if saveData.object(forKey: "@dictData") != nil {
-                    deleteDict = saveData.object(forKey: "@dictData") as! [String : Array<String>]
+                    deleteDict = saveData.object(forKey: "@dictData") as! [String: Array<String>]
                     
                     if deleteDict[searchArray[indexPath.row]] != nil {
                         for fileName in deleteDict[searchArray[indexPath.row]]! {
@@ -334,16 +334,16 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             if isBlank {
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
             } else {
-                self.sameName = false
+                self.isSameName = false
                 if self.folderNameArray.count != 0 {
                     for i in 0...self.folderNameArray.count-1 {
                         if self.folderNameArray[i] == textField.text! {
-                            self.sameName = true
+                            self.isSameName = true
                         }
                     }
                 }
                 
-                if self.sameName {
+                if self.isSameName {
                     self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
                 } else {
                     if (textField.text?.contains("@"))! {
@@ -358,7 +358,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         self.checkIsArrayIsEmpty()
                         
-                        if self.searchbar.text == "" {
+                        if self.searchBar.text == "" {
                             if self.folderNameArray.count >= 10 {
                                 let location = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
                                 self.table.setContentOffset(location, animated: true)
@@ -402,10 +402,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    // MARK: - SearchBar
+    // MARK: - searchBar
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchbar.endEditing(true)
+        searchBar.endEditing(true)
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -417,7 +417,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchbar.text == "" {
+        if searchBar.text == "" {
             searchArray.removeAll()
             searchArray = folderNameArray
         } else {
@@ -443,7 +443,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if table.contentOffset.y < -64 {
-            searchbar.endEditing(true)
+            searchBar.endEditing(true)
         }
     }
     
@@ -480,21 +480,21 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         searchArray.removeAll()
         
         for folderName in folderNameArray {
-            switch searchbar.selectedScopeButtonIndex {
+            switch searchBar.selectedScopeButtonIndex {
             case 0:
-                if folderName.lowercased(with: NSLocale.current).contains(searchbar.text!.lowercased(with: NSLocale.current)) {
+                if folderName.lowercased(with: NSLocale.current).contains(searchBar.text!.lowercased(with: NSLocale.current)) {
                     searchArray.append(folderName)
                 }
             case 1:
-                if folderName.lowercased(with: NSLocale.current) == searchbar.text!.lowercased(with: NSLocale.current) {
+                if folderName.lowercased(with: NSLocale.current) == searchBar.text!.lowercased(with: NSLocale.current) {
                     searchArray.append(folderName)
                 }
             case 2:
-                if folderName.lowercased(with: NSLocale.current).hasPrefix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                if folderName.lowercased(with: NSLocale.current).hasPrefix(searchBar.text!.lowercased(with: NSLocale.current)) {
                     searchArray.append(folderName)
                 }
             case 3:
-                if folderName.lowercased(with: NSLocale.current).hasSuffix(searchbar.text!.lowercased(with: NSLocale.current)) {
+                if folderName.lowercased(with: NSLocale.current).hasSuffix(searchBar.text!.lowercased(with: NSLocale.current)) {
                     searchArray.append(folderName)
                 }
             default:
