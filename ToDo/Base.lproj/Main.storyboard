@@ -71,7 +71,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="editButton" destination="brS-NQ-fPn" id="2j5-Kl-gB4"/>
-                        <outlet property="searchbar" destination="cIE-X2-7Ia" id="rDk-gJ-pYb"/>
+                        <outlet property="searchBar" destination="cIE-X2-7Ia" id="OAa-eZ-O8I"/>
                         <outlet property="table" destination="ykn-f0-c68" id="SVj-xQ-GsE"/>
                     </connections>
                 </viewController>
@@ -167,8 +167,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="editButton" destination="lKS-zJ-ReQ" id="uQs-4c-a0T"/>
-                        <outlet property="navtitle" destination="9qV-EE-jIO" id="Bsw-24-3Z0"/>
-                        <outlet property="searchbar" destination="b1n-bX-yKT" id="96j-R5-aJu"/>
+                        <outlet property="navTitleButton" destination="9qV-EE-jIO" id="dgg-32-XfS"/>
+                        <outlet property="searchBar" destination="b1n-bX-yKT" id="mQG-j1-Ju0"/>
                         <outlet property="table" destination="40m-Kp-Nxk" id="OMa-UA-7ah"/>
                     </connections>
                 </viewController>
@@ -244,8 +244,8 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
-                        <outlet property="navigationbar" destination="f8D-8S-Fr4" id="cXp-If-Zwg"/>
-                        <outlet property="searchbar" destination="zVq-0Y-oX5" id="PUP-Jg-aDl"/>
+                        <outlet property="navBar" destination="f8D-8S-Fr4" id="3ZA-OG-raT"/>
+                        <outlet property="searchBar" destination="zVq-0Y-oX5" id="c4d-mv-XEy"/>
                         <outlet property="table" destination="SZL-GO-xF7" id="8PG-B5-x7t"/>
                     </connections>
                 </viewController>
