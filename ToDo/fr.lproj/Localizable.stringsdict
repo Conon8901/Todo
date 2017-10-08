@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+   Localizable.stringsdict.plist
+   ToDo
+
+   Created by 黒岩修 on 2017/10/07.
+   Copyright (c) 2017年 黒岩修. All rights reserved.
+-->
+<plist version="1.0">
+    <dict>
+        <key>年前</key>
+        <dict>
+            <key>NSStringLocalizedFormatKey</key>
+            <string>%#@years@</string>
+            <key>years</key>
+            <dict>
+                <key>NSStringFormatSpecTypeKey</key>
+                <string>NSStringPluralRuleType</string>
+                <key>NSStringFormatValueTypeKey</key>
+                <string>d</string>
+                <key>one</key>
+                <string>il y a 1 an</string>
+                <key>other</key>
+                <string>il y a %d ans</string>
+            </dict>
+        </dict>
+        <key>月前</key>
+        <dict>
+            <key>NSStringLocalizedFormatKey</key>
+            <string>%#@months@</string>
+            <key>months</key>
+            <dict>
+                <key>NSStringFormatSpecTypeKey</key>
+                <string>NSStringPluralRuleType</string>
+                <key>NSStringFormatValueTypeKey</key>
+                <string>d</string>
+                <key>one</key>
+                <string>il y a 1 mois</string>
+                <key>other</key>
+                <string>il y a %d mois</string>
+            </dict>
+        </dict>
+        <key>日前</key>
+        <dict>
+            <key>NSStringLocalizedFormatKey</key>
+            <string>%#@days@</string>
+            <key>days</key>
+            <dict>
+                <key>NSStringFormatSpecTypeKey</key>
+                <string>NSStringPluralRuleType</string>
+                <key>NSStringFormatValueTypeKey</key>
+                <string>d</string>
+                <key>one</key>
+                <string>il y a 1 jour</string>
+                <key>other</key>
+                <string>il y a %d jours</string>
+            </dict>
+        </dict>
+        <key>時間前</key>
+        <dict>
+            <key>NSStringLocalizedFormatKey</key>
+            <string>%#@hours@</string>
+            <key>hours</key>
+            <dict>
+                <key>NSStringFormatSpecTypeKey</key>
+                <string>NSStringPluralRuleType</string>
+                <key>NSStringFormatValueTypeKey</key>
+                <string>d</string>
+                <key>one</key>
+                <string>il y a 1 heure</string>
+                <key>other</key>
+                <string>il y a %d heures</string>
+            </dict>
+        </dict>
+        <key>分前</key>
+        <dict>
+            <key>NSStringLocalizedFormatKey</key>
+            <string>%#@minutes@</string>
+            <key>minutes</key>
+            <dict>
+                <key>NSStringFormatSpecTypeKey</key>
+                <string>NSStringPluralRuleType</string>
+                <key>NSStringFormatValueTypeKey</key>
+                <string>d</string>
+                <key>one</key>
+                <string>il y a 1 minute</string>
+                <key>other</key>
+                <string>il y a %d minutes</string>
+            </dict>
+        </dict>
+    </dict>
+</plist>
