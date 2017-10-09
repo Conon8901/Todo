@@ -137,74 +137,26 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             
             var difference = ""
             
-            let nowyear = Calendar.current.component(.year, from: Date())
-            let nowmonth = Calendar.current.component(.month, from: Date())
-            let nowday = Calendar.current.component(.day, from: Date())
-            let nowhour = Calendar.current.component(.hour, from: Date())
-            let nowminute = Calendar.current.component(.minute, from: Date())
-            print(nowyear, nowmonth, nowday, nowhour, nowminute)
-            let savedyear = Calendar.current.component(.year, from: datePicker.date)
-            let savedmonth = Calendar.current.component(.month, from: datePicker.date)
-            let savedday = Calendar.current.component(.day, from: datePicker.date)
-            let savedhour = Calendar.current.component(.hour, from: datePicker.date)
-            let savedminute = Calendar.current.component(.minute, from: datePicker.date)
-            print(savedyear, savedmonth, savedday, savedhour, savedminute)
-            if nowyear > savedyear {
-                if (12*(nowyear - savedyear) + nowmonth) - savedmonth >= 12 {
-                    difference = String(format: NSLocalizedString("年前", comment: ""), nowyear - savedyear)
-                } else {
-                    if (30*(nowmonth - savedmonth) + nowday) - savedday >= 30 {
-                        difference = String(format: NSLocalizedString("月前", comment: ""), nowmonth - savedmonth)
-                    } else {
-                        if (24*(nowday - savedday) + nowhour) - savedhour >= 24 {
-                            difference = String(format: NSLocalizedString("日前", comment: ""), nowday - savedday)
-                        } else {
-                            if (60*(nowhour - savedhour) + nowminute) - savedminute >= 60 {
-                                difference = String(format: NSLocalizedString("時間前", comment: ""), nowhour - savedhour)
+            let span = Date().timeIntervalSince(datePicker.date)
+            
+            if span > 0 {
+                if span > 60 {
+                    if span > 3600 {
+                        if span > 86400 {
+                            if span > 2592000 {
+                                if span > 31536000 {
+                                    difference = String(format: NSLocalizedString("年前", comment: ""), Int(span/31536000))
+                                } else {
+                                    difference = String(format: NSLocalizedString("月前", comment: ""), Int(span/2592000))
+                                }
                             } else {
-                                difference = String(format: NSLocalizedString("分前", comment: ""), nowminute - savedminute)
+                                difference = String(format: NSLocalizedString("日前", comment: ""), Int(span/86400))
                             }
-                        }
-                    }
-                }
-            } else {
-                if nowmonth > savedmonth {
-                    if (30*(nowmonth - savedmonth) + nowday) - savedday >= 30 {
-                        difference = String(format: NSLocalizedString("月前", comment: ""), nowmonth - savedmonth)
-                    } else {
-                        if (24*(nowday - savedday) + nowhour) - savedhour >= 24 {
-                            difference = String(format: NSLocalizedString("日前", comment: ""), nowday - savedday)
                         } else {
-                            if (60*(nowhour - savedhour) + nowminute) - savedminute >= 60 {
-                                difference = String(format: NSLocalizedString("時間前", comment: ""), nowhour - savedhour)
-                            } else {
-                                difference = String(format: NSLocalizedString("分前", comment: ""), nowminute - savedminute)
-                            }
-                        }
-                    }
-                } else {
-                    if nowday > savedday {
-                        if (24*(nowday - savedday) + nowhour) - savedhour >= 24 {
-                            difference = String(format: NSLocalizedString("日前", comment: ""), nowday - savedday)
-                        } else {
-                            if (60*(nowhour - savedhour) + nowminute) - savedminute >= 60 {
-                                difference = String(format: NSLocalizedString("時間前", comment: ""), nowhour - savedhour)
-                            } else {
-                                difference = String(format: NSLocalizedString("分前", comment: ""), nowminute - savedminute)
-                            }
+                            difference = String(format: NSLocalizedString("時間前", comment: ""), Int(span/3600))
                         }
                     } else {
-                        if nowhour > savedhour {
-                            if (60*(nowhour - savedhour) + nowminute) - savedminute >= 60 {
-                                difference = String(format: NSLocalizedString("時間前", comment: ""), nowhour - savedhour)
-                            } else {
-                                difference = String(format: NSLocalizedString("分前", comment: ""), nowminute - savedminute)
-                            }
-                        } else {
-                            if nowminute > savedminute {
-                                difference = String(format: NSLocalizedString("分前", comment: ""), nowminute - savedminute)
-                            }
-                        }
+                        difference = String(format: NSLocalizedString("分前", comment: ""), Int(span/60))
                     }
                 }
             }
