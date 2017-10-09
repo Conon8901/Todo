@@ -112,8 +112,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 } else {
                     var isSameName = false
                     
-                    for i in 0...self.folderNameArray.count-1 {
-                        if self.folderNameArray[i] == textField.text! {
+                    for i in 1...self.folderNameArray.count {
+                        if self.folderNameArray[i-1] == textField.text! {
                             isSameName = true
                         }
                     }
@@ -125,7 +125,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         self.deselect()
                     } else {
-                        if (textField.text?.contains("@"))! {
+                        if textField.text!.contains("@") {
                             self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
                             
                             self.deselect()
@@ -142,9 +142,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     
                                     if let content = dict[self.folderNameArray[indexPath.row]] {
                                         if !content.isEmpty {
-                                            for i in 0...content.count-1 {
-                                                let formerkey = self.folderNameArray[indexPath.row]+"@"+content[i]
-                                                let laterkey = textField.text!+"@"+content[i]
+                                            for i in 1...content.count {
+                                                let formerkey = self.folderNameArray[indexPath.row] + "@" + content[i]
+                                                let laterkey = textField.text! + "@" + content[i-1]
                                                 
                                                 self.resave(formerkey, laterkey)
                                             }
@@ -153,8 +153,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     
                                     if let content = dict[self.folderNameArray[indexPath.row]] {
                                         if !content.isEmpty {
-                                            for _ in 0...content.count-1 {
-                                                contentsOfFolder.append((dict[self.folderNameArray[indexPath.row]]?[0])!)
+                                            for _ in 1...content.count {
+                                                contentsOfFolder.append(dict[self.folderNameArray[indexPath.row]]![0])
                                                 
                                                 dict[self.folderNameArray[indexPath.row]]?.remove(at: 0)
                                             }
@@ -183,8 +183,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     if let content = dict[folderName] {
                                         if !content.isEmpty {
                                             for fileName in content {
-                                                let formerkey = folderName+"@"+fileName
-                                                let laterkey = textField.text!+"@"+fileName
+                                                let formerkey = folderName + "@" + fileName
+                                                let laterkey = textField.text! + "@" + fileName
                                                 
                                                 self.resave(formerkey, laterkey)
                                             }
@@ -195,7 +195,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     
                                     if let content = dict[self.searchArray[indexPath.row]] {
                                         if !content.isEmpty {
-                                            for _ in 0...content.count-1 {
+                                            for _ in 1...content.count {
                                                 contentsOfFolder.append((content[0]))
                                                 
                                                 dict[self.searchArray[indexPath.row]]?.remove(at: 0)
@@ -208,11 +208,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     
                                     self.saveData.set(dict, forKey: "@dictData")
                                 }
-                                    
-                                    self.searchArray[indexPath.row] = textField.text!
-                                    
-                                    let index = self.folderNameArray.index(of: self.searchArray[indexPath.row])
-                                    self.folderNameArray[index!] = textField.text!
+                                
+                                self.searchArray[indexPath.row] = textField.text!
+                                
+                                let index = self.folderNameArray.index(of: self.searchArray[indexPath.row])!
+                                self.folderNameArray[index] = textField.text!
                             }
                             
                             self.saveData.set(self.folderNameArray, forKey: "@folders")
@@ -268,9 +268,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             if searchBar.text == "" {
                 if saveData.object(forKey: "@dictData") != nil {
                     deleteDict = saveData.object(forKey: "@dictData") as! [String: Array<String>]
+                    
                     if deleteDict[folderNameArray[indexPath.row]] != nil {
                         for fileName in deleteDict[folderNameArray[indexPath.row]]! {
-                            removeAllObject(key: folderNameArray[indexPath.row]+"@"+fileName)
+                            removeAllObject(key: folderNameArray[indexPath.row] + "@" + fileName)
                         }
                     }
                     
@@ -286,7 +287,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     
                     if deleteDict[searchArray[indexPath.row]] != nil {
                         for fileName in deleteDict[searchArray[indexPath.row]]! {
-                            removeAllObject(key: searchArray[indexPath.row]+"@"+fileName)
+                            removeAllObject(key: searchArray[indexPath.row] + "@" + fileName)
                         }
                     }
                     
@@ -342,8 +343,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             } else {
                 var isSameName = false
                 if self.folderNameArray.count != 0 {
-                    for i in 0...self.folderNameArray.count-1 {
-                        if self.folderNameArray[i] == textField.text! {
+                    for i in 1...self.folderNameArray.count {
+                        if self.folderNameArray[i-1] == textField.text! {
                             isSameName = true
                         }
                     }
@@ -352,7 +353,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 if isSameName {
                     self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
                 } else {
-                    if (textField.text?.contains("@"))! {
+                    if textField.text!.contains("@") {
                         self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
                         
                         self.deselect()
@@ -367,12 +368,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         if self.searchBar.text == "" {
                             if self.folderNameArray.count >= 10 {
-                                let location = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
+                                let location = CGPoint(x: 0, y: self.table.contentSize.height - self.table.frame.height)
                                 self.table.setContentOffset(location, animated: true)
                             }
                         } else {
                             if self.searchArray.count >= 10 {
-                                let location = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
+                                let location = CGPoint(x: 0, y: self.table.contentSize.height - self.table.frame.height)
                                 self.table.setContentOffset(location, animated: true)
                             }
                             
@@ -418,10 +419,15 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(FileViewController.closeKeyboard))
+        self.view.addGestureRecognizer(tapGesture)
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
+        
+        self.view.gestureRecognizers?.removeAll()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -456,6 +462,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
+    func closeKeyboard() {
+        searchBar.endEditing(true)
+    }
+    
     // MARK: - Method
     
     func showalert(message: String) {
@@ -470,7 +480,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func checkIsArrayIsEmpty() {
-        editButton.isEnabled = folderNameArray.isEmpty ? false : true
+        if folderNameArray.isEmpty {
+            editButton.isEnabled = false
+        } else {
+            editButton.isEnabled = true
+        }
     }
     
     func deselect() {
@@ -481,8 +495,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func removeAllObject(key: String) {
         saveData.removeObject(forKey: key)
-        saveData.removeObject(forKey: key+"@ison")
-        saveData.removeObject(forKey: key+"@date")
+        saveData.removeObject(forKey: key + "@ison")
+        saveData.removeObject(forKey: key + "@date")
     }
     
     func showSearchResult() {
@@ -516,8 +530,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func resave(_ formerkey: String, _ laterkey: String) {
         let memoTextView = self.saveData.object(forKey: formerkey) as! String?
-        let dateSwitch = self.saveData.object(forKey: formerkey+"@ison") as! Bool?
-        let datePicker = self.saveData.object(forKey: formerkey+"@date") as! Date?
+        let dateSwitch = self.saveData.object(forKey: formerkey + "@ison") as! Bool?
+        let datePicker = self.saveData.object(forKey: formerkey + "@date") as! Date?
         
         if memoTextView != nil {
             self.saveData.set(memoTextView!, forKey: laterkey)
@@ -525,13 +539,13 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         if dateSwitch != nil {
-            self.saveData.set(dateSwitch!, forKey: laterkey+"@ison")
-            self.saveData.removeObject(forKey: formerkey+"@ison")
+            self.saveData.set(dateSwitch!, forKey: laterkey + "@ison")
+            self.saveData.removeObject(forKey: formerkey + "@ison")
         }
         
         if datePicker != nil {
-            self.saveData.set(datePicker!, forKey: laterkey+"@date")
-            self.saveData.removeObject(forKey: formerkey+"@date")
+            self.saveData.set(datePicker!, forKey: laterkey + "@date")
+            self.saveData.removeObject(forKey: formerkey + "@date")
         }
     }
     

@@ -16,6 +16,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var navBar: UINavigationBar!
     
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     var listNameArray = [String]()
     var searchArray = [String]()
     
@@ -99,15 +101,16 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var dic: [String : Array<String>] = saveData.object(forKey: "@dictData") as! [String : Array<String>]
+        var dic: [String: Array<String>] = saveData.object(forKey: "@dictData") as! [String: Array<String>]
         
         let fromFolderName = saveData.object(forKey: "@folderName") as! String
-        let fileName = saveData.object(forKey: "@movingFileName") as! String
-        let formerkey = fromFolderName+"@"+fileName
+        let fileName = self.appDelegate.movingFileName
+        
+        let formerkey = fromFolderName + "@" + fileName
         
         let memotextview = saveData.object(forKey: formerkey) as! String?
-        let dateswitch = saveData.object(forKey: formerkey+"@ison") as! Bool?
-        let datepicker = saveData.object(forKey: formerkey+"@date") as! Date?
+        let dateswitch = saveData.object(forKey: formerkey + "@ison") as! Bool?
+        let datepicker = saveData.object(forKey: formerkey + "@date") as! Date?
         
         var laterkey = ""
         
@@ -118,9 +121,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 dic[listNameArray[indexPath.row]]!.append(fileName)
             }
             
-            dic[fromFolderName]?.remove(at: (dic[fromFolderName]?.index(of: fileName))!)
+            dic[fromFolderName]?.remove(at: dic[fromFolderName]!.index(of: fileName)!)
             
-            laterkey = listNameArray[indexPath.row]+"@"+fileName
+            laterkey = listNameArray[indexPath.row] + "@" + fileName
         } else {
             if dic[searchArray[indexPath.row]] == nil {
                 dic[searchArray[indexPath.row]] = [fileName]
@@ -128,9 +131,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 dic[searchArray[indexPath.row]]!.append(fileName)
             }
             
-            dic[fromFolderName]?.remove(at: (dic[fromFolderName]?.index(of: fileName))!)
+            dic[fromFolderName]?.remove(at: dic[fromFolderName]!.index(of: fileName)!)
             
-            laterkey = searchArray[indexPath.row]+"@"+fileName
+            laterkey = searchArray[indexPath.row] + "@" + fileName
         }
         
         if memotextview != nil {
@@ -139,18 +142,19 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         if dateswitch != nil {
-            saveData.set(dateswitch, forKey: laterkey+"@ison")
-            saveData.removeObject(forKey: formerkey+"@ison")
+            saveData.set(dateswitch, forKey: laterkey + "@ison")
+            saveData.removeObject(forKey: formerkey + "@ison")
         }
         
         if datepicker != nil {
-            saveData.set(datepicker, forKey: laterkey+"@date")
-            saveData.removeObject(forKey: formerkey+"@date")
+            saveData.set(datepicker, forKey: laterkey + "@date")
+            saveData.removeObject(forKey: formerkey + "@date")
         }
         
         saveData.set(dic, forKey: "@dictData")
         
-        saveData.set(true, forKey: "@isFromListView")
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.isFromListView = true
         
         self.dismiss(animated: true, completion: nil)
     }
@@ -172,8 +176,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 var isSameName = false
                 
                 if self.listNameArray.count != 0 {
-                    for i in 0...self.listNameArray.count-1 {
-                        if self.listNameArray[i] == textField.text! {
+                    for i in 1...self.listNameArray.count {
+                        if self.listNameArray[i-1] == textField.text! {
                             isSameName = true
                         }
                     }
@@ -182,8 +186,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 if isSameName {
                     self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
                 } else {
-                    if (textField.text?.contains("@"))! {
-                        self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
+                    if textField.text!.contains("@") {
+                        self.showalert(message: NSLocalizedString("\'@\'は使用できません", comment: ""))
                         
                         self.deselect()
                     } else {
@@ -193,13 +197,13 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.table.reloadData()
                         
-                        var dict = self.saveData.object(forKey: "@dictData") as! [String : Array<String>]
+                        var dict = self.saveData.object(forKey: "@dictData") as! [String: Array<String>]
                         dict[textField.text!] = []
                         
                         self.saveData.set(dict, forKey: "@dictData")
                         
                         if self.listNameArray.count >= 11 {
-                            let location = CGPoint(x: 0, y: self.table.contentSize.height-self.table.frame.height)
+                            let location = CGPoint(x: 0, y: self.table.contentSize.height - self.table.frame.height)
                             self.table.setContentOffset(location, animated: true)
                         }
                     }
@@ -228,10 +232,15 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(FileViewController.closeKeyboard))
+        self.view.addGestureRecognizer(tapGesture)
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
+        
+        self.view.gestureRecognizers?.removeAll()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -264,6 +273,10 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if table.contentOffset.y < -64 {
             searchBar.endEditing(true)
         }
+    }
+    
+    func closeKeyboard() {
+        searchBar.endEditing(true)
     }
     
     // MARK: - Method
