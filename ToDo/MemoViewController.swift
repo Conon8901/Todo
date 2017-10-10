@@ -41,7 +41,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         datePicker.minimumDate = Date()
         datePicker.maximumDate = Date(timeInterval: 60*60*24*10000, since: Date())
         
-        hidesDateComponents(true)
+        showsDateComponents(true)
         
         formatter.dateStyle = .short
         formatter.timeStyle = .short
@@ -72,7 +72,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             setDate()
         }
         
-        hidesPlaceHolder()
+        showsPlaceHolder()
         
         navigationItem.title = fileName
     }
@@ -92,7 +92,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - TextView
     
     func textViewDidChange(_ textView: UITextView) {
-        hidesPlaceHolder()
+        showsPlaceHolder()
     }
     
     // MARK: DatePicker
@@ -107,13 +107,13 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         if dateSwitch.isOn {
             setDate()
         } else {
-            hidesDateComponents(true)
+            showsDateComponents(true)
         }
     }
     
     // MARK: - Method
     
-    func hidesPlaceHolder() {
+    func showsPlaceHolder() {
         if memoTextView.text.isEmpty {
             placeholder.isHidden = false
         } else {
@@ -121,14 +121,18 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         }
     }
     
+    func showsDateComponents(_ bool: Bool) {
+        dateField.isHidden = bool
+        datePicker.isHidden = bool
+        dateLabel.isHidden = bool
+    }
+    
     func setDate() {
         if dateSwitch.isOn {
-            hidesDateComponents(false)
+            showsDateComponents(false)
         } else {
-            hidesDateComponents(true)
+            showsDateComponents(true)
         }
-        
-        datePicker.minimumDate = Date()
         
         if saveData.object(forKey: key + "@date") == nil {
             dateField.text = formatter.string(from: Date())
@@ -139,25 +143,23 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             
             let span = Date().timeIntervalSince(datePicker.date)
             
-            if span > 0 {
-                if span > 60 {
-                    if span > 3600 {
-                        if span > 86400 {
-                            if span > 2592000 {
-                                if span > 31536000 {
-                                    difference = String(format: NSLocalizedString("年前", comment: ""), Int(span/31536000))
-                                } else {
-                                    difference = String(format: NSLocalizedString("月前", comment: ""), Int(span/2592000))
-                                }
+            if span > 60 {
+                if span > 3600 {
+                    if span > 86400 {
+                        if span > 2592000 {
+                            if span > 31536000 {
+                                difference = String(format: NSLocalizedString("年前", comment: ""), Int(span/31536000))
                             } else {
-                                difference = String(format: NSLocalizedString("日前", comment: ""), Int(span/86400))
+                                difference = String(format: NSLocalizedString("月前", comment: ""), Int(span/2592000))
                             }
                         } else {
-                            difference = String(format: NSLocalizedString("時間前", comment: ""), Int(span/3600))
+                            difference = String(format: NSLocalizedString("日前", comment: ""), Int(span/86400))
                         }
                     } else {
-                        difference = String(format: NSLocalizedString("分前", comment: ""), Int(span/60))
+                        difference = String(format: NSLocalizedString("時間前", comment: ""), Int(span/3600))
                     }
+                } else {
+                    difference = String(format: NSLocalizedString("分前", comment: ""), Int(span/60))
                 }
             }
             
@@ -167,12 +169,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
                 dateField.text = difference
             }
         }
-    }
-    
-    func hidesDateComponents(_ bool: Bool) {
-        dateField.isHidden = bool
-        datePicker.isHidden = bool
-        dateLabel.isHidden = bool
     }
     
     // MARK: - Else

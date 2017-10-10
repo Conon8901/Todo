@@ -42,15 +42,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         openedFolder = saveData.object(forKey: "@folderName") as! String
         
-        if showDict[openedFolder] != nil {
-            searchArray = showDict[openedFolder]!
-        }
-        
         if showDict[openedFolder] == nil {
             showDict[openedFolder] = []
         }
         
-        checkIsArrayIsEmpty()
+        searchArray = showDict[openedFolder]!
         
         searchBar.delegate = self
         searchBar.enablesReturnKeyAutomatically = false
@@ -92,6 +88,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.navTitleButton.addGestureRecognizer(longPressGesture)
         }
         
+        checkIsArrayIsEmpty()
+        
         table.reloadData()
     }
     
@@ -103,11 +101,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searchBar.text == "" {
-            if showDict[openedFolder] == nil {
-                return 0
-            } else {
-                return showDict[openedFolder]!.count
-            }
+            return showDict[openedFolder]!.count
         } else {
             return searchArray.count
         }
