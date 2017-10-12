@@ -139,8 +139,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         } else {
             datePicker.date = saveData.object(forKey: key + "@date") as! Date
             
-            var difference = ""
-            
             let span = Date().timeIntervalSince(datePicker.date)
             
             if span > 60 {
@@ -148,25 +146,21 @@ class MemoViewController: UIViewController, UITextViewDelegate {
                     if span > 86400 {
                         if span > 2592000 {
                             if span > 31536000 {
-                                difference = String(format: NSLocalizedString("年前", comment: ""), Int(span/31536000))
+                                dateField.text = String(format: NSLocalizedString("年前", comment: ""), Int(span/31536000))
                             } else {
-                                difference = String(format: NSLocalizedString("月前", comment: ""), Int(span/2592000))
+                                dateField.text = String(format: NSLocalizedString("月前", comment: ""), Int(span/2592000))
                             }
                         } else {
-                            difference = String(format: NSLocalizedString("日前", comment: ""), Int(span/86400))
+                            dateField.text = String(format: NSLocalizedString("日前", comment: ""), Int(span/86400))
                         }
                     } else {
-                        difference = String(format: NSLocalizedString("時間前", comment: ""), Int(span/3600))
+                        dateField.text = String(format: NSLocalizedString("時間前", comment: ""), Int(span/3600))
                     }
                 } else {
-                    difference = String(format: NSLocalizedString("分前", comment: ""), Int(span/60))
+                    dateField.text = String(format: NSLocalizedString("分前", comment: ""), Int(span/60))
                 }
-            }
-            
-            if difference == "" {
-                dateField.text = formatter.string(from: datePicker.date)
             } else {
-                dateField.text = difference
+                dateField.text = formatter.string(from: datePicker.date)
             }
         }
     }

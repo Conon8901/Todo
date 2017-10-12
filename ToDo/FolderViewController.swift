@@ -70,7 +70,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchBar.text == "" {
+        if searchBar.text!.isEmpty {
             return folderNameArray.count
         } else {
             return searchArray.count
@@ -80,7 +80,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Folder")
         
-        if searchBar.text == "" {
+        if searchBar.text!.isEmpty {
             cell?.textLabel?.text = folderNameArray[indexPath.row]
         } else {
             cell?.textLabel?.text = searchArray[indexPath.row]
@@ -112,8 +112,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 } else {
                     var isSameName = false
                     
-                    for i in 1...self.folderNameArray.count {
-                        if self.folderNameArray[i-1] == textField.text! {
+                    for i in 0...self.folderNameArray.count - 1 {
+                        if self.folderNameArray[i] == textField.text! {
                             isSameName = true
                         }
                     }
@@ -130,7 +130,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             
                             self.deselect()
                         } else {
-                            if self.searchBar.text == "" {
+                            if self.searchBar.text!.isEmpty {
                                 beforetitle = self.folderNameArray[indexPath.row]
                                 
                                 var dict = [String: Array<String>]()
@@ -142,9 +142,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     
                                     if let content = dict[self.folderNameArray[indexPath.row]] {
                                         if !content.isEmpty {
-                                            for i in 1...content.count {
+                                            for i in 0...content.count - 1 {
                                                 let formerkey = self.folderNameArray[indexPath.row] + "@" + content[i]
-                                                let laterkey = textField.text! + "@" + content[i-1]
+                                                let laterkey = textField.text! + "@" + content[i]
                                                 
                                                 self.resave(formerkey, laterkey)
                                             }
@@ -228,7 +228,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             }
             
             alert.addTextField { (textField: UITextField!) -> Void in
-                if self.searchBar.text == "" {
+                if self.searchBar.text!.isEmpty {
                     textField.text = self.folderNameArray[indexPath.row]
                 } else {
                     textField.text = self.searchArray[indexPath.row]
@@ -242,7 +242,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             present(alert, animated: true, completion: nil)
         } else {
-            if searchBar.text == "" {
+            if searchBar.text!.isEmpty {
                 saveData.set(folderNameArray[indexPath.row], forKey: "@folderName")
             } else {
                 saveData.set(searchArray[indexPath.row], forKey: "@folderName")
@@ -253,19 +253,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             var deleteDict = [String: Array<String>]()
             
-            if searchBar.text == "" {
+            if searchBar.text!.isEmpty {
                 if saveData.object(forKey: "@dictData") != nil {
                     deleteDict = saveData.object(forKey: "@dictData") as! [String: Array<String>]
                     
@@ -343,8 +335,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             } else {
                 var isSameName = false
                 if self.folderNameArray.count != 0 {
-                    for i in 1...self.folderNameArray.count {
-                        if self.folderNameArray[i-1] == textField.text! {
+                    for i in 0...self.folderNameArray.count - 1 {
+                        if self.folderNameArray[i] == textField.text! {
                             isSameName = true
                         }
                     }
@@ -366,7 +358,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         self.table.reloadData()
                         
-                        if self.searchBar.text == "" {
+                        if self.searchBar.text!.isEmpty {
                             if self.folderNameArray.count >= 10 {
                                 let location = CGPoint(x: 0, y: self.table.contentSize.height - self.table.frame.height)
                                 self.table.setContentOffset(location, animated: true)
@@ -431,7 +423,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.text == "" {
+        if searchBar.text!.isEmpty {
             searchArray.removeAll()
             searchArray = folderNameArray
             
@@ -442,7 +434,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        if searchBar.text != "" {
+        if !searchBar.text!.isEmpty {
             showSearchResult()
             
             searchBar.becomeFirstResponder()
