@@ -56,7 +56,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchBar.text == "" {
+        if searchBar.text!.isEmpty {
             return listNameArray.count
         } else {
             return searchArray.count
@@ -66,7 +66,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "List")
         
-        if searchBar.text == "" {
+        if searchBar.text!.isEmpty {
             cell?.textLabel?.text = listNameArray[indexPath.row]
         } else {
             cell?.textLabel?.text = searchArray[indexPath.row]
@@ -85,7 +85,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         let folderName = saveData.object(forKey: "@folderName") as! String
         
-        if searchBar.text == "" {
+        if searchBar.text!.isEmpty {
             if listNameArray[indexPath.row] == folderName {
                 return nil
             } else {
@@ -114,7 +114,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         var laterkey = ""
         
-        if searchBar.text == "" {
+        if searchBar.text!.isEmpty {
             if dic[listNameArray[indexPath.row]] == nil {
                 dic[listNameArray[indexPath.row]] = [fileName]
             } else {
@@ -168,7 +168,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let saveAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = textField.text!.components(separatedBy: .whitespaces).joined() == ""
+            let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
             
             if isBlank {
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
@@ -176,8 +176,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 var isSameName = false
                 
                 if self.listNameArray.count != 0 {
-                    for i in 1...self.listNameArray.count {
-                        if self.listNameArray[i-1] == textField.text! {
+                    for i in 0...self.listNameArray.count - 1 {
+                        if self.listNameArray[i] == textField.text! {
                             isSameName = true
                         }
                     }
@@ -244,7 +244,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.text == "" {
+        if searchBar.text!.isEmpty {
             searchArray.removeAll()
             searchArray = listNameArray
             
@@ -255,7 +255,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        if searchBar.text != "" {
+        if !searchBar.text!.isEmpty {
             showSearchResult()
             
             searchBar.becomeFirstResponder()
