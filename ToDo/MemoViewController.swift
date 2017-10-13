@@ -138,9 +138,11 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         if saveData.object(forKey: key + "@date") == nil {
             dateField.text = formatter.string(from: Date())
         } else {
-            datePicker.date = saveData.object(forKey: key + "@date") as! Date
+            let savedDate = saveData.object(forKey: key + "@date") as! Date
             
-            let span = Date().timeIntervalSince(datePicker.date)
+            datePicker.date = savedDate
+            
+            let span = Date().timeIntervalSince(savedDate)
             
             if span > 60 {
                 if span > 3600 {
