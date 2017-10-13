@@ -26,7 +26,7 @@
                 <key>many</key>
                 <string>%d лет назад</string>
                 <key>other</key>
-                <string>-----</string>
+                <string>ошибка</string>
             </dict>
         </dict>
         <key>月前</key>
@@ -46,7 +46,7 @@
                 <key>many</key>
                 <string>%d месяцев назад</string>
                 <key>other</key>
-                <string>-----</string>
+                <string>ошибка</string>
             </dict>
         </dict>
         <key>日前</key>
@@ -66,7 +66,7 @@
                 <key>many</key>
                 <string>%d дней назад</string>
                 <key>other</key>
-                <string>-----</string>
+                <string>ошибка</string>
             </dict>
         </dict>
         <key>時間前</key>
@@ -86,7 +86,7 @@
                 <key>many</key>
                 <string>%d часов назад</string>
                 <key>other</key>
-                <string>-----</string>
+                <string>ошибка</string>
             </dict>
         </dict>
         <key>分前</key>
@@ -106,7 +106,7 @@
                 <key>many</key>
                 <string>%d минут назад</string>
                 <key>other</key>
-                <string>-----</string>
+                <string>ошибка</string>
             </dict>
         </dict>
     </dict>

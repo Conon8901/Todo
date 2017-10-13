@@ -35,6 +35,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         searchBar.delegate = self
         searchBar.enablesReturnKeyAutomatically = false
+        searchBar.autocapitalizationType = .none
         
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
@@ -172,24 +173,18 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             if isBlank {
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
+                
+                self.deselectCell()
             } else {
-                var isSameName = false
-                
-                if self.listNameArray.count != 0 {
-                    for i in 0...self.listNameArray.count - 1 {
-                        if self.listNameArray[i] == textField.text! {
-                            isSameName = true
-                        }
-                    }
-                }
-                
-                if isSameName {
+                if self.listNameArray.index(of: textField.text!) != nil {
                     self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
+                    
+                    self.deselectCell()
                 } else {
                     if textField.text!.contains("@") {
                         self.showalert(message: NSLocalizedString("\'@\'は使用できません", comment: ""))
                         
-                        self.deselect()
+                        self.deselectCell()
                     } else {
                         self.listNameArray.append(textField.text!)
                         
@@ -292,7 +287,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.present(alert, animated: true, completion: nil)
     }
     
-    func deselect() {
+    func deselectCell() {
         if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
             self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
         }
@@ -301,27 +296,17 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func showSearchResult() {
         searchArray.removeAll()
         
-        for folderName in listNameArray {
-            switch searchBar.selectedScopeButtonIndex {
-            case 0:
-                if folderName.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current)) {
-                    searchArray.append(folderName)
-                }
-            case 1:
-                if folderName.lowercased(with: .current) == searchBar.text!.lowercased(with: .current) {
-                    searchArray.append(folderName)
-                }
-            case 2:
-                if folderName.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current)) {
-                    searchArray.append(folderName)
-                }
-            case 3:
-                if folderName.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current)) {
-                    searchArray.append(folderName)
-                }
-            default:
-                break
-            }
+        switch searchBar.selectedScopeButtonIndex {
+        case 0:
+            searchArray = listNameArray.filter{ $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current)) }
+        case 1:
+            searchArray = listNameArray.filter{ $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current) }
+        case 2:
+            searchArray = listNameArray.filter{ $0.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current)) }
+        case 3:
+            searchArray = listNameArray.filter{ $0.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current)) }
+        default:
+            break
         }
         
         table.reloadData()

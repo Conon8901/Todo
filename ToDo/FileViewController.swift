@@ -50,6 +50,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         searchBar.delegate = self
         searchBar.enablesReturnKeyAutomatically = false
+        searchBar.autocapitalizationType = .none
         
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
@@ -88,7 +89,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.navTitleButton.addGestureRecognizer(longPressGesture)
         }
         
-        checkIsArrayIsEmpty()
+        checkIsArrayEmpty()
         
         table.reloadData()
     }
@@ -111,21 +112,24 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let cell = tableView.dequeueReusableCell(withIdentifier: "File")
         
         if searchBar.text!.isEmpty {
-            cell?.textLabel?.text = showDict[openedFolder]?[indexPath.row]
+            let fileName = showDict[openedFolder]![indexPath.row]
             
-            let fileName = showDict[openedFolder]?[indexPath.row]
-            if let subtitle = saveData.object(forKey: openedFolder + "@" + fileName!) as! String? {
-                cell?.detailTextLabel?.text = subtitle
-            }
-        } else {
-            cell?.textLabel?.text = searchArray[indexPath.row]
+            cell?.textLabel?.text = fileName
             
-            let fileName = searchArray[indexPath.row]
             if let subtitle = saveData.object(forKey: openedFolder + "@" + fileName) as! String? {
                 cell?.detailTextLabel?.text = subtitle
             }
+        } else {
+            let fileName = searchArray[indexPath.row]
+            
+            cell?.textLabel?.text = fileName
+            
+            if let subtitle = saveData.object(forKey: openedFolder + "@" + fileName) as! String? {
+                cell?.detailTextLabel?.text = subtitle
+            } else {
+                cell?.detailTextLabel?.text = ""//無いと未遷移のcellにfolder-Arrayでの位置のcellのsubtitleが入る
+            }
         }
-        
         return cell!
     }
     
@@ -144,33 +148,25 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 if isBlank {
                     self.showalert(message: NSLocalizedString("入力してください", comment: ""))
                     
-                    self.deselect()
+                    self.deselectCell()
                 } else {
-                    var isSameName = false
-                    
-                    for i in 0...self.showDict[self.openedFolder]!.count - 1 {
-                        if self.showDict[self.openedFolder]?[i] == textField.text! {
-                            isSameName = true
-                        }
-                    }
-                    
-                    if isSameName {
+                    if self.showDict[self.openedFolder]?.index(of: textField.text!) != nil {
                         if textField.text != self.showDict[self.openedFolder]?[indexPath.row] {
                             self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
                         }
                         
-                        self.deselect()
+                        self.deselectCell()
                     } else {
                         if textField.text!.contains("@") {
                             self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
                             
-                            self.deselect()
+                            self.deselectCell()
                         } else {
                             if self.searchBar.text!.isEmpty {
                                 let formerkey = self.openedFolder + "@" + self.showDict[self.openedFolder]![indexPath.row]
                                 let laterkey = self.openedFolder + "@" + textField.text!
                                 
-                                self.resave(formerkey, laterkey)
+                                self.resaveMemo(formerkey, laterkey)
                                 
                                 self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
                             } else {
@@ -179,7 +175,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                                 let formerkey = self.openedFolder + "@" + self.searchArray[indexPath.row]
                                 let laterkey = self.openedFolder + "@" + textField.text!
                                 
-                                self.resave(formerkey, laterkey)
+                                self.resaveMemo(formerkey, laterkey)
                                 
                                 self.searchArray[indexPath.row] = textField.text!
                                 
@@ -198,7 +194,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             
             let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
-                self.deselect()
+                self.deselectCell()
             }
             
             alert.addTextField { (textField: UITextField!) -> Void in
@@ -226,7 +222,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.navigationController?.pushViewController(nextView, animated: true)
         }
     }
-
+    
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("削除", comment: "")) { (action, index) -> Void in
             if self.searchBar.text!.isEmpty {
@@ -261,7 +257,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             self.saveData.set(self.showDict, forKey: "@dictData")
             
-            self.checkIsArrayIsEmpty()
+            self.checkIsArrayEmpty()
         }
         
         deleteButton.backgroundColor = .red
@@ -306,26 +302,18 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             if isBlank {
                 self.showalert(message: NSLocalizedString("入力してください", comment: ""))
+                
+                self.deselectCell()
             } else {
-                var isSameName = false
-                
-                if self.showDict[self.openedFolder]?.isEmpty == false {
-                    for i in 0...self.showDict[self.openedFolder]!.count - 1 {
-                        if self.showDict[self.openedFolder]?[i] == textField.text! {
-                            isSameName = true
-                        }
-                    }
-                }
-                
-                if isSameName {
+                if self.showDict[self.openedFolder]?.index(of: textField.text!) != nil {
                     self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
                     
-                    self.deselect()
+                    self.deselectCell()
                 } else {
                     if textField.text!.contains("@") {
                         self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
                         
-                        self.deselect()
+                        self.deselectCell()
                     } else {
                         self.showDict[self.openedFolder]!.append(textField.text!)
                         
@@ -350,7 +338,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.saveData.set(self.showDict, forKey: "@dictData")
                         
-                        self.checkIsArrayIsEmpty()
+                        self.checkIsArrayEmpty()
                         
                         self.table.reloadData()
                     }
@@ -397,11 +385,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 preferredStyle: .alert)
             
             let deleteAction = UIAlertAction(title: NSLocalizedString("削除", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
-                let filescount = self.showDict[self.openedFolder]!.count
+                let folder = self.showDict[self.openedFolder]!
                 
-                if filescount != 0 {
-                    for i in 0...filescount - 1 {
-                        let key = self.openedFolder + "@" + self.showDict[self.openedFolder]![i]
+                if !folder.isEmpty {
+                    for fileName in folder {
+                        let key = self.openedFolder + "@" + fileName
                         self.removeAllObject(key: key)
                     }
                     
@@ -498,7 +486,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.present(alert, animated: true, completion: nil)
     }
     
-    func checkIsArrayIsEmpty() {
+    func checkIsArrayEmpty() {
         if showDict[openedFolder]!.isEmpty {
             editButton.isEnabled = false
         } else {
@@ -506,7 +494,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    func deselect() {
+    func deselectCell() {
         if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
             self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
         }
@@ -521,33 +509,23 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func showSearchResult() {
         searchArray.removeAll()
         
-        for fileName in showDict[openedFolder]! {
-            switch searchBar.selectedScopeButtonIndex {
-            case 0:
-                if fileName.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current)) {
-                    searchArray.append(fileName)
-                }
-            case 1:
-                if fileName.lowercased(with: .current) == searchBar.text!.lowercased(with: .current) {
-                    searchArray.append(fileName)
-                }
-            case 2:
-                if fileName.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current)) {
-                    searchArray.append(fileName)
-                }
-            case 3:
-                if fileName.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current)) {
-                    searchArray.append(fileName)
-                }
-            default:
-                break
-            }
+        switch searchBar.selectedScopeButtonIndex {
+        case 0:
+            searchArray = showDict[openedFolder]!.filter{ $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current)) }
+        case 1:
+            searchArray = showDict[openedFolder]!.filter{ $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current) }
+        case 2:
+            searchArray = showDict[openedFolder]!.filter{ $0.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current)) }
+        case 3:
+            searchArray = showDict[openedFolder]!.filter{ $0.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current)) }
+        default:
+            break
         }
         
         table.reloadData()
     }
     
-    func resave(_ formerkey: String, _ laterkey: String) {
+    func resaveMemo(_ formerkey: String, _ laterkey: String) {
         let memoTextView = self.saveData.object(forKey: formerkey) as! String?
         let dateSwitch = self.saveData.object(forKey: formerkey + "@ison") as! Bool?
         let datePicker = self.saveData.object(forKey: formerkey + "@date") as! Date?

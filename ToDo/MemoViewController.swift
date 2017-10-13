@@ -37,6 +37,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         memoTextView.layer.borderWidth = 0.5
         memoTextView.layer.cornerRadius = 6
         memoTextView.layer.masksToBounds = true
+        memoTextView.autocapitalizationType = .none
         
         datePicker.minimumDate = Date()
         datePicker.maximumDate = Date(timeInterval: 60*60*24*10000, since: Date())
@@ -72,7 +73,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             setDate()
         }
         
-        showsPlaceHolder()
+        chackIsShowPlaceHolder()
         
         navigationItem.title = fileName
     }
@@ -92,7 +93,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - TextView
     
     func textViewDidChange(_ textView: UITextView) {
-        showsPlaceHolder()
+        chackIsShowPlaceHolder()
     }
     
     // MARK: DatePicker
@@ -113,7 +114,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - Method
     
-    func showsPlaceHolder() {
+    func chackIsShowPlaceHolder() {
         if memoTextView.text.isEmpty {
             placeholder.isHidden = false
         } else {
