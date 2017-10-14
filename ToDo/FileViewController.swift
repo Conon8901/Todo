@@ -164,18 +164,18 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         } else {
                             if self.searchBar.text!.isEmpty {
                                 let formerkey = self.openedFolder + "@" + self.showDict[self.openedFolder]![indexPath.row]
-                                let laterkey = self.openedFolder + "@" + textField.text!
+                                let latterkey = self.openedFolder + "@" + textField.text!
                                 
-                                self.resaveMemo(formerkey, laterkey)
+                                self.resaveMemo(formerkey, latterkey)
                                 
                                 self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
                             } else {
                                 let fileName = self.searchArray[indexPath.row]
                                 
                                 let formerkey = self.openedFolder + "@" + self.searchArray[indexPath.row]
-                                let laterkey = self.openedFolder + "@" + textField.text!
+                                let latterkey = self.openedFolder + "@" + textField.text!
                                 
-                                self.resaveMemo(formerkey, laterkey)
+                                self.resaveMemo(formerkey, latterkey)
                                 
                                 self.searchArray[indexPath.row] = textField.text!
                                 
@@ -511,13 +511,21 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         switch searchBar.selectedScopeButtonIndex {
         case 0:
-            searchArray = showDict[openedFolder]!.filter{ $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current)) }
+            searchArray = showDict[openedFolder]!.filter {
+                $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current))
+            }
         case 1:
-            searchArray = showDict[openedFolder]!.filter{ $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current) }
+            searchArray = showDict[openedFolder]!.filter {
+                $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current)
+            }
         case 2:
-            searchArray = showDict[openedFolder]!.filter{ $0.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current)) }
+            searchArray = showDict[openedFolder]!.filter {
+                $0.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current))
+            }
         case 3:
-            searchArray = showDict[openedFolder]!.filter{ $0.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current)) }
+            searchArray = showDict[openedFolder]!.filter {
+                $0.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current))
+            }
         default:
             break
         }
@@ -525,23 +533,23 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.reloadData()
     }
     
-    func resaveMemo(_ formerkey: String, _ laterkey: String) {
+    func resaveMemo(_ formerkey: String, _ latterkey: String) {
         let memoTextView = self.saveData.object(forKey: formerkey) as! String?
         let dateSwitch = self.saveData.object(forKey: formerkey + "@ison") as! Bool?
         let datePicker = self.saveData.object(forKey: formerkey + "@date") as! Date?
         
         if memoTextView != nil {
-            self.saveData.set(memoTextView!, forKey: laterkey)
+            self.saveData.set(memoTextView!, forKey: latterkey)
             self.saveData.removeObject(forKey: formerkey)
         }
         
         if dateSwitch != nil {
-            self.saveData.set(dateSwitch!, forKey: laterkey + "@ison")
+            self.saveData.set(dateSwitch!, forKey: latterkey + "@ison")
             self.saveData.removeObject(forKey: formerkey + "@ison")
         }
         
         if datePicker != nil {
-            self.saveData.set(datePicker!, forKey: laterkey + "@date")
+            self.saveData.set(datePicker!, forKey: latterkey + "@date")
             self.saveData.removeObject(forKey: formerkey + "@date")
         }
     }

@@ -113,7 +113,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let dateswitch = saveData.object(forKey: formerkey + "@ison") as! Bool?
         let datepicker = saveData.object(forKey: formerkey + "@date") as! Date?
         
-        var laterkey = ""
+        var latterkey = ""
         
         if searchBar.text!.isEmpty {
             if dic[listNameArray[indexPath.row]] == nil {
@@ -124,7 +124,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             dic[fromFolderName]?.remove(at: dic[fromFolderName]!.index(of: fileName)!)
             
-            laterkey = listNameArray[indexPath.row] + "@" + fileName
+            latterkey = listNameArray[indexPath.row] + "@" + fileName
         } else {
             if dic[searchArray[indexPath.row]] == nil {
                 dic[searchArray[indexPath.row]] = [fileName]
@@ -134,21 +134,21 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             dic[fromFolderName]?.remove(at: dic[fromFolderName]!.index(of: fileName)!)
             
-            laterkey = searchArray[indexPath.row] + "@" + fileName
+            latterkey = searchArray[indexPath.row] + "@" + fileName
         }
         
         if memotextview != nil {
-            saveData.set(memotextview, forKey: laterkey)
+            saveData.set(memotextview, forKey: latterkey)
             saveData.removeObject(forKey: formerkey)
         }
         
         if dateswitch != nil {
-            saveData.set(dateswitch, forKey: laterkey + "@ison")
+            saveData.set(dateswitch, forKey: latterkey + "@ison")
             saveData.removeObject(forKey: formerkey + "@ison")
         }
         
         if datepicker != nil {
-            saveData.set(datepicker, forKey: laterkey + "@date")
+            saveData.set(datepicker, forKey: latterkey + "@date")
             saveData.removeObject(forKey: formerkey + "@date")
         }
         
@@ -298,13 +298,21 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         switch searchBar.selectedScopeButtonIndex {
         case 0:
-            searchArray = listNameArray.filter{ $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current)) }
+            searchArray = listNameArray.filter {
+                $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current))
+            }
         case 1:
-            searchArray = listNameArray.filter{ $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current) }
+            searchArray = listNameArray.filter {
+                $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current)
+            }
         case 2:
-            searchArray = listNameArray.filter{ $0.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current)) }
+            searchArray = listNameArray.filter {
+                $0.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current))
+            }
         case 3:
-            searchArray = listNameArray.filter{ $0.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current)) }
+            searchArray = listNameArray.filter {
+                $0.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current))
+            }
         default:
             break
         }

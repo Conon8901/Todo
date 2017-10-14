@@ -92,8 +92,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isEditing {
-            var beforetitle = ""
-            
             let alert = UIAlertController(
                 title: NSLocalizedString("名称変更", comment: ""),
                 message: NSLocalizedString("タイトル入力", comment: ""),
@@ -121,8 +119,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             
                             self.deselectCell()
                         } else {
+                            var formertitle = ""
+                            
                             if self.searchBar.text!.isEmpty {
-                                beforetitle = self.folderNameArray[indexPath.row]
+                                formertitle = self.folderNameArray[indexPath.row]
                                 
                                 if self.saveData.object(forKey: "@dictData") != nil {
                                     var dict = self.saveData.object(forKey: "@dictData") as! [String: Array<String>]
@@ -132,21 +132,21 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     if let files = dict[folderName] {
                                         for fileName in files {
                                             let formerkey = folderName + "@" + fileName
-                                            let laterkey = textField.text! + "@" + fileName
+                                            let latterkey = textField.text! + "@" + fileName
                                             
-                                            self.resaveMemo(formerkey, laterkey)
+                                            self.resaveMemo(formerkey, latterkey)
                                         }
                                     }
                                     
                                     dict[textField.text!] = dict[folderName]
-                                    dict[beforetitle] = nil
+                                    dict[formertitle] = nil
                                     
                                     self.saveData.set(dict, forKey: "@dictData")
                                 }
                                 
                                 self.folderNameArray[indexPath.row] = textField.text!
                             } else {
-                                beforetitle = self.searchArray[indexPath.row]
+                                formertitle = self.searchArray[indexPath.row]
                                 
                                 if self.saveData.object(forKey: "@dictData") != nil {
                                     var dict = self.saveData.object(forKey: "@dictData") as! [String: Array<String>]
@@ -156,16 +156,16 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     if let files = dict[folderName] {
                                         for fileName in files {
                                             let formerkey = folderName + "@" + fileName
-                                            let laterkey = textField.text! + "@" + fileName
+                                            let latterkey = textField.text! + "@" + fileName
                                             
-                                            self.resaveMemo(formerkey, laterkey)
+                                            self.resaveMemo(formerkey, latterkey)
                                         }
                                         
                                         self.showSearchResult()
                                     }
                                     
                                     dict[textField.text!] = dict[folderName]
-                                    dict[beforetitle] = nil
+                                    dict[formertitle] = nil
                                     
                                     self.saveData.set(dict, forKey: "@dictData")
                                 }
@@ -450,13 +450,21 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         switch searchBar.selectedScopeButtonIndex {
         case 0:
-            searchArray = folderNameArray.filter{ $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current)) }
+            searchArray = folderNameArray.filter {
+                $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current))
+            }
         case 1:
-            searchArray = folderNameArray.filter{ $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current) }
+            searchArray = folderNameArray.filter {
+                $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current)
+            }
         case 2:
-            searchArray = folderNameArray.filter{ $0.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current)) }
+            searchArray = folderNameArray.filter {
+                $0.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current))
+            }
         case 3:
-            searchArray = folderNameArray.filter{ $0.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current)) }
+            searchArray = folderNameArray.filter {
+                $0.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current))
+            }
         default:
             break
         }
@@ -464,23 +472,23 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.reloadData()
     }
     
-    func resaveMemo(_ formerkey: String, _ laterkey: String) {
+    func resaveMemo(_ formerkey: String, _ latterkey: String) {
         let memoTextView = self.saveData.object(forKey: formerkey) as! String?
         let dateSwitch = self.saveData.object(forKey: formerkey + "@ison") as! Bool?
         let datePicker = self.saveData.object(forKey: formerkey + "@date") as! Date?
         
         if memoTextView != nil {
-            self.saveData.set(memoTextView!, forKey: laterkey)
+            self.saveData.set(memoTextView!, forKey: latterkey)
             self.saveData.removeObject(forKey: formerkey)
         }
         
         if dateSwitch != nil {
-            self.saveData.set(dateSwitch!, forKey: laterkey + "@ison")
+            self.saveData.set(dateSwitch!, forKey: latterkey + "@ison")
             self.saveData.removeObject(forKey: formerkey + "@ison")
         }
         
         if datePicker != nil {
-            self.saveData.set(datePicker!, forKey: laterkey + "@date")
+            self.saveData.set(datePicker!, forKey: latterkey + "@date")
             self.saveData.removeObject(forKey: formerkey + "@date")
         }
     }
