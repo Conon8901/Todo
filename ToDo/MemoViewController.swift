@@ -59,19 +59,11 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         let fileName = saveData.object(forKey: "@fileName") as! String
         key = folderName + "@" + fileName
         
-        if saveData.object(forKey: key) == nil {
-            memoTextView.text = ""
-        } else {
-            memoTextView.text = saveData.object(forKey: key) as! String
-        }
+        memoTextView.text = saveData.object(forKey: key) as! String
         
-        if saveData.object(forKey: key + "@ison") == nil {
-            dateSwitch.isOn = false
-        } else {
-            dateSwitch.isOn = saveData.object(forKey: key + "@ison") as! Bool
-            
-            setDate()
-        }
+        dateSwitch.isOn = saveData.object(forKey: key + "@ison") as! Bool
+        
+        setDate()
         
         chackIsShowPlaceHolder()
         

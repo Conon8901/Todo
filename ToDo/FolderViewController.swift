@@ -53,6 +53,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         if saveData.object(forKey: "@folders") == nil {
             self.saveData.set(self.folderNameArray, forKey: "@folders")
+            let dict = [String: [String]]()
+            saveData.set(dict, forKey: "@dictData")
         } else {
             folderNameArray = saveData.object(forKey: "@folders") as! [String]
         }
@@ -124,51 +126,47 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             if self.searchBar.text!.isEmpty {
                                 formertitle = self.folderNameArray[indexPath.row]
                                 
-                                if self.saveData.object(forKey: "@dictData") != nil {
-                                    var dict = self.saveData.object(forKey: "@dictData") as! [String: Array<String>]
-                                    
-                                    let folderName = self.folderNameArray[indexPath.row]
-                                    
-                                    if let files = dict[folderName] {
-                                        for fileName in files {
-                                            let formerkey = folderName + "@" + fileName
-                                            let latterkey = textField.text! + "@" + fileName
-                                            
-                                            self.resaveMemo(formerkey, latterkey)
-                                        }
+                                var dict = self.saveData.object(forKey: "@dictData") as! [String: [String]]
+                                
+                                let folderName = self.folderNameArray[indexPath.row]
+                                
+                                if let files = dict[folderName] {
+                                    for fileName in files {
+                                        let formerkey = folderName + "@" + fileName
+                                        let latterkey = textField.text! + "@" + fileName
+                                        
+                                        self.resaveMemo(formerkey, latterkey)
                                     }
-                                    
-                                    dict[textField.text!] = dict[folderName]
-                                    dict[formertitle] = nil
-                                    
-                                    self.saveData.set(dict, forKey: "@dictData")
                                 }
+                                
+                                dict[textField.text!] = dict[folderName]
+                                dict[formertitle] = nil
+                                
+                                self.saveData.set(dict, forKey: "@dictData")
                                 
                                 self.folderNameArray[indexPath.row] = textField.text!
                             } else {
                                 formertitle = self.searchArray[indexPath.row]
                                 
-                                if self.saveData.object(forKey: "@dictData") != nil {
-                                    var dict = self.saveData.object(forKey: "@dictData") as! [String: Array<String>]
-                                    
-                                    let folderName = self.searchArray[indexPath.row]
-                                    
-                                    if let files = dict[folderName] {
-                                        for fileName in files {
-                                            let formerkey = folderName + "@" + fileName
-                                            let latterkey = textField.text! + "@" + fileName
-                                            
-                                            self.resaveMemo(formerkey, latterkey)
-                                        }
+                                var dict = self.saveData.object(forKey: "@dictData") as! [String: [String]]
+                                
+                                let folderName = self.searchArray[indexPath.row]
+                                
+                                if let files = dict[folderName] {
+                                    for fileName in files {
+                                        let formerkey = folderName + "@" + fileName
+                                        let latterkey = textField.text! + "@" + fileName
                                         
-                                        self.showSearchResult()
+                                        self.resaveMemo(formerkey, latterkey)
                                     }
                                     
-                                    dict[textField.text!] = dict[folderName]
-                                    dict[formertitle] = nil
-                                    
-                                    self.saveData.set(dict, forKey: "@dictData")
+                                    self.showSearchResult()
                                 }
+                                
+                                dict[textField.text!] = dict[folderName]
+                                dict[formertitle] = nil
+                                
+                                self.saveData.set(dict, forKey: "@dictData")
                                 
                                 self.searchArray[indexPath.row] = textField.text!
                                 
@@ -217,35 +215,27 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             if searchBar.text!.isEmpty {
-                if saveData.object(forKey: "@dictData") != nil {
-                    var deleteDict = saveData.object(forKey: "@dictData") as! [String: Array<String>]
-                    
-                    if deleteDict[folderNameArray[indexPath.row]] != nil {
-                        for fileName in deleteDict[folderNameArray[indexPath.row]]! {
-                            removeAllObject(key: folderNameArray[indexPath.row] + "@" + fileName)
-                        }
-                    }
-                    
-                    deleteDict[folderNameArray[indexPath.row]] = nil
-                    
-                    self.saveData.set(deleteDict, forKey: "@dictData")
+                var deleteDict = saveData.object(forKey: "@dictData") as! [String: [String]]
+                
+                for fileName in deleteDict[folderNameArray[indexPath.row]]! {
+                    removeAllObject(key: folderNameArray[indexPath.row] + "@" + fileName)
                 }
+                
+                deleteDict[folderNameArray[indexPath.row]] = nil
+                
+                self.saveData.set(deleteDict, forKey: "@dictData")
                 
                 folderNameArray.remove(at: indexPath.row)
             } else {
-                if saveData.object(forKey: "@dictData") != nil {
-                    var deleteDict = saveData.object(forKey: "@dictData") as! [String: Array<String>]
-                    
-                    if deleteDict[searchArray[indexPath.row]] != nil {
-                        for fileName in deleteDict[searchArray[indexPath.row]]! {
-                            removeAllObject(key: searchArray[indexPath.row] + "@" + fileName)
-                        }
-                    }
-                    
-                    deleteDict[searchArray[indexPath.row]] = nil
-                    
-                    self.saveData.set(deleteDict, forKey: "@dictData")
+                var deleteDict = saveData.object(forKey: "@dictData") as! [String: [String]]
+                
+                for fileName in deleteDict[searchArray[indexPath.row]]! {
+                    removeAllObject(key: searchArray[indexPath.row] + "@" + fileName)
                 }
+                
+                deleteDict[searchArray[indexPath.row]] = nil
+                
+                self.saveData.set(deleteDict, forKey: "@dictData")
                 
                 folderNameArray.remove(at: folderNameArray.index(of: searchArray[indexPath.row])!)
                 searchArray.remove(at: indexPath.row)
@@ -304,9 +294,15 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         self.deselectCell()
                     } else {
+                        var dict = self.saveData.object(forKey: "@dictData") as! [String: [String]]
+                        
                         self.folderNameArray.append(textField.text!)
                         
+                        dict[textField.text!] = []
+                        
                         self.saveData.set(self.folderNameArray, forKey: "@folders")
+                        
+                        self.saveData.set(dict, forKey: "@dictData")
                         
                         self.checkIsArrayEmpty()
                         
@@ -473,24 +469,19 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func resaveMemo(_ formerkey: String, _ latterkey: String) {
-        let memoTextView = self.saveData.object(forKey: formerkey) as! String?
-        let dateSwitch = self.saveData.object(forKey: formerkey + "@ison") as! Bool?
+        let memoTextView = self.saveData.object(forKey: formerkey) as! String
+        let dateSwitch = self.saveData.object(forKey: formerkey + "@ison") as! Bool
         let datePicker = self.saveData.object(forKey: formerkey + "@date") as! Date?
         
-        if memoTextView != nil {
-            self.saveData.set(memoTextView!, forKey: latterkey)
-            self.saveData.removeObject(forKey: formerkey)
-        }
+        self.saveData.set(memoTextView, forKey: latterkey)
         
-        if dateSwitch != nil {
-            self.saveData.set(dateSwitch!, forKey: latterkey + "@ison")
-            self.saveData.removeObject(forKey: formerkey + "@ison")
-        }
+        self.saveData.set(dateSwitch, forKey: latterkey + "@ison")
         
         if datePicker != nil {
             self.saveData.set(datePicker!, forKey: latterkey + "@date")
-            self.saveData.removeObject(forKey: formerkey + "@date")
         }
+        
+        removeAllObject(key: formerkey)
     }
     
     // MARK: - Else

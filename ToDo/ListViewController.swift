@@ -102,50 +102,38 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var dic: [String: Array<String>] = saveData.object(forKey: "@dictData") as! [String: Array<String>]
+        var dic: [String: [String]] = saveData.object(forKey: "@dictData") as! [String: [String]]
         
         let fromFolderName = saveData.object(forKey: "@folderName") as! String
         let fileName = self.appDelegate.movingFileName
         
         let formerkey = fromFolderName + "@" + fileName
         
-        let memotextview = saveData.object(forKey: formerkey) as! String?
-        let dateswitch = saveData.object(forKey: formerkey + "@ison") as! Bool?
+        let memotextview = saveData.object(forKey: formerkey) as! String
+        let dateswitch = saveData.object(forKey: formerkey + "@ison") as! Bool
         let datepicker = saveData.object(forKey: formerkey + "@date") as! Date?
         
         var latterkey = ""
         
         if searchBar.text!.isEmpty {
-            if dic[listNameArray[indexPath.row]] == nil {
-                dic[listNameArray[indexPath.row]] = [fileName]
-            } else {
-                dic[listNameArray[indexPath.row]]!.append(fileName)
-            }
+            dic[listNameArray[indexPath.row]]!.append(fileName)
             
             dic[fromFolderName]?.remove(at: dic[fromFolderName]!.index(of: fileName)!)
             
             latterkey = listNameArray[indexPath.row] + "@" + fileName
         } else {
-            if dic[searchArray[indexPath.row]] == nil {
-                dic[searchArray[indexPath.row]] = [fileName]
-            } else {
-                dic[searchArray[indexPath.row]]!.append(fileName)
-            }
+            dic[searchArray[indexPath.row]]!.append(fileName)
             
             dic[fromFolderName]?.remove(at: dic[fromFolderName]!.index(of: fileName)!)
             
             latterkey = searchArray[indexPath.row] + "@" + fileName
         }
         
-        if memotextview != nil {
-            saveData.set(memotextview, forKey: latterkey)
-            saveData.removeObject(forKey: formerkey)
-        }
+        saveData.set(memotextview, forKey: latterkey)
+        saveData.removeObject(forKey: formerkey)
         
-        if dateswitch != nil {
-            saveData.set(dateswitch, forKey: latterkey + "@ison")
-            saveData.removeObject(forKey: formerkey + "@ison")
-        }
+        saveData.set(dateswitch, forKey: latterkey + "@ison")
+        saveData.removeObject(forKey: formerkey + "@ison")
         
         if datepicker != nil {
             saveData.set(datepicker, forKey: latterkey + "@date")
@@ -192,7 +180,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.table.reloadData()
                         
-                        var dict = self.saveData.object(forKey: "@dictData") as! [String: Array<String>]
+                        var dict = self.saveData.object(forKey: "@dictData") as! [String: [String]]
                         dict[textField.text!] = []
                         
                         self.saveData.set(dict, forKey: "@dictData")

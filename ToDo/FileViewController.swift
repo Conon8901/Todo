@@ -21,7 +21,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var saveData = UserDefaults.standard
     
-    var showDict = [String: Array<String>]()
+    var showDict = [String: [String]]()
     var searchArray = [String]()
     
     var openedFolder = ""
@@ -34,17 +34,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.dataSource = self
         table.delegate = self
         
-        if saveData.object(forKey: "@dictData") == nil {
-            self.saveData.set(self.showDict, forKey: "@dictData")
-        } else {
-            showDict = saveData.object(forKey: "@dictData") as! [String: Array<String>]
-        }
+        showDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
         openedFolder = saveData.object(forKey: "@folderName") as! String
-        
-        if showDict[openedFolder] == nil {
-            showDict[openedFolder] = []
-        }
         
         searchArray = showDict[openedFolder]!
         
@@ -73,7 +65,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         navTitleButton.setTitle(openedFolder, for: .normal)
         
         if appDelegate.isFromListView {
-            showDict = saveData.object(forKey: "@dictData") as! [String: Array<String>]
+            showDict = saveData.object(forKey: "@dictData") as! [String: [String]]
             
             appDelegate.isFromListView = false
         }
@@ -319,6 +311,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.navTitleButton.isEnabled = true
                         
+                        let key = self.openedFolder + "@" + textField.text!
+                        
+                        self.saveData.set("", forKey: key)
+                        self.saveData.set(false, forKey: key + "@ison")
+                        
                         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
                         self.navTitleButton.addGestureRecognizer(longPressGesture)
                         
@@ -534,19 +531,15 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func resaveMemo(_ formerkey: String, _ latterkey: String) {
-        let memoTextView = self.saveData.object(forKey: formerkey) as! String?
-        let dateSwitch = self.saveData.object(forKey: formerkey + "@ison") as! Bool?
+        let memoTextView = self.saveData.object(forKey: formerkey) as! String
+        let dateSwitch = self.saveData.object(forKey: formerkey + "@ison") as! Bool
         let datePicker = self.saveData.object(forKey: formerkey + "@date") as! Date?
         
-        if memoTextView != nil {
-            self.saveData.set(memoTextView!, forKey: latterkey)
-            self.saveData.removeObject(forKey: formerkey)
-        }
+        self.saveData.set(memoTextView, forKey: latterkey)
+        self.saveData.removeObject(forKey: formerkey)
         
-        if dateSwitch != nil {
-            self.saveData.set(dateSwitch!, forKey: latterkey + "@ison")
-            self.saveData.removeObject(forKey: formerkey + "@ison")
-        }
+        self.saveData.set(dateSwitch, forKey: latterkey + "@ison")
+        self.saveData.removeObject(forKey: formerkey + "@ison")
         
         if datePicker != nil {
             self.saveData.set(datePicker!, forKey: latterkey + "@date")
