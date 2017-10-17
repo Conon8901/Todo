@@ -15,7 +15,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet var table: UITableView!
     @IBOutlet var editButton: UIBarButtonItem!
     @IBOutlet var searchBar: UISearchBar!
-    @IBOutlet var navTitleButton: UIButton!
+    
+    var allRemoveButton: UIBarButtonItem?
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
@@ -56,29 +57,26 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         editButton.title = NSLocalizedString("編集", comment: "")
         
+        allRemoveButton?.title = NSLocalizedString("全削除", comment: "")
+        allRemoveButton?.isEnabled = true
+        allRemoveButton?.tintColor = UIColor(white: 1, alpha: 1)
+        
+        allRemoveButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(FileViewController.allRemove))
+        
+        self.navigationItem.leftBarButtonItem = nil
+        
         navigationItem.backBarButtonItem = UIBarButtonItem(title: openedFolder, style: .plain, target: nil, action: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        navTitleButton.setTitle(openedFolder, for: .normal)
+        navigationItem.title = openedFolder
         
         if appDelegate.isFromListView {
             filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
             
             appDelegate.isFromListView = false
-        }
-        
-        if filesDict[openedFolder]!.isEmpty {
-            navTitleButton.isEnabled = false
-            
-            self.navTitleButton.gestureRecognizers?.removeAll()
-        } else {
-            navTitleButton.isEnabled = true
-            
-            let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
-            self.navTitleButton.addGestureRecognizer(longPressGesture)
         }
         
         checkIsArrayEmpty()
@@ -223,11 +221,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 self.filesDict[self.openedFolder]?.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
-                
-                if self.filesDict[self.openedFolder]!.isEmpty {
-                    self.navTitleButton.isEnabled = false
-                    self.navTitleButton.gestureRecognizers?.removeAll()
-                }
             } else {
                 let key = self.openedFolder + "@" + self.searchArray[indexPath.row]
                 self.removeAllObject(key: key)
@@ -235,11 +228,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.filesDict[self.openedFolder]?.remove(at: self.filesDict[self.openedFolder]!.index(of: self.searchArray[indexPath.row])!)
                 self.searchArray.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
-                
-                if self.searchArray.isEmpty {
-                    self.navTitleButton.isEnabled = false
-                    self.navTitleButton.gestureRecognizers?.removeAll()
-                }
             }
             
             if self.filesDict[self.openedFolder]!.count < 11 {
@@ -309,15 +297,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     } else {
                         self.filesDict[self.openedFolder]!.append(textField.text!)
                         
-                        self.navTitleButton.isEnabled = true
-                        
                         let key = self.openedFolder + "@" + textField.text!
                         
                         self.saveData.set("", forKey: key)
                         self.saveData.set(false, forKey: key + "@ison")
-                        
-                        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.allRemove(_:)))
-                        self.navTitleButton.addGestureRecognizer(longPressGesture)
                         
                         if self.searchBar.text!.isEmpty {
                             if self.filesDict[self.openedFolder]!.count >= 11 {
@@ -363,7 +346,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             editButton.title = NSLocalizedString("編集", comment: "")
             
+            self.navigationItem.leftBarButtonItem = nil
+            
             navigationItem.hidesBackButton = false
+            
+            if filesDict[openedFolder]!.isEmpty {
+                editButton.isEnabled = false
+            }
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
@@ -371,47 +360,46 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             editButton.title = NSLocalizedString("完了", comment: "")
             
             navigationItem.hidesBackButton = true
+            
+            self.navigationItem.leftBarButtonItem = allRemoveButton
         }
     }
     
-    func allRemove(_ sender: UILongPressGestureRecognizer) {
-        if sender.state == .began {
-            let alert = UIAlertController(
-                title: NSLocalizedString("全削除", comment: ""),
-                message: NSLocalizedString("本当によろしいですか？\nこのフォルダの全ファイルを削除します", comment: ""),
-                preferredStyle: .alert)
+    func allRemove() {
+        let alert = UIAlertController(
+            title: NSLocalizedString("全削除", comment: ""),
+            message: NSLocalizedString("本当によろしいですか？\nこのフォルダの全ファイルを削除します", comment: ""),
+            preferredStyle: .alert)
+        
+        let deleteAction = UIAlertAction(title: NSLocalizedString("削除", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
+            let folder = self.filesDict[self.openedFolder]!
             
-            let deleteAction = UIAlertAction(title: NSLocalizedString("削除", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
-                let folder = self.filesDict[self.openedFolder]!
-                
-                if !folder.isEmpty {
-                    for fileName in folder {
-                        let key = self.openedFolder + "@" + fileName
-                        self.removeAllObject(key: key)
-                    }
-                    
-                    self.filesDict[self.openedFolder] = []
-                    self.searchArray = []
-                    
-                    self.editButton.isEnabled = false
-                    
-                    self.navTitleButton.isEnabled = false
-                    self.navTitleButton.gestureRecognizers?.removeAll()
-                    
-                    self.saveData.set(self.filesDict, forKey: "@dictData")
-                    
-                    self.table.reloadData()
+            if !folder.isEmpty {
+                for fileName in folder {
+                    let key = self.openedFolder + "@" + fileName
+                    self.removeAllObject(key: key)
                 }
+                
+                self.filesDict[self.openedFolder] = []
+                self.searchArray = []
+                
+                self.editButton.isEnabled = false
+                
+                self.saveData.set(self.filesDict, forKey: "@dictData")
+                
+                self.table.reloadData()
+                
+                self.editButton.isEnabled = true
             }
-            
-            let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
-            }
-            
-            alert.addAction(cancelAction)
-            alert.addAction(deleteAction)
-            
-            present(alert, animated: true, completion: nil)
         }
+        
+        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(deleteAction)
+        
+        present(alert, animated: true, completion: nil)
     }
     
     // MARK: - searchBar

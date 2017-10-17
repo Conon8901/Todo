@@ -54,7 +54,6 @@
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Folder" id="Ml9-jU-I4o">
-                        <barButtonItem key="leftBarButtonItem" style="plain" id="NUa-FK-I5D"/>
                         <rightBarButtonItems>
                             <barButtonItem style="plain" systemItem="add" id="c4h-3X-LVY">
                                 <connections>
@@ -84,7 +83,7 @@
             </objects>
             <point key="canvasLocation" x="815.20000000000005" y="133.5832083958021"/>
         </scene>
-        <!--File View Controller-->
+        <!--File-->
         <scene sceneID="QOp-mh-yap">
             <objects>
                 <viewController storyboardIdentifier="File" id="7DH-dA-Yea" customClass="FileViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
@@ -143,15 +142,7 @@
                             <outletCollection property="gestureRecognizers" destination="upi-Sc-Blt" appends="YES" id="VsG-4E-aFO"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" id="isx-ny-Hoc">
-                        <button key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="9qV-EE-jIO">
-                            <rect key="frame" x="113" y="6" width="150" height="33"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
-                            <state key="normal" title="File">
-                                <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
-                            </state>
-                        </button>
+                    <navigationItem key="navigationItem" title="File" id="isx-ny-Hoc">
                         <rightBarButtonItems>
                             <barButtonItem style="plain" systemItem="add" id="lsO-t3-KtB">
                                 <connections>
@@ -167,7 +158,6 @@
                     </navigationItem>
                     <connections>
                         <outlet property="editButton" destination="lKS-zJ-ReQ" id="uQs-4c-a0T"/>
-                        <outlet property="navTitleButton" destination="9qV-EE-jIO" id="dgg-32-XfS"/>
                         <outlet property="searchBar" destination="b1n-bX-yKT" id="mQG-j1-Ju0"/>
                         <outlet property="table" destination="40m-Kp-Nxk" id="OMa-UA-7ah"/>
                     </connections>
