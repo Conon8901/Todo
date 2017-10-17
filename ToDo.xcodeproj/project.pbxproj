@@ -62,7 +62,6 @@
 		118D15611F617EA60091412B /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		118D15621F6193F80091412B /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		118D15631F6199360091412B /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
-		118D15641F61A3E50091412B /* ms */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ms; path = ms.lproj/Localizable.strings; sourceTree = "<group>"; };
 		118D15651F629FDF0091412B /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		11AC14A31F88F76E007CE23D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = Base; path = Base.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		11AC14A81F88F787007CE23D /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = es; path = es.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
@@ -73,7 +72,6 @@
 		11AC14AD1F890AC6007CE23D /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ja; path = ja.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		11AC14AE1F890AE8007CE23D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.stringsdict"; sourceTree = "<group>"; };
 		11AC14AF1F890AEB007CE23D /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ko; path = ko.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
-		11AC14B11F890B06007CE23D /* ms */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ms; path = ms.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		11C2FAF91F4E9FA30080A9B2 /* MemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -372,7 +370,6 @@
 				118D15611F617EA60091412B /* ru */,
 				118D15621F6193F80091412B /* de */,
 				118D15631F6199360091412B /* fr */,
-				118D15641F61A3E50091412B /* ms */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -389,7 +386,6 @@
 				11AC14AD1F890AC6007CE23D /* ja */,
 				11AC14AE1F890AE8007CE23D /* zh-Hans */,
 				11AC14AF1F890AEB007CE23D /* ko */,
-				11AC14B11F890B06007CE23D /* ms */,
 			);
 			name = Localizable.stringsdict;
 			sourceTree = "<group>";

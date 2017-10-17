@@ -21,7 +21,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var saveData = UserDefaults.standard
     
-    var showDict = [String: [String]]()
+    var filesDict = [String: [String]]()
     var searchArray = [String]()
     
     var openedFolder = ""
@@ -34,11 +34,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.dataSource = self
         table.delegate = self
         
-        showDict = saveData.object(forKey: "@dictData") as! [String: [String]]
+        filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
         openedFolder = saveData.object(forKey: "@folderName") as! String
         
-        searchArray = showDict[openedFolder]!
+        searchArray = filesDict[openedFolder]!
         
         searchBar.delegate = self
         searchBar.enablesReturnKeyAutomatically = false
@@ -65,12 +65,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         navTitleButton.setTitle(openedFolder, for: .normal)
         
         if appDelegate.isFromListView {
-            showDict = saveData.object(forKey: "@dictData") as! [String: [String]]
+            filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
             
             appDelegate.isFromListView = false
         }
         
-        if showDict[openedFolder]!.isEmpty {
+        if filesDict[openedFolder]!.isEmpty {
             navTitleButton.isEnabled = false
             
             self.navTitleButton.gestureRecognizers?.removeAll()
@@ -94,7 +94,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searchBar.text!.isEmpty {
-            return showDict[openedFolder]!.count
+            return filesDict[openedFolder]!.count
         } else {
             return searchArray.count
         }
@@ -104,7 +104,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let cell = tableView.dequeueReusableCell(withIdentifier: "File")
         
         if searchBar.text!.isEmpty {
-            let fileName = showDict[openedFolder]![indexPath.row]
+            let fileName = filesDict[openedFolder]![indexPath.row]
             
             cell?.textLabel?.text = fileName
             
@@ -142,8 +142,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     
                     self.deselectCell()
                 } else {
-                    if self.showDict[self.openedFolder]?.index(of: textField.text!) != nil {
-                        if textField.text != self.showDict[self.openedFolder]?[indexPath.row] {
+                    if self.filesDict[self.openedFolder]?.index(of: textField.text!) != nil {
+                        if textField.text != self.filesDict[self.openedFolder]?[indexPath.row] {
                             self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
                         }
                         
@@ -155,29 +155,29 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             self.deselectCell()
                         } else {
                             if self.searchBar.text!.isEmpty {
-                                let formerkey = self.openedFolder + "@" + self.showDict[self.openedFolder]![indexPath.row]
+                                let formerkey = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
                                 let latterkey = self.openedFolder + "@" + textField.text!
                                 
-                                self.resaveMemo(formerkey, latterkey)
+                                self.resaveMemo(ex: formerkey, post: latterkey)
                                 
-                                self.showDict[self.openedFolder]?[indexPath.row] = textField.text!
+                                self.filesDict[self.openedFolder]?[indexPath.row] = textField.text!
                             } else {
                                 let fileName = self.searchArray[indexPath.row]
                                 
                                 let formerkey = self.openedFolder + "@" + self.searchArray[indexPath.row]
                                 let latterkey = self.openedFolder + "@" + textField.text!
                                 
-                                self.resaveMemo(formerkey, latterkey)
+                                self.resaveMemo(ex: formerkey, post: latterkey)
                                 
                                 self.searchArray[indexPath.row] = textField.text!
                                 
-                                let index = self.showDict[self.openedFolder]?.index(of: fileName)
-                                self.showDict[self.openedFolder]?[index!] = textField.text!
+                                let index = self.filesDict[self.openedFolder]?.index(of: fileName)
+                                self.filesDict[self.openedFolder]?[index!] = textField.text!
                                 
                                 self.showSearchResult()
                             }
                             
-                            self.saveData.set(self.showDict, forKey: "@dictData")
+                            self.saveData.set(self.filesDict, forKey: "@dictData")
                             
                             self.table.reloadData()
                         }
@@ -191,7 +191,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             alert.addTextField { (textField: UITextField!) -> Void in
                 if self.searchBar.text!.isEmpty {
-                    textField.text = self.showDict[self.openedFolder]?[indexPath.row]
+                    textField.text = self.filesDict[self.openedFolder]?[indexPath.row]
                 } else {
                     textField.text = self.searchArray[indexPath.row]
                 }
@@ -205,7 +205,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             present(alert, animated: true, completion: nil)
         } else {
             if searchBar.text!.isEmpty {
-                saveData.set(showDict[openedFolder]![indexPath.row], forKey: "@fileName")
+                saveData.set(filesDict[openedFolder]![indexPath.row], forKey: "@fileName")
             } else {
                 saveData.set(searchArray[indexPath.row], forKey: "@fileName")
             }
@@ -218,13 +218,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("削除", comment: "")) { (action, index) -> Void in
             if self.searchBar.text!.isEmpty {
-                let key = self.openedFolder + "@" + self.showDict[self.openedFolder]![indexPath.row]
+                let key = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
                 self.removeAllObject(key: key)
                 
-                self.showDict[self.openedFolder]?.remove(at: indexPath.row)
+                self.filesDict[self.openedFolder]?.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
                 
-                if self.showDict[self.openedFolder]!.isEmpty {
+                if self.filesDict[self.openedFolder]!.isEmpty {
                     self.navTitleButton.isEnabled = false
                     self.navTitleButton.gestureRecognizers?.removeAll()
                 }
@@ -232,7 +232,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 let key = self.openedFolder + "@" + self.searchArray[indexPath.row]
                 self.removeAllObject(key: key)
                 
-                self.showDict[self.openedFolder]?.remove(at: self.showDict[self.openedFolder]!.index(of: self.searchArray[indexPath.row])!)
+                self.filesDict[self.openedFolder]?.remove(at: self.filesDict[self.openedFolder]!.index(of: self.searchArray[indexPath.row])!)
                 self.searchArray.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
                 
@@ -242,12 +242,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             }
             
-            if self.showDict[self.openedFolder]!.count < 11 {
+            if self.filesDict[self.openedFolder]!.count < 11 {
                 let location = CGPoint(x: 0, y: -64)
                 self.table.setContentOffset(location, animated: true)
             }
             
-            self.saveData.set(self.showDict, forKey: "@dictData")
+            self.saveData.set(self.filesDict, forKey: "@dictData")
             
             self.checkIsArrayEmpty()
         }
@@ -256,7 +256,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("移動", comment: "")) { (action, index) -> Void in
             if self.searchBar.text!.isEmpty {
-                self.appDelegate.movingFileName = self.showDict[self.openedFolder]![indexPath.row]
+                self.appDelegate.movingFileName = self.filesDict[self.openedFolder]![indexPath.row]
             } else {
                 self.appDelegate.movingFileName = self.searchArray[indexPath.row]
             }
@@ -271,12 +271,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let movingFile = showDict[openedFolder]?[sourceIndexPath.row]
+        let movingFile = filesDict[openedFolder]?[sourceIndexPath.row]
         
-        showDict[openedFolder]?.remove(at: sourceIndexPath.row)
-        showDict[openedFolder]?.insert(movingFile!, at: destinationIndexPath.row)
+        filesDict[openedFolder]?.remove(at: sourceIndexPath.row)
+        filesDict[openedFolder]?.insert(movingFile!, at: destinationIndexPath.row)
         
-        saveData.set(showDict, forKey: "@dictData")
+        saveData.set(filesDict, forKey: "@dictData")
         
         table.reloadData()
     }
@@ -297,7 +297,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 self.deselectCell()
             } else {
-                if self.showDict[self.openedFolder]?.index(of: textField.text!) != nil {
+                if self.filesDict[self.openedFolder]?.index(of: textField.text!) != nil {
                     self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
                     
                     self.deselectCell()
@@ -307,7 +307,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.deselectCell()
                     } else {
-                        self.showDict[self.openedFolder]!.append(textField.text!)
+                        self.filesDict[self.openedFolder]!.append(textField.text!)
                         
                         self.navTitleButton.isEnabled = true
                         
@@ -320,7 +320,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.navTitleButton.addGestureRecognizer(longPressGesture)
                         
                         if self.searchBar.text!.isEmpty {
-                            if self.showDict[self.openedFolder]!.count >= 11 {
+                            if self.filesDict[self.openedFolder]!.count >= 11 {
                                 let location = CGPoint(x: 0, y: self.table.contentSize.height - self.table.frame.height)
                                 self.table.setContentOffset(location, animated: true)
                             }
@@ -333,7 +333,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             self.showSearchResult()
                         }
                         
-                        self.saveData.set(self.showDict, forKey: "@dictData")
+                        self.saveData.set(self.filesDict, forKey: "@dictData")
                         
                         self.checkIsArrayEmpty()
                         
@@ -382,7 +382,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 preferredStyle: .alert)
             
             let deleteAction = UIAlertAction(title: NSLocalizedString("削除", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
-                let folder = self.showDict[self.openedFolder]!
+                let folder = self.filesDict[self.openedFolder]!
                 
                 if !folder.isEmpty {
                     for fileName in folder {
@@ -390,7 +390,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.removeAllObject(key: key)
                     }
                     
-                    self.showDict[self.openedFolder] = []
+                    self.filesDict[self.openedFolder] = []
                     self.searchArray = []
                     
                     self.editButton.isEnabled = false
@@ -398,7 +398,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.navTitleButton.isEnabled = false
                     self.navTitleButton.gestureRecognizers?.removeAll()
                     
-                    self.saveData.set(self.showDict, forKey: "@dictData")
+                    self.saveData.set(self.filesDict, forKey: "@dictData")
                     
                     self.table.reloadData()
                 }
@@ -437,7 +437,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text!.isEmpty {
             searchArray.removeAll()
-            searchArray = showDict[openedFolder]!
+            searchArray = filesDict[openedFolder]!
             
             table.reloadData()
         } else {
@@ -484,7 +484,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func checkIsArrayEmpty() {
-        if showDict[openedFolder]!.isEmpty {
+        if filesDict[openedFolder]!.isEmpty {
             editButton.isEnabled = false
         } else {
             editButton.isEnabled = true
@@ -508,19 +508,19 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         switch searchBar.selectedScopeButtonIndex {
         case 0:
-            searchArray = showDict[openedFolder]!.filter {
+            searchArray = filesDict[openedFolder]!.filter {
                 $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current))
             }
         case 1:
-            searchArray = showDict[openedFolder]!.filter {
+            searchArray = filesDict[openedFolder]!.filter {
                 $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current)
             }
         case 2:
-            searchArray = showDict[openedFolder]!.filter {
+            searchArray = filesDict[openedFolder]!.filter {
                 $0.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current))
             }
         case 3:
-            searchArray = showDict[openedFolder]!.filter {
+            searchArray = filesDict[openedFolder]!.filter {
                 $0.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current))
             }
         default:
@@ -530,20 +530,20 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.reloadData()
     }
     
-    func resaveMemo(_ formerkey: String, _ latterkey: String) {
-        let memoTextView = self.saveData.object(forKey: formerkey) as! String
-        let dateSwitch = self.saveData.object(forKey: formerkey + "@ison") as! Bool
-        let datePicker = self.saveData.object(forKey: formerkey + "@date") as! Date?
+    func resaveMemo(ex: String, post: String) {
+        let memoTextView = self.saveData.object(forKey: ex) as! String
+        let dateSwitch = self.saveData.object(forKey: ex + "@ison") as! Bool
+        let datePicker = self.saveData.object(forKey: ex + "@date") as! Date?
         
-        self.saveData.set(memoTextView, forKey: latterkey)
-        self.saveData.removeObject(forKey: formerkey)
+        self.saveData.set(memoTextView, forKey: post)
+        self.saveData.removeObject(forKey: ex)
         
-        self.saveData.set(dateSwitch, forKey: latterkey + "@ison")
-        self.saveData.removeObject(forKey: formerkey + "@ison")
+        self.saveData.set(dateSwitch, forKey: post + "@ison")
+        self.saveData.removeObject(forKey: ex + "@ison")
         
         if datePicker != nil {
-            self.saveData.set(datePicker!, forKey: latterkey + "@date")
-            self.saveData.removeObject(forKey: formerkey + "@date")
+            self.saveData.set(datePicker!, forKey: post + "@date")
+            self.saveData.removeObject(forKey: ex + "@date")
         }
     }
     

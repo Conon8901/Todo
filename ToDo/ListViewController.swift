@@ -21,6 +21,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var listNameArray = [String]()
     var searchArray = [String]()
     
+    var filesDict = [String: [String]]()
+    
     var saveData = UserDefaults.standard
     
     // MARK: - Basics
@@ -32,6 +34,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.delegate = self
         
         listNameArray = saveData.object(forKey: "@folders") as! [String]
+        
+        filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
         searchBar.delegate = self
         searchBar.enablesReturnKeyAutomatically = false
@@ -102,8 +106,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var dic: [String: [String]] = saveData.object(forKey: "@dictData") as! [String: [String]]
-        
         let fromFolderName = saveData.object(forKey: "@folderName") as! String
         let fileName = self.appDelegate.movingFileName
         
@@ -116,15 +118,15 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         var latterkey = ""
         
         if searchBar.text!.isEmpty {
-            dic[listNameArray[indexPath.row]]!.append(fileName)
+            filesDict[listNameArray[indexPath.row]]!.append(fileName)
             
-            dic[fromFolderName]?.remove(at: dic[fromFolderName]!.index(of: fileName)!)
+            filesDict[fromFolderName]?.remove(at: filesDict[fromFolderName]!.index(of: fileName)!)
             
             latterkey = listNameArray[indexPath.row] + "@" + fileName
         } else {
-            dic[searchArray[indexPath.row]]!.append(fileName)
+            filesDict[searchArray[indexPath.row]]!.append(fileName)
             
-            dic[fromFolderName]?.remove(at: dic[fromFolderName]!.index(of: fileName)!)
+            filesDict[fromFolderName]?.remove(at: filesDict[fromFolderName]!.index(of: fileName)!)
             
             latterkey = searchArray[indexPath.row] + "@" + fileName
         }
@@ -140,7 +142,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             saveData.removeObject(forKey: formerkey + "@date")
         }
         
-        saveData.set(dic, forKey: "@dictData")
+        saveData.set(filesDict, forKey: "@dictData")
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.isFromListView = true
@@ -180,10 +182,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.table.reloadData()
                         
-                        var dict = self.saveData.object(forKey: "@dictData") as! [String: [String]]
-                        dict[textField.text!] = []
+                        self.filesDict[textField.text!] = []
                         
-                        self.saveData.set(dict, forKey: "@dictData")
+                        self.saveData.set(self.filesDict, forKey: "@dictData")
                         
                         if self.listNameArray.count >= 11 {
                             let location = CGPoint(x: 0, y: self.table.contentSize.height - self.table.frame.height)
