@@ -433,6 +433,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         saveData.removeObject(forKey: key + "@memo")
         saveData.removeObject(forKey: key + "@ison")
         saveData.removeObject(forKey: key + "@date")
+        saveData.removeObject(forKey: key + "@check")
     }
     
     func showSearchResult() {
@@ -466,6 +467,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let memoTextView = self.saveData.object(forKey: ex + "@memo") as! String
         let dateSwitch = self.saveData.object(forKey: ex + "@ison") as! Bool
         let datePicker = self.saveData.object(forKey: ex + "@date") as! Date?
+        let isCheck = self.saveData.object(forKey: ex + "@check") as! Bool
         
         self.saveData.set(memoTextView, forKey: post + "@memo")
         
@@ -474,6 +476,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         if datePicker != nil {
             self.saveData.set(datePicker!, forKey: post + "@date")
         }
+        
+        self.saveData.set(isCheck, forKey: post + "@check")
         
         removeAllObject(key: ex)
     }

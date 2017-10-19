@@ -114,6 +114,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let memotextview = saveData.object(forKey: formerkey + "@memo") as! String
         let dateswitch = saveData.object(forKey: formerkey + "@ison") as! Bool
         let datepicker = saveData.object(forKey: formerkey + "@date") as! Date?
+        let isCheck = saveData.object(forKey: formerkey + "@check") as! Bool
         
         var latterkey = ""
         
@@ -141,6 +142,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             saveData.set(datepicker, forKey: latterkey + "@date")
             saveData.removeObject(forKey: formerkey + "@date")
         }
+        
+        saveData.set(isCheck, forKey: latterkey + "@check")
+        saveData.removeObject(forKey: formerkey + "@check")
         
         saveData.set(filesDict, forKey: "@dictData")
         

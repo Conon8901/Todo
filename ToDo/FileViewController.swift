@@ -65,6 +65,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         self.navigationItem.leftBarButtonItem = nil
         
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.putCheckmark))
+        table.addGestureRecognizer(longPressRecognizer)
+        
         navigationItem.backBarButtonItem = UIBarButtonItem(title: openedFolder, style: .plain, target: nil, action: nil)
     }
     
@@ -104,18 +107,38 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if searchBar.text!.isEmpty {
             let fileName = filesDict[openedFolder]![indexPath.row]
             
+            let key = openedFolder + "@" + fileName
+            
             cell?.textLabel?.text = fileName
             
-            if let subtitle = saveData.object(forKey: openedFolder + "@" + fileName) as! String? {
+            if let subtitle = saveData.object(forKey: key + "@memo") as! String? {
                 cell?.detailTextLabel?.text = subtitle
+            }
+            
+            if let isCheck = saveData.object(forKey: key + "@check") as! Bool? {
+                if isCheck {
+                    cell?.accessoryType = .checkmark
+                } else {
+                    cell?.accessoryType = .none
+                }
             }
         } else {
             let fileName = searchArray[indexPath.row]
             
+            let key = openedFolder + "@" + fileName
+            
             cell?.textLabel?.text = fileName
             
-            if let subtitle = saveData.object(forKey: openedFolder + "@" + fileName) as! String? {
+            if let subtitle = saveData.object(forKey: key + "@memo") as! String? {
                 cell?.detailTextLabel?.text = subtitle
+            }
+            
+            if let isCheck = saveData.object(forKey: key + "@check") as! Bool? {
+                if isCheck {
+                    cell?.accessoryType = .checkmark
+                } else {
+                    cell?.accessoryType = .none
+                }
             }
         }
         return cell!
@@ -297,8 +320,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         let key = self.openedFolder + "@" + textField.text!
                         
-                        self.saveData.set("", forKey: key)
+                        self.saveData.set("", forKey: key + "@memo")
                         self.saveData.set(false, forKey: key + "@ison")
+                        self.saveData.set(false, forKey: key + "@check")
                         
                         if self.searchBar.text!.isEmpty {
                             if self.filesDict[self.openedFolder]!.count >= 11 {
@@ -337,6 +361,33 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         present(alert, animated: true, completion: nil)
     }
     
+    func putCheckmark(recognizer: UILongPressGestureRecognizer) {
+        let indexPath = table.indexPathForRow(at: recognizer.location(in: table))
+        let cell = table.cellForRow(at:indexPath!)
+        
+        if indexPath != nil {
+            if recognizer.state == .began {
+                if cell?.accessoryType == .checkmark {
+                    cell?.accessoryType = .none
+                    
+                    if searchBar.text!.isEmpty {
+                        saveData.set(false, forKey: openedFolder + "@" + filesDict[openedFolder]![indexPath!.row] + "@check")
+                    } else {
+                        saveData.set(false, forKey: openedFolder + "@" + searchArray[indexPath!.row] + "@check")
+                    }
+                } else {
+                    cell?.accessoryType = .checkmark
+                    
+                    if searchBar.text!.isEmpty {
+                        saveData.set(true, forKey: openedFolder + "@" + filesDict[openedFolder]![indexPath!.row] + "@check")
+                    } else {
+                        saveData.set(true, forKey: openedFolder + "@" + searchArray[indexPath!.row] + "@check")
+                    }
+                }
+            }
+        }
+    }
+    
     @IBAction func tapEdit() {
         if isEditing {
             super.setEditing(false, animated: true)
@@ -351,6 +402,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if filesDict[openedFolder]!.isEmpty {
                 editButton.isEnabled = false
             }
+            
+            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.putCheckmark))
+            table.addGestureRecognizer(longPressRecognizer)
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
@@ -360,6 +414,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             navigationItem.hidesBackButton = true
             
             self.navigationItem.leftBarButtonItem = allRemoveButton
+            
+            table.gestureRecognizers?.removeAll()
         }
     }
     
@@ -484,9 +540,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func removeAllObject(key: String) {
-        saveData.removeObject(forKey: key)
+        saveData.removeObject(forKey: key + "@memo")
         saveData.removeObject(forKey: key + "@ison")
         saveData.removeObject(forKey: key + "@date")
+        saveData.removeObject(forKey: key + "@check")
     }
     
     func showSearchResult() {
@@ -517,12 +574,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func resaveMemo(ex: String, post: String) {
-        let memoTextView = self.saveData.object(forKey: ex) as! String
+        let memoTextView = self.saveData.object(forKey: ex + "@memo") as! String
         let dateSwitch = self.saveData.object(forKey: ex + "@ison") as! Bool
         let datePicker = self.saveData.object(forKey: ex + "@date") as! Date?
+        let isCheck = self.saveData.object(forKey: ex + "@check") as! Bool
         
-        self.saveData.set(memoTextView, forKey: post)
-        self.saveData.removeObject(forKey: ex)
+        self.saveData.set(memoTextView, forKey: post + "@memo")
+        self.saveData.removeObject(forKey: ex + "@memo")
         
         self.saveData.set(dateSwitch, forKey: post + "@ison")
         self.saveData.removeObject(forKey: ex + "@ison")
@@ -531,6 +589,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.saveData.set(datePicker!, forKey: post + "@date")
             self.saveData.removeObject(forKey: ex + "@date")
         }
+        
+        self.saveData.set(isCheck, forKey: post + "@check")
+        self.saveData.removeObject(forKey: ex + "@check")
     }
     
     // MARK: - Else
