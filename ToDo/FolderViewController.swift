@@ -127,10 +127,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             
                             self.deselectCell()
                         } else {
-                            var formertitle = ""
-                            
                             if self.searchBar.text!.isEmpty {
-                                formertitle = self.folderNameArray[indexPath.row]
+                                let formertitle = self.folderNameArray[indexPath.row]
                                 
                                 let folderName = self.folderNameArray[indexPath.row]
                                 
@@ -150,7 +148,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                 
                                 self.folderNameArray[indexPath.row] = textField.text!
                             } else {
-                                formertitle = self.searchArray[indexPath.row]
+                                let formertitle = self.searchArray[indexPath.row]
                                 
                                 let folderName = self.searchArray[indexPath.row]
                                 
@@ -432,7 +430,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func removeAllObject(key: String) {
-        saveData.removeObject(forKey: key)
+        saveData.removeObject(forKey: key + "@memo")
         saveData.removeObject(forKey: key + "@ison")
         saveData.removeObject(forKey: key + "@date")
     }
@@ -465,11 +463,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func resaveMemo(ex: String, post: String) {
-        let memoTextView = self.saveData.object(forKey: ex) as! String
+        let memoTextView = self.saveData.object(forKey: ex + "@memo") as! String
         let dateSwitch = self.saveData.object(forKey: ex + "@ison") as! Bool
         let datePicker = self.saveData.object(forKey: ex + "@date") as! Date?
         
-        self.saveData.set(memoTextView, forKey: post)
+        self.saveData.set(memoTextView, forKey: post + "@memo")
         
         self.saveData.set(dateSwitch, forKey: post + "@ison")
         

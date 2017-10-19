@@ -116,8 +116,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             if let subtitle = saveData.object(forKey: openedFolder + "@" + fileName) as! String? {
                 cell?.detailTextLabel?.text = subtitle
-            } else {
-                cell?.detailTextLabel?.text = ""//無いと未遷移のcellにfolder-Arrayでの位置のcellのsubtitleが入る
             }
         }
         return cell!

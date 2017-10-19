@@ -111,7 +111,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let formerkey = fromFolderName + "@" + fileName
         
-        let memotextview = saveData.object(forKey: formerkey) as! String
+        let memotextview = saveData.object(forKey: formerkey + "@memo") as! String
         let dateswitch = saveData.object(forKey: formerkey + "@ison") as! Bool
         let datepicker = saveData.object(forKey: formerkey + "@date") as! Date?
         
@@ -131,8 +131,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             latterkey = searchArray[indexPath.row] + "@" + fileName
         }
         
-        saveData.set(memotextview, forKey: latterkey)
-        saveData.removeObject(forKey: formerkey)
+        saveData.set(memotextview, forKey: latterkey + "@memo")
+        saveData.removeObject(forKey: formerkey + "@memo")
         
         saveData.set(dateswitch, forKey: latterkey + "@ison")
         saveData.removeObject(forKey: formerkey + "@ison")

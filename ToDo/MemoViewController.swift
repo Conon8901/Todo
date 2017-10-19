@@ -42,7 +42,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         datePicker.minimumDate = Date()
         datePicker.maximumDate = Date(timeInterval: 60*60*24*10000, since: Date())
         
-        showsDateComponents(true)
+        showsDateComponents(false)
         
         formatter.dateStyle = .short
         formatter.timeStyle = .short
@@ -59,7 +59,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         let fileName = saveData.object(forKey: "@fileName") as! String
         key = folderName + "@" + fileName
         
-        memoTextView.text = saveData.object(forKey: key) as! String
+        memoTextView.text = saveData.object(forKey: key + "@memo") as! String
         
         dateSwitch.isOn = saveData.object(forKey: key + "@ison") as! Bool
         
@@ -71,7 +71,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        saveData.set(memoTextView.text!, forKey: key)
+        saveData.set(memoTextView.text!, forKey: key + "@memo")
         saveData.set(dateSwitch.isOn, forKey: key + "@ison")
         saveData.set(datePicker.date, forKey: key + "@date")
         
@@ -100,7 +100,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         if dateSwitch.isOn {
             setDate()
         } else {
-            showsDateComponents(true)
+            showsDateComponents(false)
         }
     }
     
@@ -115,16 +115,16 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     }
     
     func showsDateComponents(_ bool: Bool) {
-        dateField.isHidden = bool
-        datePicker.isHidden = bool
-        dateLabel.isHidden = bool
+        dateField.isHidden = !bool
+        datePicker.isHidden = !bool
+        dateLabel.isHidden = !bool
     }
     
     func setDate() {
         if dateSwitch.isOn {
-            showsDateComponents(false)
-        } else {
             showsDateComponents(true)
+        } else {
+            showsDateComponents(false)
         }
         
         if saveData.object(forKey: key + "@date") == nil {
