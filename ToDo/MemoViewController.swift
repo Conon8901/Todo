@@ -42,7 +42,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         datePicker.minimumDate = Date()
         datePicker.maximumDate = Date(timeInterval: 60*60*24*10000, since: Date())
         
-        showsDateComponents(false)
+        showsDateParts(false)
         
         formatter.dateStyle = .short
         formatter.timeStyle = .short
@@ -100,7 +100,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         if dateSwitch.isOn {
             setDate()
         } else {
-            showsDateComponents(false)
+            showsDateParts(false)
         }
     }
     
@@ -114,7 +114,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    func showsDateComponents(_ bool: Bool) {
+    func showsDateParts(_ bool: Bool) {
         dateField.isHidden = !bool
         datePicker.isHidden = !bool
         dateLabel.isHidden = !bool
@@ -122,9 +122,9 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     func setDate() {
         if dateSwitch.isOn {
-            showsDateComponents(true)
+            showsDateParts(true)
         } else {
-            showsDateComponents(false)
+            showsDateParts(false)
         }
         
         if saveData.object(forKey: key + "@date") == nil {

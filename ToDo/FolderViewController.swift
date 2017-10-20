@@ -53,16 +53,16 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if saveData.object(forKey: "@folders") == nil {
-            self.saveData.set(self.folderNameArray, forKey: "@folders")
-        } else {
+        if saveData.object(forKey: "@folders") != nil {
             folderNameArray = saveData.object(forKey: "@folders") as! [String]
+        } else {
+            self.saveData.set(self.folderNameArray, forKey: "@folders")
         }
         
-        if saveData.object(forKey: "@dictData") == nil {
-            saveData.set(filesDict, forKey: "@dictData")
-        } else {
+        if saveData.object(forKey: "@dictData") != nil {
             filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
+        } else {
+            saveData.set(filesDict, forKey: "@dictData")
         }
         
         checkIsArrayEmpty()
@@ -110,63 +110,22 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 
                 let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
                 
-                if isBlank {
-                    self.showalert(message: NSLocalizedString("入力してください", comment: ""))
-                    
-                    self.deselectCell()
-                } else {
-                    if self.folderNameArray.index(of: textField.text!) != nil {
-                        if textField.text != self.folderNameArray[indexPath.row] {
-                            self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
-                        }
-                        
-                        self.deselectCell()
-                    } else {
-                        if textField.text!.contains("@") {
-                            self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
+                if !isBlank {
+                    if self.folderNameArray.index(of: textField.text!) == nil {
+                        if !textField.text!.contains("@") {
+                            var formerTitle = ""
+                            var folderName = ""
                             
-                            self.deselectCell()
-                        } else {
                             if self.searchBar.text!.isEmpty {
-                                let formertitle = self.folderNameArray[indexPath.row]
+                                formerTitle = self.folderNameArray[indexPath.row]
                                 
-                                let folderName = self.folderNameArray[indexPath.row]
-                                
-                                if let files = self.filesDict[folderName] {
-                                    for fileName in files {
-                                        let formerkey = folderName + "@" + fileName
-                                        let latterkey = textField.text! + "@" + fileName
-                                        
-                                        self.resaveMemo(ex: formerkey, post: latterkey)
-                                    }
-                                }
-                                
-                                self.filesDict[textField.text!] = self.filesDict[folderName]
-                                self.filesDict[formertitle] = nil
-                                
-                                self.saveData.set(self.filesDict, forKey: "@dictData")
+                                folderName = self.folderNameArray[indexPath.row]
                                 
                                 self.folderNameArray[indexPath.row] = textField.text!
                             } else {
-                                let formertitle = self.searchArray[indexPath.row]
+                                formerTitle = self.searchArray[indexPath.row]
                                 
-                                let folderName = self.searchArray[indexPath.row]
-                                
-                                if let files = self.filesDict[folderName] {
-                                    for fileName in files {
-                                        let formerkey = folderName + "@" + fileName
-                                        let latterkey = textField.text! + "@" + fileName
-                                        
-                                        self.resaveMemo(ex: formerkey, post: latterkey)
-                                    }
-                                    
-                                    self.showSearchResult()
-                                }
-                                
-                                self.filesDict[textField.text!] = self.filesDict[folderName]
-                                self.filesDict[formertitle] = nil
-                                
-                                self.saveData.set(self.filesDict, forKey: "@dictData")
+                                folderName = self.searchArray[indexPath.row]
                                 
                                 self.searchArray[indexPath.row] = textField.text!
                                 
@@ -174,11 +133,43 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                 self.folderNameArray[index] = textField.text!
                             }
                             
+                            if let files = self.filesDict[folderName] {
+                                for fileName in files {
+                                    let formerKey = folderName + "@" + fileName
+                                    let latterKey = textField.text! + "@" + fileName
+                                    
+                                    self.resaveMemo(ex: formerKey, post: latterKey)
+                                }
+                                
+                                if !self.searchBar.text!.isEmpty {
+                                    self.showSearchResult()
+                                }
+                            }
+                            
+                            self.filesDict[textField.text!] = self.filesDict[folderName]
+                            self.filesDict[formerTitle] = nil
+                            
+                            self.saveData.set(self.filesDict, forKey: "@dictData")
+                            
                             self.saveData.set(self.folderNameArray, forKey: "@folders")
                             
                             self.table.reloadData()
+                        } else {
+                            self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
+                            
+                            self.deselectCell()
                         }
+                    } else {
+                        if textField.text != self.folderNameArray[indexPath.row] {
+                            self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
+                        }
+                        
+                        self.deselectCell()
                     }
+                } else {
+                    self.showalert(message: NSLocalizedString("入力してください", comment: ""))
+                    
+                    self.deselectCell()
                 }
             }
             
@@ -221,8 +212,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 
                 filesDict[folderNameArray[indexPath.row]] = nil
                 
-                self.saveData.set(filesDict, forKey: "@dictData")
-                
                 folderNameArray.remove(at: indexPath.row)
             } else {
                 for fileName in filesDict[searchArray[indexPath.row]]! {
@@ -231,11 +220,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 
                 filesDict[searchArray[indexPath.row]] = nil
                 
-                self.saveData.set(filesDict, forKey: "@dictData")
-                
                 folderNameArray.remove(at: folderNameArray.index(of: searchArray[indexPath.row])!)
                 searchArray.remove(at: indexPath.row)
             }
+            
+            self.saveData.set(filesDict, forKey: "@dictData")
             
             tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
             
@@ -243,14 +232,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             checkIsArrayEmpty()
             
-            if folderNameArray.isEmpty {
+            if self.folderNameArray.count < 11 {
                 let location = CGPoint(x: 0, y: -64)
                 self.table.setContentOffset(location, animated: true)
-            } else {
-                if self.folderNameArray.count < 11 {
-                    let location = CGPoint(x: 0, y: -64)
-                    self.table.setContentOffset(location, animated: true)
-                }
             }
         }
     }
@@ -275,21 +259,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
             
-            if isBlank {
-                self.showalert(message: NSLocalizedString("入力してください", comment: ""))
-                
-                self.deselectCell()
-            } else {
-                if self.folderNameArray.index(of: textField.text!) != nil {
-                    self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
-                    
-                    self.deselectCell()
-                } else {
-                    if textField.text!.contains("@") {
-                        self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
-                        
-                        self.deselectCell()
-                    } else {
+            if !isBlank {
+                if self.folderNameArray.index(of: textField.text!) == nil {
+                    if !textField.text!.contains("@") {
                         self.folderNameArray.append(textField.text!)
                         
                         self.filesDict[textField.text!] = []
@@ -315,8 +287,20 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             
                             self.showSearchResult()
                         }
+                    } else {
+                        self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
+                        
+                        self.deselectCell()
                     }
+                } else {
+                    self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
+                    
+                    self.deselectCell()
                 }
+            } else {
+                self.showalert(message: NSLocalizedString("入力してください", comment: ""))
+                
+                self.deselectCell()
             }
         }
         
@@ -464,20 +448,20 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func resaveMemo(ex: String, post: String) {
-        let memoTextView = self.saveData.object(forKey: ex + "@memo") as! String
-        let dateSwitch = self.saveData.object(forKey: ex + "@ison") as! Bool
-        let datePicker = self.saveData.object(forKey: ex + "@date") as! Date?
-        let isCheck = self.saveData.object(forKey: ex + "@check") as! Bool
+        let savedMemoText = self.saveData.object(forKey: ex + "@memo") as! String
+        let isShownParts = self.saveData.object(forKey: ex + "@ison") as! Bool
+        let savedDate = self.saveData.object(forKey: ex + "@date") as! Date?
+        let isChecked = self.saveData.object(forKey: ex + "@check") as! Bool
         
-        self.saveData.set(memoTextView, forKey: post + "@memo")
+        self.saveData.set(savedMemoText, forKey: post + "@memo")
         
-        self.saveData.set(dateSwitch, forKey: post + "@ison")
+        self.saveData.set(isShownParts, forKey: post + "@ison")
         
-        if datePicker != nil {
-            self.saveData.set(datePicker!, forKey: post + "@date")
+        if savedDate != nil {
+            self.saveData.set(savedDate!, forKey: post + "@date")
         }
         
-        self.saveData.set(isCheck, forKey: post + "@check")
+        self.saveData.set(isChecked, forKey: post + "@check")
         
         removeAllObject(key: ex)
     }

@@ -104,10 +104,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "File")
         
+        var fileName = ""
+        var key = ""
+        
         if searchBar.text!.isEmpty {
-            let fileName = filesDict[openedFolder]![indexPath.row]
+            fileName = filesDict[openedFolder]![indexPath.row]
             
-            let key = openedFolder + "@" + fileName
+            key = openedFolder + "@" + fileName
             
             cell?.textLabel?.text = fileName
             
@@ -115,17 +118,17 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 cell?.detailTextLabel?.text = subtitle
             }
             
-            if let isCheck = saveData.object(forKey: key + "@check") as! Bool? {
-                if isCheck {
+            if let isChecked = saveData.object(forKey: key + "@check") as! Bool? {
+                if isChecked {
                     cell?.accessoryType = .checkmark
                 } else {
                     cell?.accessoryType = .none
                 }
             }
         } else {
-            let fileName = searchArray[indexPath.row]
+            fileName = searchArray[indexPath.row]
             
-            let key = openedFolder + "@" + fileName
+            key = openedFolder + "@" + fileName
             
             cell?.textLabel?.text = fileName
             
@@ -133,14 +136,29 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 cell?.detailTextLabel?.text = subtitle
             }
             
-            if let isCheck = saveData.object(forKey: key + "@check") as! Bool? {
-                if isCheck {
+            if let isChecked = saveData.object(forKey: key + "@check") as! Bool? {
+                if isChecked {
                     cell?.accessoryType = .checkmark
                 } else {
                     cell?.accessoryType = .none
                 }
             }
         }
+        
+        cell?.textLabel?.text = fileName
+        
+        if let subtitle = saveData.object(forKey: key + "@memo") as! String? {
+            cell?.detailTextLabel?.text = subtitle
+        }
+        
+        if let isChecked = saveData.object(forKey: key + "@check") as! Bool? {
+            if isChecked {
+                cell?.accessoryType = .checkmark
+            } else {
+                cell?.accessoryType = .none
+            }
+        }
+        
         return cell!
     }
     
@@ -156,37 +174,23 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
                 
-                if isBlank {
-                    self.showalert(message: NSLocalizedString("入力してください", comment: ""))
-                    
-                    self.deselectCell()
-                } else {
-                    if self.filesDict[self.openedFolder]?.index(of: textField.text!) != nil {
-                        if textField.text != self.filesDict[self.openedFolder]?[indexPath.row] {
-                            self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
-                        }
-                        
-                        self.deselectCell()
-                    } else {
-                        if textField.text!.contains("@") {
-                            self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
-                            
-                            self.deselectCell()
-                        } else {
+                if !isBlank {
+                    if self.filesDict[self.openedFolder]?.index(of: textField.text!) == nil {
+                        if !textField.text!.contains("@") {
                             if self.searchBar.text!.isEmpty {
-                                let formerkey = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
-                                let latterkey = self.openedFolder + "@" + textField.text!
+                                let formerKey = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
+                                let latterKey = self.openedFolder + "@" + textField.text!
                                 
-                                self.resaveMemo(ex: formerkey, post: latterkey)
+                                self.resaveMemo(ex: formerKey, post: latterKey)
                                 
                                 self.filesDict[self.openedFolder]?[indexPath.row] = textField.text!
                             } else {
                                 let fileName = self.searchArray[indexPath.row]
                                 
-                                let formerkey = self.openedFolder + "@" + self.searchArray[indexPath.row]
-                                let latterkey = self.openedFolder + "@" + textField.text!
+                                let formerKey = self.openedFolder + "@" + self.searchArray[indexPath.row]
+                                let latterKey = self.openedFolder + "@" + textField.text!
                                 
-                                self.resaveMemo(ex: formerkey, post: latterkey)
+                                self.resaveMemo(ex: formerKey, post: latterKey)
                                 
                                 self.searchArray[indexPath.row] = textField.text!
                                 
@@ -199,8 +203,22 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             self.saveData.set(self.filesDict, forKey: "@dictData")
                             
                             self.table.reloadData()
+                        } else {
+                            self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
+                            
+                            self.deselectCell()
                         }
+                    } else {
+                        if textField.text != self.filesDict[self.openedFolder]?[indexPath.row] {
+                            self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
+                        }
+                        
+                        self.deselectCell()
                     }
+                } else {
+                    self.showalert(message: NSLocalizedString("入力してください", comment: ""))
+                    
+                    self.deselectCell()
                 }
             }
             
@@ -301,21 +319,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
             
-            if isBlank {
-                self.showalert(message: NSLocalizedString("入力してください", comment: ""))
-                
-                self.deselectCell()
-            } else {
-                if self.filesDict[self.openedFolder]?.index(of: textField.text!) != nil {
-                    self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
-                    
-                    self.deselectCell()
-                } else {
-                    if textField.text!.contains("@") {
-                        self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
-                        
-                        self.deselectCell()
-                    } else {
+            if !isBlank {
+                if self.filesDict[self.openedFolder]?.index(of: textField.text!) == nil {
+                    if !textField.text!.contains("@") {
                         self.filesDict[self.openedFolder]!.append(textField.text!)
                         
                         let key = self.openedFolder + "@" + textField.text!
@@ -343,8 +349,20 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.checkIsArrayEmpty()
                         
                         self.table.reloadData()
+                    } else {
+                        self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
+                        
+                        self.deselectCell()
                     }
+                } else {
+                    self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
+                    
+                    self.deselectCell()
                 }
+            } else {
+                self.showalert(message: NSLocalizedString("入力してください", comment: ""))
+                
+                self.deselectCell()
             }
         }
         
@@ -367,21 +385,21 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         if indexPath != nil {
             if recognizer.state == .began {
-                if cell?.accessoryType == .checkmark {
-                    cell?.accessoryType = .none
-                    
-                    if searchBar.text!.isEmpty {
-                        saveData.set(false, forKey: openedFolder + "@" + filesDict[openedFolder]![indexPath!.row] + "@check")
-                    } else {
-                        saveData.set(false, forKey: openedFolder + "@" + searchArray[indexPath!.row] + "@check")
-                    }
-                } else {
+                if cell?.accessoryType == .none {
                     cell?.accessoryType = .checkmark
                     
                     if searchBar.text!.isEmpty {
                         saveData.set(true, forKey: openedFolder + "@" + filesDict[openedFolder]![indexPath!.row] + "@check")
                     } else {
                         saveData.set(true, forKey: openedFolder + "@" + searchArray[indexPath!.row] + "@check")
+                    }
+                } else {
+                    cell?.accessoryType = .none
+                    
+                    if searchBar.text!.isEmpty {
+                        saveData.set(false, forKey: openedFolder + "@" + filesDict[openedFolder]![indexPath!.row] + "@check")
+                    } else {
+                        saveData.set(false, forKey: openedFolder + "@" + searchArray[indexPath!.row] + "@check")
                     }
                 }
             }
@@ -574,23 +592,23 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func resaveMemo(ex: String, post: String) {
-        let memoTextView = self.saveData.object(forKey: ex + "@memo") as! String
-        let dateSwitch = self.saveData.object(forKey: ex + "@ison") as! Bool
-        let datePicker = self.saveData.object(forKey: ex + "@date") as! Date?
-        let isCheck = self.saveData.object(forKey: ex + "@check") as! Bool
+        let savedMemoText = self.saveData.object(forKey: ex + "@memo") as! String
+        let isShownParts = self.saveData.object(forKey: ex + "@ison") as! Bool
+        let savedDate = self.saveData.object(forKey: ex + "@date") as! Date?
+        let isCheckeded = self.saveData.object(forKey: ex + "@check") as! Bool
         
-        self.saveData.set(memoTextView, forKey: post + "@memo")
+        self.saveData.set(savedMemoText, forKey: post + "@memo")
         self.saveData.removeObject(forKey: ex + "@memo")
         
-        self.saveData.set(dateSwitch, forKey: post + "@ison")
+        self.saveData.set(isShownParts, forKey: post + "@ison")
         self.saveData.removeObject(forKey: ex + "@ison")
         
-        if datePicker != nil {
-            self.saveData.set(datePicker!, forKey: post + "@date")
+        if savedDate != nil {
+            self.saveData.set(savedDate!, forKey: post + "@date")
             self.saveData.removeObject(forKey: ex + "@date")
         }
         
-        self.saveData.set(isCheck, forKey: post + "@check")
+        self.saveData.set(isCheckeded, forKey: post + "@check")
         self.saveData.removeObject(forKey: ex + "@check")
     }
     

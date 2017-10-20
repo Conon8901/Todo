@@ -91,16 +91,16 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let folderName = saveData.object(forKey: "@folderName") as! String
         
         if searchBar.text!.isEmpty {
-            if listNameArray[indexPath.row] == folderName {
-                return nil
-            } else {
+            if listNameArray[indexPath.row] != folderName {
                 return indexPath
+            } else {
+                return nil
             }
         } else {
-            if searchArray[indexPath.row] == folderName {
-                return nil
-            } else {
+            if searchArray[indexPath.row] != folderName {
                 return indexPath
+            } else {
+                return nil
             }
         }
     }
@@ -109,14 +109,14 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let fromFolderName = saveData.object(forKey: "@folderName") as! String
         let fileName = self.appDelegate.movingFileName
         
-        let formerkey = fromFolderName + "@" + fileName
+        let formerKey = fromFolderName + "@" + fileName
         
-        let memotextview = saveData.object(forKey: formerkey + "@memo") as! String
-        let dateswitch = saveData.object(forKey: formerkey + "@ison") as! Bool
-        let datepicker = saveData.object(forKey: formerkey + "@date") as! Date?
-        let isCheck = saveData.object(forKey: formerkey + "@check") as! Bool
+        let savedMemoText = saveData.object(forKey: formerKey + "@memo") as! String
+        let isShownParts = saveData.object(forKey: formerKey + "@ison") as! Bool
+        let savedDate = saveData.object(forKey: formerKey + "@date") as! Date?
+        let isChecked = saveData.object(forKey: formerKey + "@check") as! Bool
         
-        var latterkey = ""
+        var latterKey = ""
         
         if searchBar.text!.isEmpty {
             let fileIndex = filesDict[listNameArray[indexPath.row]]!.index(of: fileName)
@@ -126,21 +126,21 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 self.filesDict[fromFolderName]?.remove(at: self.filesDict[fromFolderName]!.index(of: fileName)!)
                 
-                latterkey = self.listNameArray[indexPath.row] + "@" + fileName
+                latterKey = self.listNameArray[indexPath.row] + "@" + fileName
                 
-                self.saveData.set(memotextview, forKey: latterkey + "@memo")
-                self.saveData.removeObject(forKey: formerkey + "@memo")
+                self.saveData.set(savedMemoText, forKey: latterKey + "@memo")
+                self.saveData.removeObject(forKey: formerKey + "@memo")
                 
-                self.saveData.set(dateswitch, forKey: latterkey + "@ison")
-                self.saveData.removeObject(forKey: formerkey + "@ison")
+                self.saveData.set(isShownParts, forKey: latterKey + "@ison")
+                self.saveData.removeObject(forKey: formerKey + "@ison")
                 
-                if datepicker != nil {
-                    self.saveData.set(datepicker, forKey: latterkey + "@date")
-                    self.saveData.removeObject(forKey: formerkey + "@date")
+                if savedDate != nil {
+                    self.saveData.set(savedDate, forKey: latterKey + "@date")
+                    self.saveData.removeObject(forKey: formerKey + "@date")
                 }
                 
-                self.saveData.set(isCheck, forKey: latterkey + "@check")
-                self.saveData.removeObject(forKey: formerkey + "@check")
+                self.saveData.set(isChecked, forKey: latterKey + "@check")
+                self.saveData.removeObject(forKey: formerKey + "@check")
                 
                 self.saveData.set(self.filesDict, forKey: "@dictData")
                 
@@ -160,21 +160,21 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     
                     self.filesDict[fromFolderName]?.remove(at: self.filesDict[fromFolderName]!.index(of: fileName)!)
                     
-                    latterkey = self.listNameArray[indexPath.row] + "@" + fileName
+                    latterKey = self.listNameArray[indexPath.row] + "@" + fileName
                     
-                    self.saveData.set(memotextview, forKey: latterkey + "@memo")
-                    self.saveData.removeObject(forKey: formerkey + "@memo")
+                    self.saveData.set(savedMemoText, forKey: latterKey + "@memo")
+                    self.saveData.removeObject(forKey: formerKey + "@memo")
                     
-                    self.saveData.set(dateswitch, forKey: latterkey + "@ison")
-                    self.saveData.removeObject(forKey: formerkey + "@ison")
+                    self.saveData.set(isShownParts, forKey: latterKey + "@ison")
+                    self.saveData.removeObject(forKey: formerKey + "@ison")
                     
-                    if datepicker != nil {
-                        self.saveData.set(datepicker, forKey: latterkey + "@date")
-                        self.saveData.removeObject(forKey: formerkey + "@date")
+                    if savedDate != nil {
+                        self.saveData.set(savedDate, forKey: latterKey + "@date")
+                        self.saveData.removeObject(forKey: formerKey + "@date")
                     }
                     
-                    self.saveData.set(isCheck, forKey: latterkey + "@check")
-                    self.saveData.removeObject(forKey: formerkey + "@check")
+                    self.saveData.set(isChecked, forKey: latterKey + "@check")
+                    self.saveData.removeObject(forKey: formerKey + "@check")
                     
                     self.saveData.set(self.filesDict, forKey: "@dictData")
                     
@@ -201,21 +201,21 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 filesDict[fromFolderName]?.remove(at: filesDict[fromFolderName]!.index(of: fileName)!)
                 
-                latterkey = searchArray[indexPath.row] + "@" + fileName
+                latterKey = searchArray[indexPath.row] + "@" + fileName
                 
-                saveData.set(memotextview, forKey: latterkey + "@memo")
-                saveData.removeObject(forKey: formerkey + "@memo")
+                saveData.set(savedMemoText, forKey: latterKey + "@memo")
+                saveData.removeObject(forKey: formerKey + "@memo")
                 
-                saveData.set(dateswitch, forKey: latterkey + "@ison")
-                saveData.removeObject(forKey: formerkey + "@ison")
+                saveData.set(isShownParts, forKey: latterKey + "@ison")
+                saveData.removeObject(forKey: formerKey + "@ison")
                 
-                if datepicker != nil {
-                    saveData.set(datepicker, forKey: latterkey + "@date")
-                    saveData.removeObject(forKey: formerkey + "@date")
+                if savedDate != nil {
+                    saveData.set(savedDate, forKey: latterKey + "@date")
+                    saveData.removeObject(forKey: formerKey + "@date")
                 }
                 
-                saveData.set(isCheck, forKey: latterkey + "@check")
-                saveData.removeObject(forKey: formerkey + "@check")
+                saveData.set(isChecked, forKey: latterKey + "@check")
+                saveData.removeObject(forKey: formerKey + "@check")
                 
                 saveData.set(filesDict, forKey: "@dictData")
                 
@@ -229,27 +229,27 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     message: NSLocalizedString("同名のファイルがあります", comment: ""),
                     preferredStyle: .alert)
                 
-                let moveAction = UIAlertAction(title: NSLocalizedString("置き換える", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+                let moveAction = UIAlertAction(title: NSLocalizedString("置換", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
                     self.filesDict[self.searchArray[indexPath.row]]!.remove(at: fileIndex!)
                     self.filesDict[self.searchArray[indexPath.row]]!.append(fileName)
                     
                     self.filesDict[fromFolderName]?.remove(at: self.filesDict[fromFolderName]!.index(of: fileName)!)
                     
-                    latterkey = self.searchArray[indexPath.row] + "@" + fileName
+                    latterKey = self.searchArray[indexPath.row] + "@" + fileName
                     
-                    self.saveData.set(memotextview, forKey: latterkey + "@memo")
-                    self.saveData.removeObject(forKey: formerkey + "@memo")
+                    self.saveData.set(savedMemoText, forKey: latterKey + "@memo")
+                    self.saveData.removeObject(forKey: formerKey + "@memo")
                     
-                    self.saveData.set(dateswitch, forKey: latterkey + "@ison")
-                    self.saveData.removeObject(forKey: formerkey + "@ison")
+                    self.saveData.set(isShownParts, forKey: latterKey + "@ison")
+                    self.saveData.removeObject(forKey: formerKey + "@ison")
                     
-                    if datepicker != nil {
-                        self.saveData.set(datepicker, forKey: latterkey + "@date")
-                        self.saveData.removeObject(forKey: formerkey + "@date")
+                    if savedDate != nil {
+                        self.saveData.set(savedDate, forKey: latterKey + "@date")
+                        self.saveData.removeObject(forKey: formerKey + "@date")
                     }
                     
-                    self.saveData.set(isCheck, forKey: latterkey + "@check")
-                    self.saveData.removeObject(forKey: formerkey + "@check")
+                    self.saveData.set(isChecked, forKey: latterKey + "@check")
+                    self.saveData.removeObject(forKey: formerKey + "@check")
                     
                     self.saveData.set(self.filesDict, forKey: "@dictData")
                     
@@ -282,21 +282,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
             
-            if isBlank {
-                self.showalert(message: NSLocalizedString("入力してください", comment: ""))
-                
-                self.deselectCell()
-            } else {
-                if self.listNameArray.index(of: textField.text!) != nil {
-                    self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
-                    
-                    self.deselectCell()
-                } else {
-                    if textField.text!.contains("@") {
-                        self.showalert(message: NSLocalizedString("\'@\'は使用できません", comment: ""))
-                        
-                        self.deselectCell()
-                    } else {
+            if !isBlank {
+                if self.listNameArray.index(of: textField.text!) == nil {
+                    if !textField.text!.contains("@") {
                         self.listNameArray.append(textField.text!)
                         
                         self.saveData.set(self.listNameArray, forKey: "@folders")
@@ -311,8 +299,20 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             let location = CGPoint(x: 0, y: self.table.contentSize.height - self.table.frame.height)
                             self.table.setContentOffset(location, animated: true)
                         }
+                    } else {
+                        self.showalert(message: NSLocalizedString("\'@\'は使用できません", comment: ""))
+                        
+                        self.deselectCell()
                     }
+                } else {
+                    self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
+                    
+                    self.deselectCell()
                 }
+            } else {
+                self.showalert(message: NSLocalizedString("入力してください", comment: ""))
+                
+                self.deselectCell()
             }
         }
         
