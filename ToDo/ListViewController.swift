@@ -119,39 +119,156 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         var latterkey = ""
         
         if searchBar.text!.isEmpty {
-            filesDict[listNameArray[indexPath.row]]!.append(fileName)
+            let fileIndex = filesDict[listNameArray[indexPath.row]]!.index(of: fileName)
             
-            filesDict[fromFolderName]?.remove(at: filesDict[fromFolderName]!.index(of: fileName)!)
-            
-            latterkey = listNameArray[indexPath.row] + "@" + fileName
+            if fileIndex == nil {
+                self.filesDict[self.listNameArray[indexPath.row]]!.append(fileName)
+                
+                self.filesDict[fromFolderName]?.remove(at: self.filesDict[fromFolderName]!.index(of: fileName)!)
+                
+                latterkey = self.listNameArray[indexPath.row] + "@" + fileName
+                
+                self.saveData.set(memotextview, forKey: latterkey + "@memo")
+                self.saveData.removeObject(forKey: formerkey + "@memo")
+                
+                self.saveData.set(dateswitch, forKey: latterkey + "@ison")
+                self.saveData.removeObject(forKey: formerkey + "@ison")
+                
+                if datepicker != nil {
+                    self.saveData.set(datepicker, forKey: latterkey + "@date")
+                    self.saveData.removeObject(forKey: formerkey + "@date")
+                }
+                
+                self.saveData.set(isCheck, forKey: latterkey + "@check")
+                self.saveData.removeObject(forKey: formerkey + "@check")
+                
+                self.saveData.set(self.filesDict, forKey: "@dictData")
+                
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.isFromListView = true
+                
+                self.dismiss(animated: true, completion: nil)
+            } else {
+                let alert = UIAlertController(
+                    title: NSLocalizedString("置き換え", comment: ""),
+                    message: NSLocalizedString("同名のファイルがあります", comment: ""),
+                    preferredStyle: .alert)
+                
+                let moveAction = UIAlertAction(title: NSLocalizedString("置き換える", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+                    self.filesDict[self.listNameArray[indexPath.row]]!.remove(at: fileIndex!)
+                    self.filesDict[self.listNameArray[indexPath.row]]!.append(fileName)
+                    
+                    self.filesDict[fromFolderName]?.remove(at: self.filesDict[fromFolderName]!.index(of: fileName)!)
+                    
+                    latterkey = self.listNameArray[indexPath.row] + "@" + fileName
+                    
+                    self.saveData.set(memotextview, forKey: latterkey + "@memo")
+                    self.saveData.removeObject(forKey: formerkey + "@memo")
+                    
+                    self.saveData.set(dateswitch, forKey: latterkey + "@ison")
+                    self.saveData.removeObject(forKey: formerkey + "@ison")
+                    
+                    if datepicker != nil {
+                        self.saveData.set(datepicker, forKey: latterkey + "@date")
+                        self.saveData.removeObject(forKey: formerkey + "@date")
+                    }
+                    
+                    self.saveData.set(isCheck, forKey: latterkey + "@check")
+                    self.saveData.removeObject(forKey: formerkey + "@check")
+                    
+                    self.saveData.set(self.filesDict, forKey: "@dictData")
+                    
+                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                    appDelegate.isFromListView = true
+                    
+                    self.dismiss(animated: true, completion: nil)
+                }
+                
+                let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+                    self.deselectCell()
+                }
+                
+                alert.addAction(cancelAction)
+                alert.addAction(moveAction)
+                
+                present(alert, animated: true, completion: nil)
+            }
         } else {
-            filesDict[searchArray[indexPath.row]]!.append(fileName)
+            let fileIndex = filesDict[listNameArray[indexPath.row]]!.index(of: fileName)
             
-            filesDict[fromFolderName]?.remove(at: filesDict[fromFolderName]!.index(of: fileName)!)
-            
-            latterkey = searchArray[indexPath.row] + "@" + fileName
+            if fileIndex == nil {
+                filesDict[searchArray[indexPath.row]]!.append(fileName)
+                
+                filesDict[fromFolderName]?.remove(at: filesDict[fromFolderName]!.index(of: fileName)!)
+                
+                latterkey = searchArray[indexPath.row] + "@" + fileName
+                
+                saveData.set(memotextview, forKey: latterkey + "@memo")
+                saveData.removeObject(forKey: formerkey + "@memo")
+                
+                saveData.set(dateswitch, forKey: latterkey + "@ison")
+                saveData.removeObject(forKey: formerkey + "@ison")
+                
+                if datepicker != nil {
+                    saveData.set(datepicker, forKey: latterkey + "@date")
+                    saveData.removeObject(forKey: formerkey + "@date")
+                }
+                
+                saveData.set(isCheck, forKey: latterkey + "@check")
+                saveData.removeObject(forKey: formerkey + "@check")
+                
+                saveData.set(filesDict, forKey: "@dictData")
+                
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.isFromListView = true
+                
+                self.dismiss(animated: true, completion: nil)
+            } else {
+                let alert = UIAlertController(
+                    title: NSLocalizedString("置き換え", comment: ""),
+                    message: NSLocalizedString("同名のファイルがあります", comment: ""),
+                    preferredStyle: .alert)
+                
+                let moveAction = UIAlertAction(title: NSLocalizedString("置き換える", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+                    self.filesDict[self.searchArray[indexPath.row]]!.remove(at: fileIndex!)
+                    self.filesDict[self.searchArray[indexPath.row]]!.append(fileName)
+                    
+                    self.filesDict[fromFolderName]?.remove(at: self.filesDict[fromFolderName]!.index(of: fileName)!)
+                    
+                    latterkey = self.searchArray[indexPath.row] + "@" + fileName
+                    
+                    self.saveData.set(memotextview, forKey: latterkey + "@memo")
+                    self.saveData.removeObject(forKey: formerkey + "@memo")
+                    
+                    self.saveData.set(dateswitch, forKey: latterkey + "@ison")
+                    self.saveData.removeObject(forKey: formerkey + "@ison")
+                    
+                    if datepicker != nil {
+                        self.saveData.set(datepicker, forKey: latterkey + "@date")
+                        self.saveData.removeObject(forKey: formerkey + "@date")
+                    }
+                    
+                    self.saveData.set(isCheck, forKey: latterkey + "@check")
+                    self.saveData.removeObject(forKey: formerkey + "@check")
+                    
+                    self.saveData.set(self.filesDict, forKey: "@dictData")
+                    
+                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                    appDelegate.isFromListView = true
+                    
+                    self.dismiss(animated: true, completion: nil)
+                }
+                
+                let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+                    self.deselectCell()
+                }
+                
+                alert.addAction(cancelAction)
+                alert.addAction(moveAction)
+                
+                present(alert, animated: true, completion: nil)
+            }
         }
-        
-        saveData.set(memotextview, forKey: latterkey + "@memo")
-        saveData.removeObject(forKey: formerkey + "@memo")
-        
-        saveData.set(dateswitch, forKey: latterkey + "@ison")
-        saveData.removeObject(forKey: formerkey + "@ison")
-        
-        if datepicker != nil {
-            saveData.set(datepicker, forKey: latterkey + "@date")
-            saveData.removeObject(forKey: formerkey + "@date")
-        }
-        
-        saveData.set(isCheck, forKey: latterkey + "@check")
-        saveData.removeObject(forKey: formerkey + "@check")
-        
-        saveData.set(filesDict, forKey: "@dictData")
-        
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.isFromListView = true
-        
-        self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func add() {
