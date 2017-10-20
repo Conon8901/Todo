@@ -340,7 +340,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(FileViewController.closeKeyboard))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(FolderViewController.closeKeyboard))
         self.view.addGestureRecognizer(tapGesture)
     }
     
@@ -382,7 +382,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    func closeKeyboard() {
+    @objc func closeKeyboard() {
         searchBar.endEditing(true)
     }
     

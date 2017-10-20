@@ -379,7 +379,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         present(alert, animated: true, completion: nil)
     }
     
-    func putCheckmark(recognizer: UILongPressGestureRecognizer) {
+    @objc func putCheckmark(recognizer: UILongPressGestureRecognizer) {
         let indexPath = table.indexPathForRow(at: recognizer.location(in: table))
         let cell = table.cellForRow(at:indexPath!)
         
@@ -437,7 +437,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    func allRemove() {
+    @objc func allRemove() {
         let alert = UIAlertController(
             title: NSLocalizedString("全削除", comment: ""),
             message: NSLocalizedString("本当によろしいですか？\nこのフォルダの全ファイルを削除します", comment: ""),
@@ -526,7 +526,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    func closeKeyboard() {
+    @objc func closeKeyboard() {
         searchBar.endEditing(true)
     }
     

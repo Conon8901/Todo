@@ -338,7 +338,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(FileViewController.closeKeyboard))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ListViewController.closeKeyboard))
         self.view.addGestureRecognizer(tapGesture)
     }
     
@@ -380,7 +380,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    func closeKeyboard() {
+    @objc func closeKeyboard() {
         searchBar.endEditing(true)
     }
     
