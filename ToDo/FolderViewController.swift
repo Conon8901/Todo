@@ -138,7 +138,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     let formerKey = folderName + "@" + fileName
                                     let latterKey = textField.text! + "@" + fileName
                                     
-                                    self.resaveMemo(ex: formerKey, post: latterKey)
+                                    self.resaveDate(pre: formerKey, post: latterKey)
                                 }
                                 
                                 if !self.searchBar.text!.isEmpty {
@@ -447,11 +447,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.reloadData()
     }
     
-    func resaveMemo(ex: String, post: String) {
-        let savedMemoText = self.saveData.object(forKey: ex + "@memo") as! String
-        let isShownParts = self.saveData.object(forKey: ex + "@ison") as! Bool
-        let savedDate = self.saveData.object(forKey: ex + "@date") as! Date?
-        let isChecked = self.saveData.object(forKey: ex + "@check") as! Bool
+    func resaveDate(pre: String, post: String) {
+        let savedMemoText = self.saveData.object(forKey: pre + "@memo") as! String
+        let isShownParts = self.saveData.object(forKey: pre + "@ison") as! Bool
+        let savedDate = self.saveData.object(forKey: pre + "@date") as! Date?
+        let isChecked = self.saveData.object(forKey: pre + "@check") as! Bool
         
         self.saveData.set(savedMemoText, forKey: post + "@memo")
         
@@ -463,7 +463,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.saveData.set(isChecked, forKey: post + "@check")
         
-        removeAllObject(key: ex)
+        removeAllObject(key: pre)
     }
     
     // MARK: - Else

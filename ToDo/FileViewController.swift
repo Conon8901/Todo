@@ -181,7 +181,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                                 let formerKey = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
                                 let latterKey = self.openedFolder + "@" + textField.text!
                                 
-                                self.resaveMemo(ex: formerKey, post: latterKey)
+                                self.resaveDate(pre: formerKey, post: latterKey)
                                 
                                 self.filesDict[self.openedFolder]?[indexPath.row] = textField.text!
                             } else {
@@ -190,7 +190,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                                 let formerKey = self.openedFolder + "@" + self.searchArray[indexPath.row]
                                 let latterKey = self.openedFolder + "@" + textField.text!
                                 
-                                self.resaveMemo(ex: formerKey, post: latterKey)
+                                self.resaveDate(pre: formerKey, post: latterKey)
                                 
                                 self.searchArray[indexPath.row] = textField.text!
                                 
@@ -591,25 +591,23 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.reloadData()
     }
     
-    func resaveMemo(ex: String, post: String) {
-        let savedMemoText = self.saveData.object(forKey: ex + "@memo") as! String
-        let isShownParts = self.saveData.object(forKey: ex + "@ison") as! Bool
-        let savedDate = self.saveData.object(forKey: ex + "@date") as! Date?
-        let isCheckeded = self.saveData.object(forKey: ex + "@check") as! Bool
+    func resaveDate(pre: String, post: String) {
+        let savedMemoText = self.saveData.object(forKey: pre + "@memo") as! String
+        let isShownParts = self.saveData.object(forKey: pre + "@ison") as! Bool
+        let savedDate = self.saveData.object(forKey: pre + "@date") as! Date?
+        let isCheckeded = self.saveData.object(forKey: pre + "@check") as! Bool
         
         self.saveData.set(savedMemoText, forKey: post + "@memo")
-        self.saveData.removeObject(forKey: ex + "@memo")
         
         self.saveData.set(isShownParts, forKey: post + "@ison")
-        self.saveData.removeObject(forKey: ex + "@ison")
         
         if savedDate != nil {
             self.saveData.set(savedDate!, forKey: post + "@date")
-            self.saveData.removeObject(forKey: ex + "@date")
         }
         
         self.saveData.set(isCheckeded, forKey: post + "@check")
-        self.saveData.removeObject(forKey: ex + "@check")
+        
+        removeAllObject(key: pre)
     }
     
     // MARK: - Else

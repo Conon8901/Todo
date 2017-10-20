@@ -42,8 +42,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         datePicker.minimumDate = Date()
         datePicker.maximumDate = Date(timeInterval: 60*60*24*10000, since: Date())
         
-        showsDateParts(false)
-        
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         
@@ -63,9 +61,15 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         dateSwitch.isOn = saveData.object(forKey: key + "@ison") as! Bool
         
+        if dateSwitch.isOn {
+            showsDateParts(true)
+        } else {
+            showsDateParts(false)
+        }
+        
         setDate()
         
-        chackIsShowPlaceHolder()
+        chackShowPlaceHolder()
         
         navigationItem.title = fileName
     }
@@ -85,7 +89,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - TextView
     
     func textViewDidChange(_ textView: UITextView) {
-        chackIsShowPlaceHolder()
+        chackShowPlaceHolder()
     }
     
     // MARK: DatePicker
@@ -98,6 +102,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     @IBAction func switchChanged() {
         if dateSwitch.isOn {
+            showsDateParts(true)
             setDate()
         } else {
             showsDateParts(false)
@@ -106,7 +111,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - Method
     
-    func chackIsShowPlaceHolder() {
+    func chackShowPlaceHolder() {
         if memoTextView.text.isEmpty {
             placeholder.isHidden = false
         } else {
@@ -121,13 +126,9 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     }
     
     func setDate() {
-        if dateSwitch.isOn {
-            showsDateParts(true)
-        } else {
-            showsDateParts(false)
-        }
-        
         if saveData.object(forKey: key + "@date") == nil {
+            datePicker.date = Date()
+            
             dateField.text = formatter.string(from: Date())
         } else {
             let savedDate = saveData.object(forKey: key + "@date") as! Date
