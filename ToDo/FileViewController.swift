@@ -27,6 +27,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var openedFolder = ""
     
+    var numberOfCellsInScreen = 0
+    
     // MARK: - Basics
     
     override func viewDidLoad() {
@@ -64,6 +66,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         allRemoveButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(FileViewController.allRemove))
         
         self.navigationItem.leftBarButtonItem = nil
+        
+        numberOfCellsInScreen = Int(ceil((view.frame.height-(UIApplication.shared.statusBarFrame.height+navigationController!.navigationBar.frame.height+searchBar.frame.height))/table.rowHeight))
         
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.putCheckmark))
         table.addGestureRecognizer(longPressRecognizer)
@@ -264,13 +268,13 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 let key = self.openedFolder + "@" + self.searchArray[indexPath.row]
                 self.removeAllObject(key: key)
                 
-                self.filesDict[self.openedFolder]?.remove(at: self.filesDict[self.openedFolder]!.index(of: self.searchArray[indexPath.row])!)
+                self.filesDict[self.openedFolder]!.remove(at: self.filesDict[self.openedFolder]!.index(of: self.searchArray[indexPath.row])!)
                 self.searchArray.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
             }
             
-            if self.filesDict[self.openedFolder]!.count < 11 {
-                let location = CGPoint(x: 0, y: -64)
+            if self.filesDict[self.openedFolder]!.count < self.numberOfCellsInScreen {
+                let location = CGPoint(x: 0, y: -UIApplication.shared.statusBarFrame.height+self.navigationController!.navigationBar.frame.height)
                 self.table.setContentOffset(location, animated: true)
             }
             
@@ -331,17 +335,21 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.saveData.set(false, forKey: key + "@check")
                         
                         if self.searchBar.text!.isEmpty {
-                            if self.filesDict[self.openedFolder]!.count >= 11 {
-                                let location = CGPoint(x: 0, y: self.table.contentSize.height - self.table.frame.height)
+                            if self.filesDict[self.openedFolder]!.count >= self.numberOfCellsInScreen {
+                                let movingHeight = self.searchBar.frame.height+self.table.rowHeight*CGFloat(self.filesDict[self.openedFolder]!.count)-self.view.frame.height
+                                
+                                let location = CGPoint(x: 0, y: movingHeight)
                                 self.table.setContentOffset(location, animated: true)
                             }
                         } else {
-                            if self.searchArray.count >= 11 {
-                                let location = CGPoint(x: 0, y: self.table.contentSize.height - self.table.frame.height)
+                            self.showSearchResult()
+                            
+                            if self.searchArray.count >= self.numberOfCellsInScreen {
+                                let movingHeight = self.searchBar.frame.height+self.table.rowHeight*CGFloat(self.searchArray.count)-self.view.frame.height
+                                
+                                let location = CGPoint(x: 0, y: movingHeight)
                                 self.table.setContentOffset(location, animated: true)
                             }
-                            
-                            self.showSearchResult()
                         }
                         
                         self.saveData.set(self.filesDict, forKey: "@dictData")
@@ -381,25 +389,26 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @objc func putCheckmark(recognizer: UILongPressGestureRecognizer) {
         let indexPath = table.indexPathForRow(at: recognizer.location(in: table))
-        let cell = table.cellForRow(at:indexPath!)
         
         if indexPath != nil {
             if recognizer.state == .began {
-                if cell?.accessoryType == .none {
-                    cell?.accessoryType = .checkmark
-                    
-                    if searchBar.text!.isEmpty {
-                        saveData.set(true, forKey: openedFolder + "@" + filesDict[openedFolder]![indexPath!.row] + "@check")
+                if let cell = table.cellForRow(at: indexPath!) {
+                    if cell.accessoryType == .none {
+                        cell.accessoryType = .checkmark
+                        
+                        if searchBar.text!.isEmpty {
+                            saveData.set(true, forKey: openedFolder + "@" + filesDict[openedFolder]![indexPath!.row] + "@check")
+                        } else {
+                            saveData.set(true, forKey: openedFolder + "@" + searchArray[indexPath!.row] + "@check")
+                        }
                     } else {
-                        saveData.set(true, forKey: openedFolder + "@" + searchArray[indexPath!.row] + "@check")
-                    }
-                } else {
-                    cell?.accessoryType = .none
-                    
-                    if searchBar.text!.isEmpty {
-                        saveData.set(false, forKey: openedFolder + "@" + filesDict[openedFolder]![indexPath!.row] + "@check")
-                    } else {
-                        saveData.set(false, forKey: openedFolder + "@" + searchArray[indexPath!.row] + "@check")
+                        cell.accessoryType = .none
+                        
+                        if searchBar.text!.isEmpty {
+                            saveData.set(false, forKey: openedFolder + "@" + filesDict[openedFolder]![indexPath!.row] + "@check")
+                        } else {
+                            saveData.set(false, forKey: openedFolder + "@" + searchArray[indexPath!.row] + "@check")
+                        }
                     }
                 }
             }

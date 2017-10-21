@@ -23,6 +23,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     var filesDict = [String: [String]]()
     
+    var numberOfCellsInScreen = 0
+    
     // MARK: - Basics
     
     override func viewDidLoad() {
@@ -44,6 +46,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let backward = NSLocalizedString("後方", comment: "")
         
         searchBar.scopeButtonTitles = [partial, exact, forward, backward]
+        
+        numberOfCellsInScreen = Int(ceil((view.frame.height-(UIApplication.shared.statusBarFrame.height+navigationController!.navigationBar.frame.height+searchBar.frame.height))/table.rowHeight))
         
         editButton.title = NSLocalizedString("編集", comment: "")
         
@@ -232,8 +236,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             checkIsArrayEmpty()
             
-            if self.folderNameArray.count < 11 {
-                let location = CGPoint(x: 0, y: -64)
+            if self.folderNameArray.count < self.numberOfCellsInScreen {
+                let location = CGPoint(x: 0, y: -UIApplication.shared.statusBarFrame.height+self.navigationController!.navigationBar.frame.height)
                 self.table.setContentOffset(location, animated: true)
             }
         }
@@ -275,17 +279,21 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         self.table.reloadData()
                         
                         if self.searchBar.text!.isEmpty {
-                            if self.folderNameArray.count >= 10 {
-                                let location = CGPoint(x: 0, y: self.table.contentSize.height - self.table.frame.height)
+                            if self.folderNameArray.count >= self.numberOfCellsInScreen {
+                                let movingHeight = self.searchBar.frame.height+self.table.rowHeight*CGFloat(self.folderNameArray.count)-self.view.frame.height
+                                
+                                let location = CGPoint(x: 0, y: movingHeight)
                                 self.table.setContentOffset(location, animated: true)
                             }
                         } else {
-                            if self.searchArray.count >= 10 {
-                                let location = CGPoint(x: 0, y: self.table.contentSize.height - self.table.frame.height)
+                            self.showSearchResult()
+                            
+                            if self.searchArray.count >= self.numberOfCellsInScreen {
+                                let movingHeight = self.searchBar.frame.height+self.table.rowHeight*CGFloat(self.searchArray.count)-self.view.frame.height
+                                
+                                let location = CGPoint(x: 0, y: movingHeight)
                                 self.table.setContentOffset(location, animated: true)
                             }
-                            
-                            self.showSearchResult()
                         }
                     } else {
                         self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))

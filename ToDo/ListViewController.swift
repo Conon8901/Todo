@@ -25,6 +25,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var saveData = UserDefaults.standard
     
+    var numberOfCellsInScreen = 0
+    
     // MARK: - Basics
     
     override func viewDidLoad() {
@@ -50,6 +52,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let backward = NSLocalizedString("後方", comment: "")
         
         searchBar.scopeButtonTitles = [partial, exact, forward, backward]
+        
+        numberOfCellsInScreen = Int(ceil((view.frame.height-(UIApplication.shared.statusBarFrame.height+navBar.frame.height+searchBar.frame.height))/table.rowHeight))
         
         navBar.topItem?.title = NSLocalizedString("フォルダ", comment: "")
     }
@@ -78,10 +82,13 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         cell?.textLabel?.numberOfLines = 0
-    
+        
         if cell?.textLabel?.text == saveData.object(forKey: "@folderName") as! String? {
             cell?.selectionStyle = .none
             cell?.textLabel?.textColor = .lightGray
+        } else {
+            cell?.selectionStyle = .default
+            cell?.textLabel?.textColor = .black
         }
     
         return cell!
@@ -119,7 +126,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if fileIndex == nil {
                 self.filesDict[self.listNameArray[indexPath.row]]!.append(fileName)
                 
-                self.filesDict[fromFolderName]?.remove(at: self.filesDict[fromFolderName]!.index(of: fileName)!)
+                let index = self.filesDict[fromFolderName]!.index(of: fileName)!
+                self.filesDict[fromFolderName]?.remove(at: index)
                 
                 resaveDate(pre: formerKey, post: latterKey)
                 
@@ -135,11 +143,12 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     message: NSLocalizedString("同名のファイルがあります", comment: ""),
                     preferredStyle: .alert)
                 
-                let moveAction = UIAlertAction(title: NSLocalizedString("置き換える", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+                let moveAction = UIAlertAction(title: NSLocalizedString("置換", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
                     self.filesDict[self.listNameArray[indexPath.row]]!.remove(at: fileIndex!)
                     self.filesDict[self.listNameArray[indexPath.row]]!.append(fileName)
                     
-                    self.filesDict[fromFolderName]?.remove(at: self.filesDict[fromFolderName]!.index(of: fileName)!)
+                    let index = self.filesDict[fromFolderName]!.index(of: fileName)!
+                    self.filesDict[fromFolderName]?.remove(at: index)
                     
                     self.resaveDate(pre: formerKey, post: latterKey)
                     
@@ -161,14 +170,15 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 present(alert, animated: true, completion: nil)
             }
         } else {
-            let fileIndex = filesDict[listNameArray[indexPath.row]]!.index(of: fileName)
+            let fileIndex = filesDict[searchArray[indexPath.row]]!.index(of: fileName)
             
             let latterKey = searchArray[indexPath.row] + "@" + fileName
             
             if fileIndex == nil {
                 filesDict[searchArray[indexPath.row]]!.append(fileName)
                 
-                filesDict[fromFolderName]?.remove(at: filesDict[fromFolderName]!.index(of: fileName)!)
+                let index = filesDict[fromFolderName]!.index(of: fileName)!
+                filesDict[fromFolderName]?.remove(at: index)
                 
                 resaveDate(pre: formerKey, post: latterKey)
                 
@@ -188,7 +198,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.filesDict[self.searchArray[indexPath.row]]!.remove(at: fileIndex!)
                     self.filesDict[self.searchArray[indexPath.row]]!.append(fileName)
                     
-                    self.filesDict[fromFolderName]?.remove(at: self.filesDict[fromFolderName]!.index(of: fileName)!)
+                    let index = self.filesDict[fromFolderName]!.index(of: fileName)!
+                    self.filesDict[fromFolderName]?.remove(at: index)
                     
                     self.resaveDate(pre: formerKey, post: latterKey)
                     
@@ -236,9 +247,22 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.saveData.set(self.filesDict, forKey: "@dictData")
                         
-                        if self.listNameArray.count >= 11 {
-                            let location = CGPoint(x: 0, y: self.table.contentSize.height - self.table.frame.height)
-                            self.table.setContentOffset(location, animated: true)
+                        if self.searchBar.text!.isEmpty {
+                            if self.listNameArray.count >= self.numberOfCellsInScreen {
+                                let movingHeight = self.searchBar.frame.height+self.table.rowHeight*CGFloat(self.listNameArray.count)-self.view.frame.height
+                                
+                                let location = CGPoint(x: 0, y: movingHeight)
+                                self.table.setContentOffset(location, animated: true)
+                            }
+                        } else {
+                            if self.searchArray.count >= self.numberOfCellsInScreen {
+                                self.showSearchResult()
+                                
+                                let movingHeight = self.searchBar.frame.height+self.table.rowHeight*CGFloat(self.listNameArray.count)-self.view.frame.height
+                                
+                                let location = CGPoint(x: 0, y: movingHeight)
+                                self.table.setContentOffset(location, animated: true)
+                            }
                         }
                     } else {
                         self.showalert(message: NSLocalizedString("\'@\'は使用できません", comment: ""))
