@@ -54,7 +54,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         searchBar.scopeButtonTitles = [partial, exact]
         
-        numberOfCellsInScreen = Int(ceil((view.frame.height-(UIApplication.shared.statusBarFrame.height+navBar.frame.height+searchBar.frame.height))/table.rowHeight))
+        numberOfCellsInScreen = Int(ceil((view.frame.height - (UIApplication.shared.statusBarFrame.height + navBar.frame.height + searchBar.frame.height)) / table.rowHeight))
         
         navBar.topItem?.title = NSLocalizedString("フォルダ", comment: "")
     }
@@ -134,7 +134,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 self.saveData.set(self.filesDict, forKey: "@dictData")
                 
-                let appDelegate = UIApplication.shared.delegate as! AppDelegate
                 appDelegate.isFromListView = true
                 
                 self.dismiss(animated: true, completion: nil)
@@ -155,8 +154,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     
                     self.saveData.set(self.filesDict, forKey: "@dictData")
                     
-                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                    appDelegate.isFromListView = true
+                    self.appDelegate.isFromListView = true
                     
                     self.dismiss(animated: true, completion: nil)
                 }
@@ -185,7 +183,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 saveData.set(filesDict, forKey: "@dictData")
                 
-                let appDelegate = UIApplication.shared.delegate as! AppDelegate
                 appDelegate.isFromListView = true
                 
                 self.dismiss(animated: true, completion: nil)
@@ -206,8 +203,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     
                     self.saveData.set(self.filesDict, forKey: "@dictData")
                     
-                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                    appDelegate.isFromListView = true
+                    self.appDelegate.isFromListView = true
                     
                     self.dismiss(animated: true, completion: nil)
                 }
@@ -250,7 +246,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         if self.searchBar.text!.isEmpty {
                             if self.listNameArray.count >= self.numberOfCellsInScreen {
-                                let movingHeight = self.searchBar.frame.height+self.table.rowHeight*CGFloat(self.listNameArray.count)-self.view.frame.height
+                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.listNameArray.count) - self.view.frame.height
                                 
                                 let location = CGPoint(x: 0, y: movingHeight)
                                 self.table.setContentOffset(location, animated: true)
@@ -259,7 +255,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             if self.searchArray.count >= self.numberOfCellsInScreen {
                                 self.showSearchResult()
                                 
-                                let movingHeight = self.searchBar.frame.height+self.table.rowHeight*CGFloat(self.listNameArray.count)-self.view.frame.height
+                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.listNameArray.count) - self.view.frame.height
                                 
                                 let location = CGPoint(x: 0, y: movingHeight)
                                 self.table.setContentOffset(location, animated: true)

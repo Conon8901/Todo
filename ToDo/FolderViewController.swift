@@ -50,7 +50,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         statusNavHeight = UIApplication.shared.statusBarFrame.height + self.navigationController!.navigationBar.frame.height
         
-        numberOfCellsInScreen = Int(ceil((view.frame.height-(statusNavHeight+searchBar.frame.height))/table.rowHeight))
+        numberOfCellsInScreen = Int(ceil((view.frame.height - (statusNavHeight + searchBar.frame.height)) / table.rowHeight))
         
         editButton.title = NSLocalizedString("編集", comment: "")
         
@@ -283,7 +283,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         if self.searchBar.text!.isEmpty {
                             if self.folderNameArray.count >= self.numberOfCellsInScreen {
-                                let movingHeight = self.searchBar.frame.height+self.table.rowHeight*CGFloat(self.folderNameArray.count)-self.view.frame.height
+                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.folderNameArray.count) - self.view.frame.height
                                 
                                 let location = CGPoint(x: 0, y: movingHeight)
                                 self.table.setContentOffset(location, animated: true)
@@ -292,7 +292,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             self.showSearchResult()
                             
                             if self.searchArray.count >= self.numberOfCellsInScreen {
-                                let movingHeight = self.searchBar.frame.height+self.table.rowHeight*CGFloat(self.searchArray.count)-self.view.frame.height
+                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
                                 
                                 let location = CGPoint(x: 0, y: movingHeight)
                                 self.table.setContentOffset(location, animated: true)

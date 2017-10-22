@@ -339,7 +339,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         if self.searchBar.text!.isEmpty {
                             if self.filesDict[self.openedFolder]!.count >= self.numberOfCellsInScreen {
-                                let movingHeight = self.searchBar.frame.height+self.table.rowHeight*CGFloat(self.filesDict[self.openedFolder]!.count)-self.view.frame.height
+                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.filesDict[self.openedFolder]!.count) - self.view.frame.height
                                 
                                 let location = CGPoint(x: 0, y: movingHeight)
                                 self.table.setContentOffset(location, animated: true)
@@ -348,7 +348,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             self.showSearchResult()
                             
                             if self.searchArray.count >= self.numberOfCellsInScreen {
-                                let movingHeight = self.searchBar.frame.height+self.table.rowHeight*CGFloat(self.searchArray.count)-self.view.frame.height
+                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
                                 
                                 let location = CGPoint(x: 0, y: movingHeight)
                                 self.table.setContentOffset(location, animated: true)

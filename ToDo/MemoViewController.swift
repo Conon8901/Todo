@@ -40,7 +40,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         memoTextView.autocapitalizationType = .none
         
         datePicker.minimumDate = Date()
-        datePicker.maximumDate = Date(timeInterval: 60*60*24*10000, since: Date())
+        datePicker.maximumDate = Date(timeInterval: 60*60*24*2000, since: Date())
         
         formatter.dateStyle = .short
         formatter.timeStyle = .short
