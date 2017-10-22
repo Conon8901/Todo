@@ -45,10 +45,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         let partial = NSLocalizedString("部分", comment: "")
         let exact = NSLocalizedString("完全", comment: "")
-        let forward = NSLocalizedString("前方", comment: "")
-        let backward = NSLocalizedString("後方", comment: "")
         
-        searchBar.scopeButtonTitles = [partial, exact, forward, backward]
+        searchBar.scopeButtonTitles = [partial, exact]
         
         statusNavHeight = UIApplication.shared.statusBarFrame.height + self.navigationController!.navigationBar.frame.height
         
@@ -438,14 +436,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         case 1:
             searchArray = folderNameArray.filter {
                 $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current)
-            }
-        case 2:
-            searchArray = folderNameArray.filter {
-                $0.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current))
-            }
-        case 3:
-            searchArray = folderNameArray.filter {
-                $0.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current))
             }
         default:
             break

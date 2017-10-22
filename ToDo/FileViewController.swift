@@ -55,10 +55,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let partial = NSLocalizedString("部分", comment: "")
         let exact = NSLocalizedString("完全", comment: "")
-        let forward = NSLocalizedString("前方", comment: "")
-        let backward = NSLocalizedString("後方", comment: "")
         
-        searchBar.scopeButtonTitles = [partial, exact, forward, backward]
+        searchBar.scopeButtonTitles = [partial, exact]
         
         editButton.title = NSLocalizedString("編集", comment: "")
         
@@ -583,14 +581,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         case 1:
             searchArray = filesDict[openedFolder]!.filter {
                 $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current)
-            }
-        case 2:
-            searchArray = filesDict[openedFolder]!.filter {
-                $0.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current))
-            }
-        case 3:
-            searchArray = filesDict[openedFolder]!.filter {
-                $0.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current))
             }
         default:
             break

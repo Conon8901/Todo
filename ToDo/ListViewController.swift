@@ -51,10 +51,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let partial = NSLocalizedString("部分", comment: "")
         let exact = NSLocalizedString("完全", comment: "")
-        let forward = NSLocalizedString("前方", comment: "")
-        let backward = NSLocalizedString("後方", comment: "")
         
-        searchBar.scopeButtonTitles = [partial, exact, forward, backward]
+        searchBar.scopeButtonTitles = [partial, exact]
         
         numberOfCellsInScreen = Int(ceil((view.frame.height-(UIApplication.shared.statusBarFrame.height+navBar.frame.height+searchBar.frame.height))/table.rowHeight))
         
@@ -376,14 +374,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         case 1:
             searchArray = listNameArray.filter {
                 $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current)
-            }
-        case 2:
-            searchArray = listNameArray.filter {
-                $0.lowercased(with: .current).hasPrefix(searchBar.text!.lowercased(with: .current))
-            }
-        case 3:
-            searchArray = listNameArray.filter {
-                $0.lowercased(with: .current).hasSuffix(searchBar.text!.lowercased(with: .current))
             }
         default:
             break
