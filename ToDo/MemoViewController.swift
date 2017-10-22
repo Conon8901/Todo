@@ -95,7 +95,33 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: DatePicker
     
     @IBAction func changeDate() {
-        dateField.text = formatter.string(from: datePicker.date)
+        if datePicker.date < Date() {
+            let span = Date().timeIntervalSince(datePicker.date)
+            
+            if span > 60 {
+                if span > 3600 {
+                    if span > 86400 {
+                        if span > 2592000 {
+                            if span > 31536000 {
+                                dateField.text = String(format: NSLocalizedString("年前", comment: ""), Int(span/31536000))
+                            } else {
+                                dateField.text = String(format: NSLocalizedString("月前", comment: ""), Int(span/2592000))
+                            }
+                        } else {
+                            dateField.text = String(format: NSLocalizedString("日前", comment: ""), Int(span/86400))
+                        }
+                    } else {
+                        dateField.text = String(format: NSLocalizedString("時間前", comment: ""), Int(span/3600))
+                    }
+                } else {
+                    dateField.text = String(format: NSLocalizedString("分前", comment: ""), Int(span/60))
+                }
+            } else {
+                dateField.text = formatter.string(from: datePicker.date)
+            }
+        } else {
+            dateField.text = formatter.string(from: datePicker.date)
+        }
     }
     
     // MARK: Switch
@@ -155,6 +181,9 @@ class MemoViewController: UIViewController, UITextViewDelegate {
                 } else {
                     dateField.text = String(format: NSLocalizedString("分前", comment: ""), Int(span/60))
                 }
+                
+                datePicker.minimumDate = savedDate
+                datePicker.date = savedDate
             } else {
                 dateField.text = formatter.string(from: datePicker.date)
             }
