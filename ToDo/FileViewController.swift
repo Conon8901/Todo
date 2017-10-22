@@ -29,6 +29,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var numberOfCellsInScreen = 0
     
+    var statusNavHeight: CGFloat = 0.0
+    
     // MARK: - Basics
     
     override func viewDidLoad() {
@@ -36,6 +38,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         table.dataSource = self
         table.delegate = self
+        table.rowHeight = 60
         
         filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
@@ -67,7 +70,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         self.navigationItem.leftBarButtonItem = nil
         
-        numberOfCellsInScreen = Int(ceil((view.frame.height-(UIApplication.shared.statusBarFrame.height+navigationController!.navigationBar.frame.height+searchBar.frame.height))/table.rowHeight))
+        statusNavHeight = UIApplication.shared.statusBarFrame.height + self.navigationController!.navigationBar.frame.height
+        
+        numberOfCellsInScreen = Int(ceil((view.frame.height - (statusNavHeight + searchBar.frame.height)) / table.rowHeight))
         
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.putCheckmark))
         table.addGestureRecognizer(longPressRecognizer)
@@ -274,7 +279,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             
             if self.filesDict[self.openedFolder]!.count < self.numberOfCellsInScreen {
-                let location = CGPoint(x: 0, y: -UIApplication.shared.statusBarFrame.height+self.navigationController!.navigationBar.frame.height)
+                let location = CGPoint(x: 0, y: -self.statusNavHeight)
                 self.table.setContentOffset(location, animated: true)
             }
             
@@ -527,12 +532,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         searchBar.resignFirstResponder()
         
         table.reloadData()
-    }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if table.contentOffset.y < -64 {
-            searchBar.endEditing(true)
-        }
     }
     
     @objc func closeKeyboard() {

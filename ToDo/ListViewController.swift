@@ -27,6 +27,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var numberOfCellsInScreen = 0
     
+    var statusNavHeight: CGFloat = 0.0
+    
     // MARK: - Basics
     
     override func viewDidLoad() {
@@ -34,6 +36,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         table.dataSource = self
         table.delegate = self
+        table.rowHeight = 60
         
         listNameArray = saveData.object(forKey: "@folders") as! [String]
         
@@ -337,12 +340,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         searchBar.resignFirstResponder()
         
         table.reloadData()
-    }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if table.contentOffset.y < -64 {
-            searchBar.endEditing(true)
-        }
     }
     
     @objc func closeKeyboard() {

@@ -25,6 +25,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     var numberOfCellsInScreen = 0
     
+    var statusNavHeight: CGFloat = 0.0
+    
     // MARK: - Basics
     
     override func viewDidLoad() {
@@ -32,6 +34,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         table.dataSource = self
         table.delegate = self
+        table.rowHeight = 60
         
         searchBar.delegate = self
         searchBar.enablesReturnKeyAutomatically = false
@@ -47,7 +50,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         searchBar.scopeButtonTitles = [partial, exact, forward, backward]
         
-        numberOfCellsInScreen = Int(ceil((view.frame.height-(UIApplication.shared.statusBarFrame.height+navigationController!.navigationBar.frame.height+searchBar.frame.height))/table.rowHeight))
+        statusNavHeight = UIApplication.shared.statusBarFrame.height + self.navigationController!.navigationBar.frame.height
+        
+        numberOfCellsInScreen = Int(ceil((view.frame.height-(statusNavHeight+searchBar.frame.height))/table.rowHeight))
         
         editButton.title = NSLocalizedString("編集", comment: "")
         
@@ -237,7 +242,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             checkIsArrayEmpty()
             
             if self.folderNameArray.count < self.numberOfCellsInScreen {
-                let location = CGPoint(x: 0, y: -UIApplication.shared.statusBarFrame.height+self.navigationController!.navigationBar.frame.height)
+                let location = CGPoint(x: 0, y: -statusNavHeight)
                 self.table.setContentOffset(location, animated: true)
             }
         }
@@ -382,12 +387,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         searchBar.resignFirstResponder()
         
         table.reloadData()
-    }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        if table.contentOffset.y < -64 {
-            searchBar.endEditing(true)
-        }
     }
     
     @objc func closeKeyboard() {
