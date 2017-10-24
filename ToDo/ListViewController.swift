@@ -8,13 +8,14 @@
 
 import UIKit
 
-class ListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
+class ListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
     
     // MARK: - Declare
     
     @IBOutlet var table: UITableView!
-    @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var navBar: UINavigationBar!
+    
+    var searchController = UISearchController(searchResultsController: nil)
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
@@ -42,19 +43,14 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
-        searchBar.delegate = self
-        searchBar.enablesReturnKeyAutomatically = false
-        searchBar.autocapitalizationType = .none
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        table.tableHeaderView = searchController.searchBar
         
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
         
-        let partial = NSLocalizedString("PARTIAL", comment: "")
-        let exact = NSLocalizedString("EXACT", comment: "")
-        
-        searchBar.scopeButtonTitles = [partial, exact]
-        
-        numberOfCellsInScreen = Int(ceil((view.frame.height - (UIApplication.shared.statusBarFrame.height + navBar.frame.height + searchBar.frame.height)) / table.rowHeight))
+        numberOfCellsInScreen = Int(ceil((view.frame.height - (UIApplication.shared.statusBarFrame.height + navBar.frame.height + searchController.searchBar.frame.height)) / table.rowHeight))
         
         navBar.topItem?.title = NSLocalizedString("FOLDER", comment: "")
     }
@@ -66,7 +62,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchBar.text!.isEmpty {
+        if searchController.searchBar.text!.isEmpty {
             return listNameArray.count
         } else {
             return searchArray.count
@@ -76,7 +72,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "List")
         
-        if searchBar.text!.isEmpty {
+        if searchController.searchBar.text!.isEmpty {
             cell?.textLabel?.text = listNameArray[indexPath.row]
         } else {
             cell?.textLabel?.text = searchArray[indexPath.row]
@@ -98,7 +94,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         let folderName = saveData.object(forKey: "@folderName") as! String
         
-        if searchBar.text!.isEmpty {
+        if searchController.searchBar.text!.isEmpty {
             if listNameArray[indexPath.row] != folderName {
                 return indexPath
             } else {
@@ -119,7 +115,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let formerKey = fromFolderName + "@" + fileName
         
-        if searchBar.text!.isEmpty {
+        if searchController.searchBar.text!.isEmpty {
             let fileIndex = filesDict[listNameArray[indexPath.row]]!.index(of: fileName)
             
             let latterKey = self.listNameArray[indexPath.row] + "@" + fileName
@@ -244,23 +240,12 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.saveData.set(self.filesDict, forKey: "@dictData")
                         
-                        if self.searchBar.text!.isEmpty {
-                            if self.listNameArray.count >= self.numberOfCellsInScreen {
-                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.listNameArray.count) - self.view.frame.height
+                        if self.listNameArray.count >= self.numberOfCellsInScreen {
+                                let movingHeight = self.searchController.searchBar.frame.height + self.table.rowHeight * CGFloat(self.listNameArray.count) - self.view.frame.height
                                 
                                 let location = CGPoint(x: 0, y: movingHeight)
                                 self.table.setContentOffset(location, animated: true)
                             }
-                        } else {
-                            if self.searchArray.count >= self.numberOfCellsInScreen {
-                                self.showSearchResult()
-                                
-                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.listNameArray.count) - self.view.frame.height
-                                
-                                let location = CGPoint(x: 0, y: movingHeight)
-                                self.table.setContentOffset(location, animated: true)
-                            }
-                        }
                     } else {
                         self.showalert(message: NSLocalizedString("UNUSABLE-ATSIGN", comment: ""))
                         
@@ -291,53 +276,14 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         present(alert, animated: true, completion: nil)
     }
     
-    // MARK: - searchBar
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.endEditing(true)
-    }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(true, animated: true)
+    func updateSearchResults(for searchController: UISearchController) {
+        searchArray.removeAll()
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ListViewController.closeKeyboard))
-        self.view.addGestureRecognizer(tapGesture)
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(false, animated: true)
-        
-        self.view.gestureRecognizers?.removeAll()
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.text!.isEmpty {
-            searchArray.removeAll()
-            searchArray = listNameArray
-            
-            table.reloadData()
-        } else {
-            showSearchResult()
+        searchArray = listNameArray.filter {
+            $0.lowercased(with: .current).contains(searchController.searchBar.text!.lowercased(with: .current))
         }
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        if !searchBar.text!.isEmpty {
-            showSearchResult()
-            
-            searchBar.becomeFirstResponder()
-        }
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = ""
-        searchBar.resignFirstResponder()
         
         table.reloadData()
-    }
-    
-    @objc func closeKeyboard() {
-        searchBar.endEditing(true)
     }
     
     // MARK: - Method
@@ -357,25 +303,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
             self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
         }
-    }
-    
-    func showSearchResult() {
-        searchArray.removeAll()
-        
-        switch searchBar.selectedScopeButtonIndex {
-        case 0:
-            searchArray = listNameArray.filter {
-                $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current))
-            }
-        case 1:
-            searchArray = listNameArray.filter {
-                $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current)
-            }
-        default:
-            break
-        }
-        
-        table.reloadData()
     }
     
     func resaveDate(pre: String, post: String) {

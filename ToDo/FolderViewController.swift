@@ -8,13 +8,14 @@
 
 import UIKit
 
-class FolderViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
+class FolderViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
     
     // MARK: - Declare
     
     @IBOutlet var table: UITableView!
     @IBOutlet var editButton: UIBarButtonItem!
-    @IBOutlet var searchBar: UISearchBar!
+    
+    var searchController = UISearchController(searchResultsController: nil)
     
     var saveData = UserDefaults.standard
     
@@ -36,21 +37,16 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.delegate = self
         table.rowHeight = 60
         
-        searchBar.delegate = self
-        searchBar.enablesReturnKeyAutomatically = false
-        searchBar.autocapitalizationType = .none
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        table.tableHeaderView = searchController.searchBar
         
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
         
-        let partial = NSLocalizedString("PARTIAL", comment: "")
-        let exact = NSLocalizedString("EXACT", comment: "")
-        
-        searchBar.scopeButtonTitles = [partial, exact]
-        
         statusNavHeight = UIApplication.shared.statusBarFrame.height + self.navigationController!.navigationBar.frame.height
         
-        numberOfCellsInScreen = Int(ceil((view.frame.height - (statusNavHeight + searchBar.frame.height)) / table.rowHeight))
+        numberOfCellsInScreen = Int(ceil((view.frame.height - (statusNavHeight + searchController.searchBar.frame.height)) / table.rowHeight))
         
         editButton.title = NSLocalizedString("EDIT", comment: "")
         
@@ -84,7 +80,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchBar.text!.isEmpty {
+        if searchController.searchBar.text!.isEmpty {
             return folderNameArray.count
         } else {
             return searchArray.count
@@ -94,7 +90,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Folder")
         
-        if searchBar.text!.isEmpty {
+        if searchController.searchBar.text!.isEmpty {
             cell?.textLabel?.text = folderNameArray[indexPath.row]
         } else {
             cell?.textLabel?.text = searchArray[indexPath.row]
@@ -123,22 +119,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             var formerTitle = ""
                             var folderName = ""
                             
-                            if self.searchBar.text!.isEmpty {
                                 formerTitle = self.folderNameArray[indexPath.row]
                                 
                                 folderName = self.folderNameArray[indexPath.row]
                                 
                                 self.folderNameArray[indexPath.row] = textField.text!
-                            } else {
-                                formerTitle = self.searchArray[indexPath.row]
-                                
-                                folderName = self.searchArray[indexPath.row]
-                                
-                                self.searchArray[indexPath.row] = textField.text!
-                                
-                                let index = self.folderNameArray.index(of: self.searchArray[indexPath.row])!
-                                self.folderNameArray[index] = textField.text!
-                            }
                             
                             if let files = self.filesDict[folderName] {
                                 for fileName in files {
@@ -146,10 +131,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     let latterKey = textField.text! + "@" + fileName
                                     
                                     self.resaveDate(pre: formerKey, post: latterKey)
-                                }
-                                
-                                if !self.searchBar.text!.isEmpty {
-                                    self.showSearchResult()
                                 }
                             }
                             
@@ -185,11 +166,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             }
             
             alert.addTextField { (textField: UITextField!) -> Void in
-                if self.searchBar.text!.isEmpty {
-                    textField.text = self.folderNameArray[indexPath.row]
-                } else {
-                    textField.text = self.searchArray[indexPath.row]
-                }
+                textField.text = self.folderNameArray[indexPath.row]
                 
                 textField.textAlignment = .left
             }
@@ -199,20 +176,25 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             present(alert, animated: true, completion: nil)
         } else {
-            if searchBar.text!.isEmpty {
+            if searchController.searchBar.text!.isEmpty {
                 saveData.set(folderNameArray[indexPath.row], forKey: "@folderName")
             } else {
                 saveData.set(searchArray[indexPath.row], forKey: "@folderName")
             }
             
-            let nextView = self.storyboard!.instantiateViewController(withIdentifier: "File") as! FileViewController
-            self.navigationController?.pushViewController(nextView, animated: true)
+            self.searchController.searchBar.endEditing(true)
+            searchController.isActive = false
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                let nextView = self.storyboard!.instantiateViewController(withIdentifier: "File") as! FileViewController
+                self.navigationController?.pushViewController(nextView, animated: true)
+            }
         }
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            if searchBar.text!.isEmpty {
+            if searchController.searchBar.text!.isEmpty {
                 for fileName in filesDict[folderNameArray[indexPath.row]]! {
                     removeAllObject(key: folderNameArray[indexPath.row] + "@" + fileName)
                 }
@@ -281,23 +263,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         self.table.reloadData()
                         
-                        if self.searchBar.text!.isEmpty {
                             if self.folderNameArray.count >= self.numberOfCellsInScreen {
-                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.folderNameArray.count) - self.view.frame.height
+                                let movingHeight = self.searchController.searchBar.frame.height + self.table.rowHeight * CGFloat(self.folderNameArray.count) - self.view.frame.height
                                 
                                 let location = CGPoint(x: 0, y: movingHeight)
                                 self.table.setContentOffset(location, animated: true)
                             }
-                        } else {
-                            self.showSearchResult()
-                            
-                            if self.searchArray.count >= self.numberOfCellsInScreen {
-                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
-                                
-                                let location = CGPoint(x: 0, y: movingHeight)
-                                self.table.setContentOffset(location, animated: true)
-                            }
-                        }
                     } else {
                         self.showalert(message: NSLocalizedString("UNUSABLE-ATSIGN", comment: ""))
                         
@@ -333,62 +304,27 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
             
+            table.tableHeaderView = searchController.searchBar
+            
             editButton.title = NSLocalizedString("EDIT", comment: "")
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             
+            table.tableHeaderView = nil
+            
             editButton.title = NSLocalizedString("DONE", comment: "")
         }
     }
     
-    // MARK: - searchBar
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.endEditing(true)
-    }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(true, animated: true)
+    func updateSearchResults(for searchController: UISearchController) {
+        searchArray.removeAll()
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(FolderViewController.closeKeyboard))
-        self.view.addGestureRecognizer(tapGesture)
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(false, animated: true)
-        
-        self.view.gestureRecognizers?.removeAll()
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.text!.isEmpty {
-            searchArray.removeAll()
-            searchArray = folderNameArray
-            
-            table.reloadData()
-        } else {
-            showSearchResult()
+        searchArray = folderNameArray.filter {
+            $0.lowercased(with: .current).contains(searchController.searchBar.text!.lowercased(with: .current))
         }
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        if !searchBar.text!.isEmpty {
-            showSearchResult()
-            
-            searchBar.becomeFirstResponder()
-        }
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = ""
-        searchBar.resignFirstResponder()
         
         table.reloadData()
-    }
-    
-    @objc func closeKeyboard() {
-        searchBar.endEditing(true)
     }
     
     // MARK: - Method
@@ -423,25 +359,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         saveData.removeObject(forKey: key + "@ison")
         saveData.removeObject(forKey: key + "@date")
         saveData.removeObject(forKey: key + "@check")
-    }
-    
-    func showSearchResult() {
-        searchArray.removeAll()
-        
-        switch searchBar.selectedScopeButtonIndex {
-        case 0:
-            searchArray = folderNameArray.filter {
-                $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current))
-            }
-        case 1:
-            searchArray = folderNameArray.filter {
-                $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current)
-            }
-        default:
-            break
-        }
-        
-        table.reloadData()
     }
     
     func resaveDate(pre: String, post: String) {
