@@ -132,7 +132,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 appDelegate.isFromListView = true
                 
-                self.dismiss(animated: true, completion: nil)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self.dismiss(animated: true, completion: nil)
+                }
             } else {
                 let alert = UIAlertController(
                     title: NSLocalizedString("REPLACE_TITLE", comment: ""),
@@ -181,7 +183,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 appDelegate.isFromListView = true
                 
-                self.dismiss(animated: true, completion: nil)
+                searchController.isActive = false
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self.dismiss(animated: true, completion: nil)
+                }
             } else {
                 let alert = UIAlertController(
                     title: NSLocalizedString("REPLACE_TITLE", comment: ""),

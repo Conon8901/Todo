@@ -4,4 +4,4 @@
 
     fileが初期表示時にスクロールできすぎる問題
 
-    画面遷移が全般的にうまくいかない
+    listViewControllerでsearchController使用時に同名ファイルを選択したら落ちる
