@@ -53,14 +53,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
         
-        let partial = NSLocalizedString("部分", comment: "")
-        let exact = NSLocalizedString("完全", comment: "")
+        let partial = NSLocalizedString("PARTIAL", comment: "")
+        let exact = NSLocalizedString("EXACT", comment: "")
         
         searchBar.scopeButtonTitles = [partial, exact]
         
-        editButton.title = NSLocalizedString("編集", comment: "")
+        editButton.title = NSLocalizedString("EDIT", comment: "")
         
-        allRemoveButton?.title = NSLocalizedString("全削除", comment: "")
+        allRemoveButton?.title = NSLocalizedString("ALLREMOVE", comment: "")
         allRemoveButton?.isEnabled = true
         allRemoveButton?.tintColor = UIColor(white: 1, alpha: 1)
         
@@ -172,11 +172,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isEditing {
             let alert = UIAlertController(
-                title: NSLocalizedString("名称変更", comment: ""),
-                message: NSLocalizedString("タイトル入力", comment: ""),
+                title: NSLocalizedString("CHANGE-NAME", comment: ""),
+                message: NSLocalizedString("ENTER-TITLE", comment: ""),
                 preferredStyle: .alert)
             
-            let changeAction = UIAlertAction(title: NSLocalizedString("変更", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+            let changeAction = UIAlertAction(title: NSLocalizedString("CHANGE", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
                 let textField = alert.textFields![0] as UITextField
                 
                 let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
@@ -211,25 +211,25 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             
                             self.table.reloadData()
                         } else {
-                            self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
+                            self.showalert(message: NSLocalizedString("UNUSABLE-ATSIGN", comment: ""))
                             
                             self.deselectCell()
                         }
                     } else {
                         if textField.text != self.filesDict[self.openedFolder]?[indexPath.row] {
-                            self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
+                            self.showalert(message: NSLocalizedString("SAME_FILE", comment: ""))
                         }
                         
                         self.deselectCell()
                     }
                 } else {
-                    self.showalert(message: NSLocalizedString("入力してください", comment: ""))
+                    self.showalert(message: NSLocalizedString("PLEASE-ENTER", comment: ""))
                     
                     self.deselectCell()
                 }
             }
             
-            let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+            let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
                 self.deselectCell()
             }
             
@@ -260,7 +260,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("削除", comment: "")) { (action, index) -> Void in
+        let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("DELETE", comment: "")) { (action, index) -> Void in
             if self.searchBar.text!.isEmpty {
                 let key = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
                 self.removeAllObject(key: key)
@@ -288,7 +288,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         deleteButton.backgroundColor = .red
         
-        let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("移動", comment: "")) { (action, index) -> Void in
+        let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("MOVE", comment: "")) { (action, index) -> Void in
             if self.searchBar.text!.isEmpty {
                 self.appDelegate.movingFileName = self.filesDict[self.openedFolder]![indexPath.row]
             } else {
@@ -317,11 +317,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBAction func add() {
         let alert = UIAlertController(
-            title: NSLocalizedString("追加", comment: ""),
-            message: NSLocalizedString("タイトル入力", comment: ""),
+            title: NSLocalizedString("ADD_TITLE", comment: ""),
+            message: NSLocalizedString("ENTER-TITLE", comment: ""),
             preferredStyle: .alert)
         
-        let addAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+        let addAction = UIAlertAction(title: NSLocalizedString("ADD", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
             let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
@@ -361,23 +361,23 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.table.reloadData()
                     } else {
-                        self.showalert(message: NSLocalizedString("'@'は使用できません", comment: ""))
+                        self.showalert(message: NSLocalizedString("UNUSABLE-ATSIGN", comment: ""))
                         
                         self.deselectCell()
                     }
                 } else {
-                    self.showalert(message: NSLocalizedString("同名のファイルがあります", comment: ""))
+                    self.showalert(message: NSLocalizedString("SAME_FILE", comment: ""))
                     
                     self.deselectCell()
                 }
             } else {
-                self.showalert(message: NSLocalizedString("入力してください", comment: ""))
+                self.showalert(message: NSLocalizedString("PLEASE-ENTER", comment: ""))
                 
                 self.deselectCell()
             }
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
         }
         
         alert.addTextField { (textField: UITextField!) -> Void in
@@ -423,7 +423,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
             
-            editButton.title = NSLocalizedString("編集", comment: "")
+            editButton.title = NSLocalizedString("EDIT", comment: "")
             
             self.navigationItem.leftBarButtonItem = nil
             
@@ -439,7 +439,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             
-            editButton.title = NSLocalizedString("完了", comment: "")
+            editButton.title = NSLocalizedString("DONE", comment: "")
             
             navigationItem.hidesBackButton = true
             
@@ -451,11 +451,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @objc func allRemove() {
         let alert = UIAlertController(
-            title: NSLocalizedString("全削除", comment: ""),
-            message: NSLocalizedString("本当によろしいですか？\nこのフォルダの全ファイルを削除します", comment: ""),
+            title: NSLocalizedString("ALLREMOVE", comment: ""),
+            message: NSLocalizedString("SURE-REMOVE", comment: ""),
             preferredStyle: .alert)
         
-        let deleteAction = UIAlertAction(title: NSLocalizedString("削除", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
+        let deleteAction = UIAlertAction(title: NSLocalizedString("DELETE", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
             let folder = self.filesDict[self.openedFolder]!
             
             if !folder.isEmpty {
@@ -477,7 +477,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
         }
         
         alert.addAction(cancelAction)
@@ -540,7 +540,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func showalert(message: String) {
         let alert = UIAlertController(
-            title: NSLocalizedString("エラー", comment: ""),
+            title: NSLocalizedString("ERROR", comment: ""),
             message: message,
             preferredStyle: .alert)
         

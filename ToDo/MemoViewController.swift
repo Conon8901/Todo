@@ -45,9 +45,9 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         
-        placeholder.text = NSLocalizedString("メモ", comment: "")
+        placeholder.text = NSLocalizedString("NOTE", comment: "")
         
-        dateLabel.text = NSLocalizedString("期限", comment: "")
+        dateLabel.text = NSLocalizedString("LIMIT", comment: "")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -96,29 +96,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     @IBAction func changeDate() {
         if datePicker.date < Date() {
-            let span = Date().timeIntervalSince(datePicker.date)
-            
-            if span > 60 {
-                if span > 3600 {
-                    if span > 86400 {
-                        if span > 2592000 {
-                            if span > 31536000 {
-                                dateField.text = String(format: NSLocalizedString("年前", comment: ""), Int(span/31536000))
-                            } else {
-                                dateField.text = String(format: NSLocalizedString("月前", comment: ""), Int(span/2592000))
-                            }
-                        } else {
-                            dateField.text = String(format: NSLocalizedString("日前", comment: ""), Int(span/86400))
-                        }
-                    } else {
-                        dateField.text = String(format: NSLocalizedString("時間前", comment: ""), Int(span/3600))
-                    }
-                } else {
-                    dateField.text = String(format: NSLocalizedString("分前", comment: ""), Int(span/60))
-                }
-            } else {
-                dateField.text = formatter.string(from: datePicker.date)
-            }
+            setText(span: Date().timeIntervalSince(datePicker.date))
         } else {
             dateField.text = formatter.string(from: datePicker.date)
         }
@@ -129,6 +107,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     @IBAction func switchChanged() {
         if dateSwitch.isOn {
             showsDateParts(true)
+            
             setDate()
         } else {
             showsDateParts(false)
@@ -163,34 +142,40 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             
             let span = Date().timeIntervalSince(savedDate)
             
+            setText(span: span)
+            
             if span > 60 {
-                if span > 3600 {
-                    if span > 86400 {
-                        if span > 2592000 {
-                            if span > 31536000 {
-                                dateField.text = String(format: NSLocalizedString("年前", comment: ""), Int(span/31536000))
-                            } else {
-                                dateField.text = String(format: NSLocalizedString("月前", comment: ""), Int(span/2592000))
-                            }
-                        } else {
-                            dateField.text = String(format: NSLocalizedString("日前", comment: ""), Int(span/86400))
-                        }
-                    } else {
-                        dateField.text = String(format: NSLocalizedString("時間前", comment: ""), Int(span/3600))
-                    }
-                } else {
-                    dateField.text = String(format: NSLocalizedString("分前", comment: ""), Int(span/60))
-                }
-                
                 datePicker.minimumDate = savedDate
                 datePicker.date = savedDate
-            } else {
-                dateField.text = formatter.string(from: datePicker.date)
             }
         }
     }
     
     // MARK: - Else
+    
+    func setText(span: TimeInterval) {
+        if span > 60 {
+            if span > 3600 {
+                if span > 86400 {
+                    if span > 2592000 {
+                        if span > 31536000 {
+                            dateField.text = String(format: NSLocalizedString("AGO_YEAR", comment: ""), Int(span/31536000))
+                        } else {
+                            dateField.text = String(format: NSLocalizedString("AGO_MONTH", comment: ""), Int(span/2592000))
+                        }
+                    } else {
+                        dateField.text = String(format: NSLocalizedString("AGO_DAY", comment: ""), Int(span/86400))
+                    }
+                } else {
+                    dateField.text = String(format: NSLocalizedString("AGO_HOUR", comment: ""), Int(span/3600))
+                }
+            } else {
+                dateField.text = String(format: NSLocalizedString("AGO_MINUTE", comment: ""), Int(span/60))
+            }
+        } else {
+            dateField.text = formatter.string(from: datePicker.date)
+        }
+    }
     
     @IBAction func tapScreen() {
         self.memoTextView.resignFirstResponder()

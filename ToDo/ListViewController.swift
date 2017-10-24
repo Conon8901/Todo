@@ -49,14 +49,14 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
         
-        let partial = NSLocalizedString("部分", comment: "")
-        let exact = NSLocalizedString("完全", comment: "")
+        let partial = NSLocalizedString("PARTIAL", comment: "")
+        let exact = NSLocalizedString("EXACT", comment: "")
         
         searchBar.scopeButtonTitles = [partial, exact]
         
         numberOfCellsInScreen = Int(ceil((view.frame.height - (UIApplication.shared.statusBarFrame.height + navBar.frame.height + searchBar.frame.height)) / table.rowHeight))
         
-        navBar.topItem?.title = NSLocalizedString("フォルダ", comment: "")
+        navBar.topItem?.title = NSLocalizedString("FOLDER", comment: "")
     }
 
     override func didReceiveMemoryWarning() {
@@ -139,11 +139,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.dismiss(animated: true, completion: nil)
             } else {
                 let alert = UIAlertController(
-                    title: NSLocalizedString("置き換え", comment: ""),
-                    message: NSLocalizedString("同名のファイルがあります", comment: ""),
+                    title: NSLocalizedString("REPLACE_TITLE", comment: ""),
+                    message: NSLocalizedString("SAME_FILE", comment: ""),
                     preferredStyle: .alert)
                 
-                let moveAction = UIAlertAction(title: NSLocalizedString("置換", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+                let replaceAction = UIAlertAction(title: NSLocalizedString("REPLACE_BUTTON", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
                     self.filesDict[self.listNameArray[indexPath.row]]!.remove(at: fileIndex!)
                     self.filesDict[self.listNameArray[indexPath.row]]!.append(fileName)
                     
@@ -159,12 +159,12 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.dismiss(animated: true, completion: nil)
                 }
                 
-                let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+                let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
                     self.deselectCell()
                 }
                 
                 alert.addAction(cancelAction)
-                alert.addAction(moveAction)
+                alert.addAction(replaceAction)
                 
                 present(alert, animated: true, completion: nil)
             }
@@ -188,11 +188,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.dismiss(animated: true, completion: nil)
             } else {
                 let alert = UIAlertController(
-                    title: NSLocalizedString("置き換え", comment: ""),
-                    message: NSLocalizedString("同名のファイルがあります", comment: ""),
+                    title: NSLocalizedString("REPLACE_TITLE", comment: ""),
+                    message: NSLocalizedString("SAME_FILE", comment: ""),
                     preferredStyle: .alert)
                 
-                let moveAction = UIAlertAction(title: NSLocalizedString("置換", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+                let replaceAction = UIAlertAction(title: NSLocalizedString("REPLACE_BUTTON", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
                     self.filesDict[self.searchArray[indexPath.row]]!.remove(at: fileIndex!)
                     self.filesDict[self.searchArray[indexPath.row]]!.append(fileName)
                     
@@ -208,12 +208,12 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.dismiss(animated: true, completion: nil)
                 }
                 
-                let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+                let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
                     self.deselectCell()
                 }
                 
                 alert.addAction(cancelAction)
-                alert.addAction(moveAction)
+                alert.addAction(replaceAction)
                 
                 present(alert, animated: true, completion: nil)
             }
@@ -222,11 +222,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBAction func add() {
         let alert = UIAlertController(
-            title: NSLocalizedString("フォルダ追加", comment: ""),
-            message: NSLocalizedString("タイトル入力", comment: ""),
+            title: NSLocalizedString("ADD_TITLE", comment: ""),
+            message: NSLocalizedString("ENTER-TITLE", comment: ""),
             preferredStyle: .alert)
         
-        let saveAction = UIAlertAction(title: NSLocalizedString("追加", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+        let addAction = UIAlertAction(title: NSLocalizedString("ADD", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
             let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
@@ -262,23 +262,23 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             }
                         }
                     } else {
-                        self.showalert(message: NSLocalizedString("\'@\'は使用できません", comment: ""))
+                        self.showalert(message: NSLocalizedString("UNUSABLE-ATSIGN", comment: ""))
                         
                         self.deselectCell()
                     }
                 } else {
-                    self.showalert(message: NSLocalizedString("同名のフォルダがあります", comment: ""))
+                    self.showalert(message: NSLocalizedString("SAME_FOLDER", comment: ""))
                     
                     self.deselectCell()
                 }
             } else {
-                self.showalert(message: NSLocalizedString("入力してください", comment: ""))
+                self.showalert(message: NSLocalizedString("PLEASE-ENTER", comment: ""))
                 
                 self.deselectCell()
             }
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("キャンセル", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
         }
         
         alert.addTextField { (textField: UITextField!) -> Void in
@@ -286,7 +286,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         alert.addAction(cancelAction)
-        alert.addAction(saveAction)
+        alert.addAction(addAction)
         
         present(alert, animated: true, completion: nil)
     }
@@ -344,7 +344,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func showalert(message: String) {
         let alert = UIAlertController(
-            title: NSLocalizedString("エラー", comment: ""),
+            title: NSLocalizedString("ERROR", comment: ""),
             message: message,
             preferredStyle: .alert)
         

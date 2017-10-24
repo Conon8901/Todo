@@ -9,7 +9,7 @@
 -->
 <plist version="1.0">
     <dict>
-        <key>年前</key>
+        <key>AGO_YEAR</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
             <string>%#@years@</string>
@@ -25,7 +25,7 @@
                 <string>%d years ago</string>
             </dict>
         </dict>
-        <key>月前</key>
+        <key>AGO_MONTH</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
             <string>%#@months@</string>
@@ -41,7 +41,7 @@
                 <string>%d months ago</string>
             </dict>
         </dict>
-        <key>日前</key>
+        <key>AGO_DAY</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
             <string>%#@days@</string>
@@ -57,7 +57,7 @@
                 <string>%d days ago</string>
             </dict>
         </dict>
-        <key>時間前</key>
+        <key>AGO_HOUR</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
             <string>%#@hours@</string>
@@ -73,7 +73,7 @@
                 <string>%d hours ago</string>
             </dict>
         </dict>
-        <key>分前</key>
+        <key>AGO_MINUTE</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
             <string>%#@minutes@</string>
