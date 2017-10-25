@@ -43,8 +43,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
         
-        let partial = NSLocalizedString("PARTIAL", comment: "")
-        let exact = NSLocalizedString("EXACT", comment: "")
+        let partial = NSLocalizedString("SCOPE_PARTIAL", comment: "")
+        let exact = NSLocalizedString("SCOPE_EXACT", comment: "")
         
         searchBar.scopeButtonTitles = [partial, exact]
         
@@ -52,9 +52,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         numberOfCellsInScreen = Int(ceil((view.frame.height - (statusNavHeight + searchBar.frame.height)) / table.rowHeight))
         
-        editButton.title = NSLocalizedString("EDIT", comment: "")
+        editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
         
-        navigationItem.title = NSLocalizedString("FOLDER", comment: "")
+        navigationItem.title = NSLocalizedString("NAV_TITLE_FOLDER", comment: "")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -108,11 +108,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isEditing {
             let alert = UIAlertController(
-                title: NSLocalizedString("CHANGE-NAME", comment: ""),
-                message: NSLocalizedString("ENTER-TITLE", comment: ""),
+                title: NSLocalizedString("ALERT_TITLE_CHANGE", comment: ""),
+                message: NSLocalizedString("ALERT_MESSAGE_ENTER", comment: ""),
                 preferredStyle: .alert)
             
-            let changeAction = UIAlertAction(title: NSLocalizedString("CHANGE", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+            let changeAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CHANGE", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
                 let textField = alert.textFields![0] as UITextField
                 
                 let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
@@ -162,25 +162,25 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             
                             self.table.reloadData()
                         } else {
-                            self.showalert(message: NSLocalizedString("UNUSABLE-ATSIGN", comment: ""))
+                            self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                             
                             self.deselectCell()
                         }
                     } else {
                         if textField.text != self.folderNameArray[indexPath.row] {
-                            self.showalert(message: NSLocalizedString("SAME_FOLDER", comment: ""))
+                            self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FOLDER", comment: ""))
                         }
                         
                         self.deselectCell()
                     }
                 } else {
-                    self.showalert(message: NSLocalizedString("PLEASE-ENTER", comment: ""))
+                    self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
                     
                     self.deselectCell()
                 }
             }
             
-            let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+            let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
                 self.deselectCell()
             }
             
@@ -257,11 +257,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     @IBAction func add() {
         let alert = UIAlertController(
-            title: NSLocalizedString("ADD_TITLE", comment: ""),
-            message: NSLocalizedString("ENTER-TITLE", comment: ""),
+            title: NSLocalizedString("ALERT_TITLE_ADD", comment: ""),
+            message: NSLocalizedString("ALERT_MESSAGE_ENTER", comment: ""),
             preferredStyle: .alert)
         
-        let addAction = UIAlertAction(title: NSLocalizedString("ADD", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+        let addAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_ADD", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
             let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
@@ -299,23 +299,23 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             }
                         }
                     } else {
-                        self.showalert(message: NSLocalizedString("UNUSABLE-ATSIGN", comment: ""))
+                        self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                         
                         self.deselectCell()
                     }
                 } else {
-                    self.showalert(message: NSLocalizedString("SAME_FOLDER", comment: ""))
+                    self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FOLDER", comment: ""))
                     
                     self.deselectCell()
                 }
             } else {
-                self.showalert(message: NSLocalizedString("PLEASE-ENTER", comment: ""))
+                self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
                 
                 self.deselectCell()
             }
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
         }
         
         alert.addTextField { (textField: UITextField!) -> Void in
@@ -333,12 +333,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
             
-            editButton.title = NSLocalizedString("EDIT", comment: "")
+            editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             
-            editButton.title = NSLocalizedString("DONE", comment: "")
+            editButton.title = NSLocalizedString("NAV_BUTTON_DONE", comment: "")
         }
     }
     
@@ -395,7 +395,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func showalert(message: String) {
         let alert = UIAlertController(
-            title: NSLocalizedString("ERROR", comment: ""),
+            title: NSLocalizedString("ALERT_TITLE_ERROR", comment: ""),
             message: message,
             preferredStyle: .alert)
         

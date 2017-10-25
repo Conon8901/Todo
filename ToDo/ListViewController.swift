@@ -49,8 +49,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.keyboardDismissMode = .interactive
         table.allowsSelectionDuringEditing = true
         
-        let partial = NSLocalizedString("PARTIAL", comment: "")
-        let exact = NSLocalizedString("EXACT", comment: "")
+        let partial = NSLocalizedString("SCOPE_PARTIAL", comment: "")
+        let exact = NSLocalizedString("SCOPE_EXACT", comment: "")
         
         searchBar.scopeButtonTitles = [partial, exact]
         
@@ -139,11 +139,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.dismiss(animated: true, completion: nil)
             } else {
                 let alert = UIAlertController(
-                    title: NSLocalizedString("REPLACE_TITLE", comment: ""),
-                    message: NSLocalizedString("SAME_FILE", comment: ""),
+                    title: NSLocalizedString("ALERT_TITLE_REPLACE", comment: ""),
+                    message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FILE", comment: ""),
                     preferredStyle: .alert)
                 
-                let replaceAction = UIAlertAction(title: NSLocalizedString("REPLACE_BUTTON", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+                let replaceAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_REPLACE", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
                     self.filesDict[self.listNameArray[indexPath.row]]!.remove(at: fileIndex!)
                     self.filesDict[self.listNameArray[indexPath.row]]!.append(fileName)
                     
@@ -159,7 +159,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.dismiss(animated: true, completion: nil)
                 }
                 
-                let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+                let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
                     self.deselectCell()
                 }
                 
@@ -188,11 +188,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.dismiss(animated: true, completion: nil)
             } else {
                 let alert = UIAlertController(
-                    title: NSLocalizedString("REPLACE_TITLE", comment: ""),
-                    message: NSLocalizedString("SAME_FILE", comment: ""),
+                    title: NSLocalizedString("ALERT_TITLE_REPLACE", comment: ""),
+                    message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FILE", comment: ""),
                     preferredStyle: .alert)
                 
-                let replaceAction = UIAlertAction(title: NSLocalizedString("REPLACE_BUTTON", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+                let replaceAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_REPLACE", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
                     self.filesDict[self.searchArray[indexPath.row]]!.remove(at: fileIndex!)
                     self.filesDict[self.searchArray[indexPath.row]]!.append(fileName)
                     
@@ -208,7 +208,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.dismiss(animated: true, completion: nil)
                 }
                 
-                let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+                let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
                     self.deselectCell()
                 }
                 
@@ -222,11 +222,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBAction func add() {
         let alert = UIAlertController(
-            title: NSLocalizedString("ADD_TITLE", comment: ""),
-            message: NSLocalizedString("ENTER-TITLE", comment: ""),
+            title: NSLocalizedString("ALERT_TITLE_ADD", comment: ""),
+            message: NSLocalizedString("ALERT_MESSAGE_ENTER", comment: ""),
             preferredStyle: .alert)
         
-        let addAction = UIAlertAction(title: NSLocalizedString("ADD", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+        let addAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_ADD", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
             let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
@@ -262,23 +262,23 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             }
                         }
                     } else {
-                        self.showalert(message: NSLocalizedString("UNUSABLE-ATSIGN", comment: ""))
+                        self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                         
                         self.deselectCell()
                     }
                 } else {
-                    self.showalert(message: NSLocalizedString("SAME_FOLDER", comment: ""))
+                    self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FOLDER", comment: ""))
                     
                     self.deselectCell()
                 }
             } else {
-                self.showalert(message: NSLocalizedString("PLEASE-ENTER", comment: ""))
+                self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
                 
                 self.deselectCell()
             }
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
         }
         
         alert.addTextField { (textField: UITextField!) -> Void in
@@ -344,7 +344,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func showalert(message: String) {
         let alert = UIAlertController(
-            title: NSLocalizedString("ERROR", comment: ""),
+            title: NSLocalizedString("ALERT_TITLE_ERROR", comment: ""),
             message: message,
             preferredStyle: .alert)
         

@@ -45,9 +45,9 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         
-        placeholder.text = NSLocalizedString("NOTE", comment: "")
+        placeholder.text = NSLocalizedString("ELSE_NOTE", comment: "")
         
-        dateLabel.text = NSLocalizedString("LIMIT", comment: "")
+        dateLabel.text = NSLocalizedString("ELSE_LIMIT", comment: "")
     }
     
     override func viewWillAppear(_ animated: Bool) {
