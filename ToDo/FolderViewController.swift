@@ -240,8 +240,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             checkIsArrayEmpty()
             
             if self.folderNameArray.count < self.numberOfCellsInScreen {
-                let location = CGPoint(x: 0, y: -statusNavHeight)
-                self.table.setContentOffset(location, animated: true)
+                table.scroll(y: -statusNavHeight)
             }
         }
     }
@@ -285,8 +284,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             if self.folderNameArray.count >= self.numberOfCellsInScreen {
                                 let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.folderNameArray.count) - self.view.frame.height
                                 
-                                let location = CGPoint(x: 0, y: movingHeight)
-                                self.table.setContentOffset(location, animated: true)
+                                self.table.scroll(y: movingHeight)
                             }
                         } else {
                             self.showSearchResult()
@@ -294,8 +292,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             if self.searchArray.count >= self.numberOfCellsInScreen {
                                 let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
                                 
-                                let location = CGPoint(x: 0, y: movingHeight)
-                                self.table.setContentOffset(location, animated: true)
+                                self.table.scroll(y: movingHeight)
                             }
                         }
                     } else {

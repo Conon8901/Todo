@@ -277,8 +277,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             
             if self.filesDict[self.openedFolder]!.count < self.numberOfCellsInScreen {
-                let location = CGPoint(x: 0, y: -self.statusNavHeight)
-                self.table.setContentOffset(location, animated: true)
+                self.table.scroll(y: -self.statusNavHeight)
             }
             
             self.saveData.set(self.filesDict, forKey: "@dictData")
@@ -341,8 +340,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             if self.filesDict[self.openedFolder]!.count >= self.numberOfCellsInScreen {
                                 let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.filesDict[self.openedFolder]!.count) - self.view.frame.height
                                 
-                                let location = CGPoint(x: 0, y: movingHeight)
-                                self.table.setContentOffset(location, animated: true)
+                                self.table.scroll(y: movingHeight)
                             }
                         } else {
                             self.showSearchResult()
@@ -350,8 +348,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             if self.searchArray.count >= self.numberOfCellsInScreen {
                                 let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
                                 
-                                let location = CGPoint(x: 0, y: movingHeight)
-                                self.table.setContentOffset(location, animated: true)
+                                self.table.scroll(y: movingHeight)
                             }
                         }
                         

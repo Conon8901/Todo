@@ -248,8 +248,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             if self.listNameArray.count >= self.numberOfCellsInScreen {
                                 let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.listNameArray.count) - self.view.frame.height
                                 
-                                let location = CGPoint(x: 0, y: movingHeight)
-                                self.table.setContentOffset(location, animated: true)
+                                self.table.scroll(y: movingHeight)
                             }
                         } else {
                             if self.searchArray.count >= self.numberOfCellsInScreen {
@@ -257,8 +256,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                                 
                                 let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.listNameArray.count) - self.view.frame.height
                                 
-                                let location = CGPoint(x: 0, y: movingHeight)
-                                self.table.setContentOffset(location, animated: true)
+                                self.table.scroll(y: movingHeight)
                             }
                         }
                     } else {
