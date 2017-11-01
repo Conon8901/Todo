@@ -38,25 +38,17 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         table.dataSource = self
         table.delegate = self
-        table.rowHeight = 60
+        
+        searchBar.delegate = self
+        
+        table.setUp()
+        searchBar.setUp()
         
         filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
         openedFolder = saveData.object(forKey: "@folderName") as! String
         
         searchArray = filesDict[openedFolder]!
-        
-        searchBar.delegate = self
-        searchBar.enablesReturnKeyAutomatically = false
-        searchBar.autocapitalizationType = .none
-        
-        table.keyboardDismissMode = .interactive
-        table.allowsSelectionDuringEditing = true
-        
-        let partial = NSLocalizedString("SCOPE_PARTIAL", comment: "")
-        let exact = NSLocalizedString("SCOPE_EXACT", comment: "")
-        
-        searchBar.scopeButtonTitles = [partial, exact]
         
         editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
         
@@ -299,7 +291,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         moveButton.backgroundColor = .lightGray
-     
+        
         return [deleteButton, moveButton]
     }
     
@@ -501,7 +493,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         self.view.gestureRecognizers?.removeAll()
     }
-
+    
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text!.isEmpty {

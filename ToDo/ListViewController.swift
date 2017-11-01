@@ -36,33 +36,25 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         table.dataSource = self
         table.delegate = self
-        table.rowHeight = 60
+        
+        searchBar.delegate = self
+        
+        table.setUp()
+        searchBar.setUp()
         
         listNameArray = saveData.object(forKey: "@folders") as! [String]
         
         filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
-        searchBar.delegate = self
-        searchBar.enablesReturnKeyAutomatically = false
-        searchBar.autocapitalizationType = .none
-        
-        table.keyboardDismissMode = .interactive
-        table.allowsSelectionDuringEditing = true
-        
-        let partial = NSLocalizedString("SCOPE_PARTIAL", comment: "")
-        let exact = NSLocalizedString("SCOPE_EXACT", comment: "")
-        
-        searchBar.scopeButtonTitles = [partial, exact]
-        
         numberOfCellsInScreen = Int(ceil((view.frame.height - (UIApplication.shared.statusBarFrame.height + navBar.frame.height + searchBar.frame.height)) / table.rowHeight))
         
         navBar.topItem?.title = NSLocalizedString("FOLDER", comment: "")
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
+    
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -91,7 +83,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             cell?.selectionStyle = .default
             cell?.textLabel?.textColor = .black
         }
-    
+        
         return cell!
     }
     

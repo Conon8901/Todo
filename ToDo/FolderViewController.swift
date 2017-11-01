@@ -34,20 +34,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         table.dataSource = self
         table.delegate = self
-        table.rowHeight = 60
         
         searchBar.delegate = self
-        searchBar.enablesReturnKeyAutomatically = false
-        searchBar.autocapitalizationType = .none
         
-        table.keyboardDismissMode = .interactive
-        table.allowsSelectionDuringEditing = true
-        
-        let partial = NSLocalizedString("SCOPE_PARTIAL", comment: "")
-        let exact = NSLocalizedString("SCOPE_EXACT", comment: "")
-        
-        searchBar.scopeButtonTitles = [partial, exact]
-        
+        table.setUp()
+        searchBar.setUp()
+
         statusNavHeight = UIApplication.shared.statusBarFrame.height + self.navigationController!.navigationBar.frame.height
         
         numberOfCellsInScreen = Int(ceil((view.frame.height - (statusNavHeight + searchBar.frame.height)) / table.rowHeight))

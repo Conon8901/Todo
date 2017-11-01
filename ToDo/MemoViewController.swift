@@ -32,12 +32,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         memoTextView.delegate = self
         
-        memoTextView.text = ""
-        memoTextView.layer.borderColor = UIColor(red: 205/255, green: 205/255, blue: 205/255, alpha: 1.0).cgColor
-        memoTextView.layer.borderWidth = 0.5
-        memoTextView.layer.cornerRadius = 6
-        memoTextView.layer.masksToBounds = true
-        memoTextView.autocapitalizationType = .none
+        memoTextView.setUp()
         
         datePicker.minimumDate = Date()
         datePicker.maximumDate = Date(timeInterval: 60*60*24*2000, since: Date())
@@ -75,10 +70,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        saveData.set(memoTextView.text!, forKey: key + "@memo")
-        saveData.set(dateSwitch.isOn, forKey: key + "@ison")
-        saveData.set(datePicker.date, forKey: key + "@date")
-        
         memoTextView.resignFirstResponder()
     }
     
@@ -90,6 +81,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         chackShowPlaceHolder()
+        
+        saveData.set(memoTextView.text!, forKey: key + "@memo")
     }
     
     // MARK: DatePicker
@@ -100,6 +93,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         } else {
             dateField.text = formatter.string(from: datePicker.date)
         }
+        
+        saveData.set(datePicker.date, forKey: key + "@date")
     }
     
     // MARK: Switch
@@ -112,6 +107,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         } else {
             showsDateParts(false)
         }
+        
+        saveData.set(dateSwitch.isOn, forKey: key + "@ison")
     }
     
     // MARK: - Method
