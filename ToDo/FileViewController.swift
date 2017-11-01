@@ -441,7 +441,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @objc func deleteAll() {
         let alert = UIAlertController(
             title: NSLocalizedString("ALERT_TITLE_DELETEALL", comment: ""),
-            message: NSLocalizedString("ALERT_MESSAGE_SURE", comment: ""),
+            message: NSLocalizedString("ALERT_MESSAGE_DELETEALL", comment: ""),
             preferredStyle: .alert)
         
         let deleteAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DELETE", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
