@@ -27,9 +27,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var openedFolder = ""
     
-    var numberOfCellsInScreen = 0
-    
     var statusNavHeight: CGFloat = 0.0
+    
+    var numberOfCellsInScreen = 0
     
     // MARK: - Basics
     
@@ -579,25 +579,25 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func resaveDate(pre: String, post: String) {
-        let savedMemoText = self.saveData.object(forKey: pre + "@memo") as! String
-        let isShownParts = self.saveData.object(forKey: pre + "@ison") as! Bool
-        let savedDate = self.saveData.object(forKey: pre + "@date") as! Date?
-        let isCheckeded = self.saveData.object(forKey: pre + "@check") as! Bool
+        let savedMemoText = saveData.object(forKey: pre + "@memo") as! String
+        let isShownParts = saveData.object(forKey: pre + "@ison") as! Bool
+        let savedDate = saveData.object(forKey: pre + "@date") as! Date?
+        let isCheckeded = saveData.object(forKey: pre + "@check") as! Bool
         
-        self.saveData.set(savedMemoText, forKey: post + "@memo")
+        saveData.set(savedMemoText, forKey: post + "@memo")
         
-        self.saveData.set(isShownParts, forKey: post + "@ison")
+        saveData.set(isShownParts, forKey: post + "@ison")
         
         if savedDate != nil {
-            self.saveData.set(savedDate!, forKey: post + "@date")
+            saveData.set(savedDate!, forKey: post + "@date")
         }
         
-        self.saveData.set(isCheckeded, forKey: post + "@check")
+        saveData.set(isCheckeded, forKey: post + "@check")
         
         removeAllObject(key: pre)
     }
     
-    // MARK: - Else
+    // MARK: - Others
     
     @IBAction func tapScreen(sender: UITapGestureRecognizer) {
         sender.cancelsTouchesInView = false

@@ -89,7 +89,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     @IBAction func changeDate() {
         if datePicker.date < Date() {
-            setText(span: Date().timeIntervalSince(datePicker.date))
+            setDateText(span: Date().timeIntervalSince(datePicker.date))
         } else {
             dateField.text = formatter.string(from: datePicker.date)
         }
@@ -135,22 +135,19 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         } else {
             let savedDate = saveData.object(forKey: key + "@date") as! Date
             
-            datePicker.date = savedDate
-            
             let span = Date().timeIntervalSince(savedDate)
             
-            setText(span: span)
+            setDateText(span: span)
             
             if span > 60 {
                 datePicker.minimumDate = savedDate
-                datePicker.date = savedDate
             }
+            
+            datePicker.date = savedDate
         }
     }
     
-    // MARK: - Else
-    
-    func setText(span: TimeInterval) {
+    func setDateText(span: TimeInterval) {
         if span > 60 {
             if span > 3600 {
                 if span > 86400 {
@@ -174,7 +171,9 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         }
     }
     
+    // MARK: - Others
+    
     @IBAction func tapScreen() {
-        self.memoTextView.resignFirstResponder()
+        memoTextView.resignFirstResponder()
     }
 }

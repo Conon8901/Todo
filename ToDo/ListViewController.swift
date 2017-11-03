@@ -18,16 +18,14 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
-    var listNameArray = [String]()
-    var searchArray = [String]()
+    var saveData = UserDefaults.standard
     
     var filesDict = [String: [String]]()
     
-    var saveData = UserDefaults.standard
+    var listNameArray = [String]()
+    var searchArray = [String]()
     
     var numberOfCellsInScreen = 0
-    
-    var statusNavHeight: CGFloat = 0.0
     
     // MARK: - Basics
     
@@ -48,7 +46,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         numberOfCellsInScreen = Int(ceil((view.frame.height - (UIApplication.shared.statusBarFrame.height + navBar.frame.height + searchBar.frame.height)) / table.rowHeight))
         
-        navBar.topItem?.title = NSLocalizedString("FOLDER", comment: "")
+        navBar.topItem?.title = NSLocalizedString("NAV_TITLE_FOLDER", comment: "")
     }
     
     override func didReceiveMemoryWarning() {
@@ -114,17 +112,17 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if searchBar.text!.isEmpty {
             let fileIndex = filesDict[listNameArray[indexPath.row]]!.index(of: fileName)
             
-            let latterKey = self.listNameArray[indexPath.row] + "@" + fileName
+            let latterKey = listNameArray[indexPath.row] + "@" + fileName
             
             if fileIndex == nil {
-                self.filesDict[self.listNameArray[indexPath.row]]!.append(fileName)
+                filesDict[listNameArray[indexPath.row]]!.append(fileName)
                 
-                let index = self.filesDict[fromFolderName]!.index(of: fileName)!
-                self.filesDict[fromFolderName]?.remove(at: index)
+                let index = filesDict[fromFolderName]!.index(of: fileName)!
+                filesDict[fromFolderName]?.remove(at: index)
                 
                 resaveDate(pre: formerKey, post: latterKey)
                 
-                self.saveData.set(self.filesDict, forKey: "@dictData")
+                saveData.set(filesDict, forKey: "@dictData")
                 
                 appDelegate.isFromListView = true
                 
@@ -374,22 +372,22 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let savedDate = saveData.object(forKey: pre + "@date") as! Date?
         let isChecked = saveData.object(forKey: pre + "@check") as! Bool
         
-        self.saveData.set(savedMemoText, forKey: post + "@memo")
-        self.saveData.removeObject(forKey: pre + "@memo")
+        saveData.set(savedMemoText, forKey: post + "@memo")
+        saveData.removeObject(forKey: pre + "@memo")
         
-        self.saveData.set(isShownParts, forKey: post + "@ison")
-        self.saveData.removeObject(forKey: pre + "@ison")
+        saveData.set(isShownParts, forKey: post + "@ison")
+        saveData.removeObject(forKey: pre + "@ison")
         
         if savedDate != nil {
-            self.saveData.set(savedDate, forKey: post + "@date")
-            self.saveData.removeObject(forKey: pre + "@date")
+            saveData.set(savedDate, forKey: post + "@date")
+            saveData.removeObject(forKey: pre + "@date")
         }
         
-        self.saveData.set(isChecked, forKey: post + "@check")
-        self.saveData.removeObject(forKey: pre + "@check")
+        saveData.set(isChecked, forKey: post + "@check")
+        saveData.removeObject(forKey: pre + "@check")
     }
     
-    // MARK: - Else
+    // MARK: - Others
     
     @IBAction func tapCancel() {
         self.dismiss(animated: true, completion: nil)

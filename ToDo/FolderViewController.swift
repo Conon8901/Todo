@@ -18,14 +18,14 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     var saveData = UserDefaults.standard
     
+    var filesDict = [String: [String]]()
+    
     var folderNameArray = [String]()
     var searchArray = [String]()
     
-    var filesDict = [String: [String]]()
+    var statusNavHeight: CGFloat = 0.0
     
     var numberOfCellsInScreen = 0
-    
-    var statusNavHeight: CGFloat = 0.0
     
     // MARK: - Basics
     
@@ -39,7 +39,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         table.setUp()
         searchBar.setUp()
-
+        
         statusNavHeight = UIApplication.shared.statusBarFrame.height + self.navigationController!.navigationBar.frame.height
         
         numberOfCellsInScreen = Int(ceil((view.frame.height - (statusNavHeight + searchBar.frame.height)) / table.rowHeight))
@@ -55,7 +55,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         if saveData.object(forKey: "@folders") != nil {
             folderNameArray = saveData.object(forKey: "@folders") as! [String]
         } else {
-            self.saveData.set(self.folderNameArray, forKey: "@folders")
+            saveData.set(folderNameArray, forKey: "@folders")
         }
         
         if saveData.object(forKey: "@dictData") != nil {
@@ -223,15 +223,15 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 searchArray.remove(at: indexPath.row)
             }
             
-            self.saveData.set(filesDict, forKey: "@dictData")
+            saveData.set(filesDict, forKey: "@dictData")
             
             tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
             
-            saveData.set(self.folderNameArray, forKey: "@folders")
+            saveData.set(folderNameArray, forKey: "@folders")
             
             checkIsArrayEmpty()
             
-            if self.folderNameArray.count < self.numberOfCellsInScreen {
+            if folderNameArray.count < numberOfCellsInScreen {
                 table.scroll(y: -statusNavHeight)
             }
         }
@@ -434,25 +434,25 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func resaveDate(pre: String, post: String) {
-        let savedMemoText = self.saveData.object(forKey: pre + "@memo") as! String
-        let isShownParts = self.saveData.object(forKey: pre + "@ison") as! Bool
-        let savedDate = self.saveData.object(forKey: pre + "@date") as! Date?
-        let isChecked = self.saveData.object(forKey: pre + "@check") as! Bool
+        let savedMemoText = saveData.object(forKey: pre + "@memo") as! String
+        let isShownParts = saveData.object(forKey: pre + "@ison") as! Bool
+        let savedDate = saveData.object(forKey: pre + "@date") as! Date?
+        let isChecked = saveData.object(forKey: pre + "@check") as! Bool
         
-        self.saveData.set(savedMemoText, forKey: post + "@memo")
+        saveData.set(savedMemoText, forKey: post + "@memo")
         
-        self.saveData.set(isShownParts, forKey: post + "@ison")
+        saveData.set(isShownParts, forKey: post + "@ison")
         
         if savedDate != nil {
-            self.saveData.set(savedDate!, forKey: post + "@date")
+            saveData.set(savedDate!, forKey: post + "@date")
         }
         
-        self.saveData.set(isChecked, forKey: post + "@check")
+        saveData.set(isChecked, forKey: post + "@check")
         
         removeAllObject(key: pre)
     }
     
-    // MARK: - Else
+    // MARK: - Others
     
     @IBAction func tapScreen(sender: UITapGestureRecognizer) {
         sender.cancelsTouchesInView = false
