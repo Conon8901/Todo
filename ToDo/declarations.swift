@@ -19,6 +19,12 @@ extension UITableView {
         self.keyboardDismissMode = .interactive
         self.allowsSelectionDuringEditing = true
     }
+    
+    func deselectCell() {
+        if let indexPathForSelectedRow = self.indexPathForSelectedRow {
+            self.deselectRow(at: indexPathForSelectedRow, animated: true)
+        }
+    }
 }
 
 extension UISearchBar {

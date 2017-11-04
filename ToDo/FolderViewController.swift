@@ -141,7 +141,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                 }
                                 
                                 if !self.searchBar.text!.isEmpty {
-                                    self.showSearchResult()
+                                    self.assignSearchResult()
+                                    
+                                    self.checkIsArrayEmpty()
                                 }
                             }
                             
@@ -156,24 +158,24 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         } else {
                             self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                             
-                            self.deselectCell()
+                            self.table.deselectCell()
                         }
                     } else {
                         if textField.text != self.folderNameArray[indexPath.row] {
                             self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FOLDER", comment: ""))
                         }
                         
-                        self.deselectCell()
+                        self.table.deselectCell()
                     }
                 } else {
                     self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
                     
-                    self.deselectCell()
+                    self.table.deselectCell()
                 }
             }
             
             let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
-                self.deselectCell()
+                self.table.deselectCell()
             }
             
             alert.addTextField { (textField: UITextField!) -> Void in
@@ -268,10 +270,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         self.saveData.set(self.filesDict, forKey: "@dictData")
                         
-                        self.checkIsArrayEmpty()
-                        
-                        self.table.reloadData()
-                        
                         if self.searchBar.text!.isEmpty {
                             if self.folderNameArray.count >= self.numberOfCellsInScreen {
                                 let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.folderNameArray.count) - self.view.frame.height
@@ -279,7 +277,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                 self.table.scroll(y: movingHeight)
                             }
                         } else {
-                            self.showSearchResult()
+                            self.assignSearchResult()
                             
                             if self.searchArray.count >= self.numberOfCellsInScreen {
                                 let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
@@ -287,20 +285,24 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                 self.table.scroll(y: movingHeight)
                             }
                         }
+                        
+                        self.checkIsArrayEmpty()
+                        
+                        self.table.reloadData()
                     } else {
                         self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                         
-                        self.deselectCell()
+                        self.table.deselectCell()
                     }
                 } else {
                     self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FOLDER", comment: ""))
                     
-                    self.deselectCell()
+                    self.table.deselectCell()
                 }
             } else {
                 self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
                 
-                self.deselectCell()
+                self.table.deselectCell()
             }
         }
         
@@ -354,16 +356,22 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         if searchBar.text!.isEmpty {
             searchArray.removeAll()
             searchArray = folderNameArray
-            
-            table.reloadData()
         } else {
-            showSearchResult()
+            assignSearchResult()
+            
+            checkIsArrayEmpty()
         }
+        
+        table.reloadData()
     }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
         if !searchBar.text!.isEmpty {
-            showSearchResult()
+            assignSearchResult()
+            
+            checkIsArrayEmpty()
+            
+            table.reloadData()
             
             searchBar.becomeFirstResponder()
         }
@@ -394,16 +402,18 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func checkIsArrayEmpty() {
-        if folderNameArray.isEmpty {
-            editButton.isEnabled = false
+        if searchBar.text!.isEmpty {
+            if folderNameArray.isEmpty {
+                editButton.isEnabled = false
+            } else {
+                editButton.isEnabled = true
+            }
         } else {
-            editButton.isEnabled = true
-        }
-    }
-    
-    func deselectCell() {
-        if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
-            self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
+            if searchArray.isEmpty {
+                editButton.isEnabled = false
+            } else {
+                editButton.isEnabled = true
+            }
         }
     }
     
@@ -414,7 +424,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         saveData.removeObject(forKey: key + "@check")
     }
     
-    func showSearchResult() {
+    func assignSearchResult() {
         searchArray.removeAll()
         
         switch searchBar.selectedScopeButtonIndex {
@@ -429,8 +439,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         default:
             break
         }
-        
-        table.reloadData()
     }
     
     func resaveDate(pre: String, post: String) {

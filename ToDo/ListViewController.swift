@@ -150,7 +150,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
                 
                 let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
-                    self.deselectCell()
+                    self.table.deselectCell()
                 }
                 
                 alert.addAction(cancelAction)
@@ -199,7 +199,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
                 
                 let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
-                    self.deselectCell()
+                    self.table.deselectCell()
                 }
                 
                 alert.addAction(cancelAction)
@@ -228,8 +228,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.saveData.set(self.listNameArray, forKey: "@folders")
                         
-                        self.table.reloadData()
-                        
                         self.filesDict[textField.text!] = []
                         
                         self.saveData.set(self.filesDict, forKey: "@dictData")
@@ -249,20 +247,22 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                                 self.table.scroll(y: movingHeight)
                             }
                         }
+                        
+                        self.table.reloadData()
                     } else {
                         self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                         
-                        self.deselectCell()
+                        self.table.deselectCell()
                     }
                 } else {
                     self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FOLDER", comment: ""))
                     
-                    self.deselectCell()
+                    self.table.deselectCell()
                 }
             } else {
                 self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
                 
-                self.deselectCell()
+                self.table.deselectCell()
             }
         }
         
@@ -302,16 +302,18 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if searchBar.text!.isEmpty {
             searchArray.removeAll()
             searchArray = listNameArray
-            
-            table.reloadData()
         } else {
             showSearchResult()
         }
+        
+        table.reloadData()
     }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
         if !searchBar.text!.isEmpty {
             showSearchResult()
+            
+            table.reloadData()
             
             searchBar.becomeFirstResponder()
         }
@@ -341,12 +343,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.present(alert, animated: true, completion: nil)
     }
     
-    func deselectCell() {
-        if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
-            self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
-        }
-    }
-    
     func showSearchResult() {
         searchArray.removeAll()
         
@@ -362,8 +358,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         default:
             break
         }
-        
-        table.reloadData()
     }
     
     func resaveDate(pre: String, post: String) {

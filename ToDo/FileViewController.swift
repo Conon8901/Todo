@@ -82,7 +82,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         checkIsArrayEmpty()
-        
+    }
+    
+    override func viewWillLayoutSubviews() {
         table.reloadData()
     }
     
@@ -196,7 +198,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                                 let index = self.filesDict[self.openedFolder]?.index(of: fileName)
                                 self.filesDict[self.openedFolder]?[index!] = textField.text!
                                 
-                                self.showSearchResult()
+                                self.assignSearchResult()
+                                
+                                self.checkIsArrayEmpty()
                             }
                             
                             self.saveData.set(self.filesDict, forKey: "@dictData")
@@ -205,24 +209,24 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         } else {
                             self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                             
-                            self.deselectCell()
+                            self.table.deselectCell()
                         }
                     } else {
                         if textField.text != self.filesDict[self.openedFolder]?[indexPath.row] {
                             self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FILE", comment: ""))
                         }
                         
-                        self.deselectCell()
+                        self.table.deselectCell()
                     }
                 } else {
                     self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
                     
-                    self.deselectCell()
+                    self.table.deselectCell()
                 }
             }
             
             let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
-                self.deselectCell()
+                self.table.deselectCell()
             }
             
             alert.addTextField { (textField: UITextField!) -> Void in
@@ -335,7 +339,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                                 self.table.scroll(y: movingHeight)
                             }
                         } else {
-                            self.showSearchResult()
+                            self.assignSearchResult()
                             
                             if self.searchArray.count >= self.numberOfCellsInScreen {
                                 let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
@@ -344,25 +348,25 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             }
                         }
                         
-                        self.saveData.set(self.filesDict, forKey: "@dictData")
-                        
                         self.checkIsArrayEmpty()
+                        
+                        self.saveData.set(self.filesDict, forKey: "@dictData")
                         
                         self.table.reloadData()
                     } else {
                         self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                         
-                        self.deselectCell()
+                        self.table.deselectCell()
                     }
                 } else {
                     self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FILE", comment: ""))
                     
-                    self.deselectCell()
+                    self.table.deselectCell()
                 }
             } else {
                 self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
                 
-                self.deselectCell()
+                self.table.deselectCell()
             }
         }
         
@@ -456,13 +460,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.filesDict[self.openedFolder] = []
                 self.searchArray = []
                 
-                self.editButton.isEnabled = false
+                self.editButton.isEnabled = true
                 
                 self.saveData.set(self.filesDict, forKey: "@dictData")
                 
                 self.table.reloadData()
-                
-                self.editButton.isEnabled = true
             }
         }
         
@@ -499,16 +501,22 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if searchBar.text!.isEmpty {
             searchArray.removeAll()
             searchArray = filesDict[openedFolder]!
-            
-            table.reloadData()
         } else {
-            showSearchResult()
+            assignSearchResult()
         }
+        
+        checkIsArrayEmpty()
+        
+        table.reloadData()
     }
     
     func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
         if !searchBar.text!.isEmpty {
-            showSearchResult()
+            assignSearchResult()
+            
+            checkIsArrayEmpty()
+            
+            table.reloadData()
             
             searchBar.becomeFirstResponder()
         }
@@ -517,6 +525,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         searchBar.resignFirstResponder()
+        
+        checkIsArrayEmpty()
         
         table.reloadData()
     }
@@ -539,16 +549,18 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func checkIsArrayEmpty() {
-        if filesDict[openedFolder]!.isEmpty {
-            editButton.isEnabled = false
+        if searchBar.text!.isEmpty {
+            if filesDict[openedFolder]!.isEmpty {
+                editButton.isEnabled = false
+            } else {
+                editButton.isEnabled = true
+            }
         } else {
-            editButton.isEnabled = true
-        }
-    }
-    
-    func deselectCell() {
-        if let indexPathForSelectedRow = self.table.indexPathForSelectedRow {
-            self.table.deselectRow(at: indexPathForSelectedRow, animated: true)
+            if searchArray.isEmpty {
+                editButton.isEnabled = false
+            } else {
+                editButton.isEnabled = true
+            }
         }
     }
     
@@ -559,7 +571,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         saveData.removeObject(forKey: key + "@check")
     }
     
-    func showSearchResult() {
+    func assignSearchResult() {
         searchArray.removeAll()
         
         switch searchBar.selectedScopeButtonIndex {
@@ -574,8 +586,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         default:
             break
         }
-        
-        table.reloadData()
     }
     
     func resaveDate(pre: String, post: String) {
