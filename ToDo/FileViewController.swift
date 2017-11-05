@@ -82,6 +82,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         checkIsArrayEmpty()
+        
+        table.deselectCell()
     }
     
     override func viewWillLayoutSubviews() {

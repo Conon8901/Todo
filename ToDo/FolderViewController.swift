@@ -66,6 +66,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         checkIsArrayEmpty()
         
+        table.deselectCell()
+    }
+    
+    override func viewWillLayoutSubviews() {
         table.reloadData()
     }
     
