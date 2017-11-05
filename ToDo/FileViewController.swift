@@ -179,19 +179,19 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     if self.filesDict[self.openedFolder]?.index(of: textField.text!) == nil {
                         if !textField.text!.contains("@") {
                             if self.searchBar.text!.isEmpty {
-                                let formerKey = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
-                                let latterKey = self.openedFolder + "@" + textField.text!
+                                let preKey = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
+                                let postKey = self.openedFolder + "@" + textField.text!
                                 
-                                self.resaveDate(pre: formerKey, post: latterKey)
+                                self.resaveDate(pre: preKey, post: postKey)
                                 
                                 self.filesDict[self.openedFolder]?[indexPath.row] = textField.text!
                             } else {
                                 let fileName = self.searchArray[indexPath.row]
                                 
-                                let formerKey = self.openedFolder + "@" + self.searchArray[indexPath.row]
-                                let latterKey = self.openedFolder + "@" + textField.text!
+                                let preKey = self.openedFolder + "@" + self.searchArray[indexPath.row]
+                                let postKey = self.openedFolder + "@" + textField.text!
                                 
-                                self.resaveDate(pre: formerKey, post: latterKey)
+                                self.resaveDate(pre: preKey, post: postKey)
                                 
                                 self.searchArray[indexPath.row] = textField.text!
                                 
@@ -449,12 +449,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             preferredStyle: .alert)
         
         let deleteAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DELETE", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
-            let folder = self.filesDict[self.openedFolder]!
+            let files = self.filesDict[self.openedFolder]!
             
-            if !folder.isEmpty {
-                for fileName in folder {
-                    let key = self.openedFolder + "@" + fileName
-                    self.removeAllObject(key: key)
+            if !files.isEmpty {
+                for fileName in files {
+                    self.removeAllObject(key: self.openedFolder + "@" + fileName)
                 }
                 
                 self.filesDict[self.openedFolder] = []
@@ -590,19 +589,19 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func resaveDate(pre: String, post: String) {
         let savedMemoText = saveData.object(forKey: pre + "@memo") as! String
-        let isShownParts = saveData.object(forKey: pre + "@ison") as! Bool
+        let savedisShownParts = saveData.object(forKey: pre + "@ison") as! Bool
         let savedDate = saveData.object(forKey: pre + "@date") as! Date?
-        let isCheckeded = saveData.object(forKey: pre + "@check") as! Bool
+        let savedisCheckeded = saveData.object(forKey: pre + "@check") as! Bool
         
         saveData.set(savedMemoText, forKey: post + "@memo")
         
-        saveData.set(isShownParts, forKey: post + "@ison")
+        saveData.set(savedisShownParts, forKey: post + "@ison")
         
         if savedDate != nil {
             saveData.set(savedDate!, forKey: post + "@date")
         }
         
-        saveData.set(isCheckeded, forKey: post + "@check")
+        saveData.set(savedisCheckeded, forKey: post + "@check")
         
         removeAllObject(key: pre)
     }

@@ -104,23 +104,23 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let fromFolderName = saveData.object(forKey: "@folderName") as! String
+        let preFolderName = saveData.object(forKey: "@folderName") as! String
         let fileName = self.appDelegate.movingFileName
         
-        let formerKey = fromFolderName + "@" + fileName
+        let preKey = preFolderName + "@" + fileName
         
         if searchBar.text!.isEmpty {
             let fileIndex = filesDict[listNameArray[indexPath.row]]!.index(of: fileName)
             
-            let latterKey = listNameArray[indexPath.row] + "@" + fileName
+            let postKey = listNameArray[indexPath.row] + "@" + fileName
             
             if fileIndex == nil {
                 filesDict[listNameArray[indexPath.row]]!.append(fileName)
                 
-                let index = filesDict[fromFolderName]!.index(of: fileName)!
-                filesDict[fromFolderName]?.remove(at: index)
+                let index = filesDict[preFolderName]!.index(of: fileName)!
+                filesDict[preFolderName]?.remove(at: index)
                 
-                resaveDate(pre: formerKey, post: latterKey)
+                resaveDate(pre: preKey, post: postKey)
                 
                 saveData.set(filesDict, forKey: "@dictData")
                 
@@ -137,10 +137,10 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.filesDict[self.listNameArray[indexPath.row]]!.remove(at: fileIndex!)
                     self.filesDict[self.listNameArray[indexPath.row]]!.append(fileName)
                     
-                    let index = self.filesDict[fromFolderName]!.index(of: fileName)!
-                    self.filesDict[fromFolderName]?.remove(at: index)
+                    let index = self.filesDict[preFolderName]!.index(of: fileName)!
+                    self.filesDict[preFolderName]?.remove(at: index)
                     
-                    self.resaveDate(pre: formerKey, post: latterKey)
+                    self.resaveDate(pre: preKey, post: postKey)
                     
                     self.saveData.set(self.filesDict, forKey: "@dictData")
                     
@@ -161,15 +161,15 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             let fileIndex = filesDict[searchArray[indexPath.row]]!.index(of: fileName)
             
-            let latterKey = searchArray[indexPath.row] + "@" + fileName
+            let postKey = searchArray[indexPath.row] + "@" + fileName
             
             if fileIndex == nil {
                 filesDict[searchArray[indexPath.row]]!.append(fileName)
                 
-                let index = filesDict[fromFolderName]!.index(of: fileName)!
-                filesDict[fromFolderName]?.remove(at: index)
+                let index = filesDict[preFolderName]!.index(of: fileName)!
+                filesDict[preFolderName]?.remove(at: index)
                 
-                resaveDate(pre: formerKey, post: latterKey)
+                resaveDate(pre: preKey, post: postKey)
                 
                 saveData.set(filesDict, forKey: "@dictData")
                 
@@ -186,10 +186,10 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     self.filesDict[self.searchArray[indexPath.row]]!.remove(at: fileIndex!)
                     self.filesDict[self.searchArray[indexPath.row]]!.append(fileName)
                     
-                    let index = self.filesDict[fromFolderName]!.index(of: fileName)!
-                    self.filesDict[fromFolderName]?.remove(at: index)
+                    let index = self.filesDict[preFolderName]!.index(of: fileName)!
+                    self.filesDict[preFolderName]?.remove(at: index)
                     
-                    self.resaveDate(pre: formerKey, post: latterKey)
+                    self.resaveDate(pre: preKey, post: postKey)
                     
                     self.saveData.set(self.filesDict, forKey: "@dictData")
                     
@@ -362,14 +362,14 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func resaveDate(pre: String, post: String) {
         let savedMemoText = saveData.object(forKey: pre + "@memo") as! String
-        let isShownParts = saveData.object(forKey: pre + "@ison") as! Bool
+        let savedisShownParts = saveData.object(forKey: pre + "@ison") as! Bool
         let savedDate = saveData.object(forKey: pre + "@date") as! Date?
-        let isChecked = saveData.object(forKey: pre + "@check") as! Bool
+        let savedisChecked = saveData.object(forKey: pre + "@check") as! Bool
         
         saveData.set(savedMemoText, forKey: post + "@memo")
         saveData.removeObject(forKey: pre + "@memo")
         
-        saveData.set(isShownParts, forKey: post + "@ison")
+        saveData.set(savedisShownParts, forKey: post + "@ison")
         saveData.removeObject(forKey: pre + "@ison")
         
         if savedDate != nil {
@@ -377,7 +377,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             saveData.removeObject(forKey: pre + "@date")
         }
         
-        saveData.set(isChecked, forKey: post + "@check")
+        saveData.set(savedisChecked, forKey: post + "@check")
         saveData.removeObject(forKey: pre + "@check")
     }
     

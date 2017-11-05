@@ -112,19 +112,14 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 if !isBlank {
                     if self.folderNameArray.index(of: textField.text!) == nil {
                         if !textField.text!.contains("@") {
-                            var formerTitle = ""
-                            var folderName = ""
+                            var preFolderName = ""
                             
                             if self.searchBar.text!.isEmpty {
-                                formerTitle = self.folderNameArray[indexPath.row]
-                                
-                                folderName = self.folderNameArray[indexPath.row]
+                                preFolderName = self.folderNameArray[indexPath.row]
                                 
                                 self.folderNameArray[indexPath.row] = textField.text!
                             } else {
-                                formerTitle = self.searchArray[indexPath.row]
-                                
-                                folderName = self.searchArray[indexPath.row]
+                                preFolderName = self.searchArray[indexPath.row]
                                 
                                 self.searchArray[indexPath.row] = textField.text!
                                 
@@ -132,12 +127,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                 self.folderNameArray[index] = textField.text!
                             }
                             
-                            if let files = self.filesDict[folderName] {
+                            if let files = self.filesDict[preFolderName] {
                                 for fileName in files {
-                                    let formerKey = folderName + "@" + fileName
-                                    let latterKey = textField.text! + "@" + fileName
+                                    let preKey = preFolderName + "@" + fileName
+                                    let postKey = textField.text! + "@" + fileName
                                     
-                                    self.resaveDate(pre: formerKey, post: latterKey)
+                                    self.resaveDate(pre: preKey, post: postKey)
                                 }
                                 
                                 if !self.searchBar.text!.isEmpty {
@@ -147,8 +142,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                 }
                             }
                             
-                            self.filesDict[textField.text!] = self.filesDict[folderName]
-                            self.filesDict[formerTitle] = nil
+                            self.filesDict[textField.text!] = self.filesDict[preFolderName]
+                            self.filesDict[preFolderName] = nil
                             
                             self.saveData.set(self.filesDict, forKey: "@dictData")
                             
@@ -443,19 +438,19 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func resaveDate(pre: String, post: String) {
         let savedMemoText = saveData.object(forKey: pre + "@memo") as! String
-        let isShownParts = saveData.object(forKey: pre + "@ison") as! Bool
+        let savedIsShownParts = saveData.object(forKey: pre + "@ison") as! Bool
         let savedDate = saveData.object(forKey: pre + "@date") as! Date?
-        let isChecked = saveData.object(forKey: pre + "@check") as! Bool
+        let savedIsChecked = saveData.object(forKey: pre + "@check") as! Bool
         
         saveData.set(savedMemoText, forKey: post + "@memo")
         
-        saveData.set(isShownParts, forKey: post + "@ison")
+        saveData.set(savedIsShownParts, forKey: post + "@ison")
         
         if savedDate != nil {
             saveData.set(savedDate!, forKey: post + "@date")
         }
         
-        saveData.set(isChecked, forKey: post + "@check")
+        saveData.set(savedIsChecked, forKey: post + "@check")
         
         removeAllObject(key: pre)
     }
