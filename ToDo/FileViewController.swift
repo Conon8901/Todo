@@ -83,11 +83,15 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         checkIsArrayEmpty()
         
-        table.deselectCell()
-    }
-    
-    override func viewWillLayoutSubviews() {
+        let indexPath = table.indexPathForSelectedRow
+        
         table.reloadData()
+        
+        table.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
+            self.table.deselectCell()
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -145,20 +149,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 } else {
                     cell?.accessoryType = .none
                 }
-            }
-        }
-        
-        cell?.textLabel?.text = fileName
-        
-        if let subtitle = saveData.object(forKey: key + "@memo") as! String? {
-            cell?.detailTextLabel?.text = subtitle
-        }
-        
-        if let isChecked = saveData.object(forKey: key + "@check") as! Bool? {
-            if isChecked {
-                cell?.accessoryType = .checkmark
-            } else {
-                cell?.accessoryType = .none
             }
         }
         

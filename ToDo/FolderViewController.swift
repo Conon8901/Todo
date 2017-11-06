@@ -66,11 +66,15 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         checkIsArrayEmpty()
         
-        table.deselectCell()
-    }
-    
-    override func viewWillLayoutSubviews() {
+        let indexPath = table.indexPathForSelectedRow
+        
         table.reloadData()
+        
+        table.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
+            self.table.deselectCell()
+        }
     }
     
     override func didReceiveMemoryWarning() {
