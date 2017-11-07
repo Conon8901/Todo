@@ -18,8 +18,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var deleteAllButton: UIBarButtonItem?
     
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    
     var saveData = UserDefaults.standard
     
     var filesDict = [String: [String]]()
@@ -75,10 +73,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         navigationItem.title = openedFolder
         
-        if appDelegate.isFromListView {
+        if variables.shared.isFromListView {
             filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
             
-            appDelegate.isFromListView = false
+            variables.shared.isFromListView = false
         }
         
         checkIsArrayEmpty()
@@ -261,9 +259,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_MOVE", comment: "")) { (action, index) -> Void in
             if self.searchBar.text!.isEmpty {
-                self.appDelegate.movingFileName = self.filesDict[self.openedFolder]![indexPath.row]
+                variables.shared.movingFileName = self.filesDict[self.openedFolder]![indexPath.row]
             } else {
-                self.appDelegate.movingFileName = self.searchArray[indexPath.row]
+                variables.shared.movingFileName = self.searchArray[indexPath.row]
             }
             
             let nextView = self.storyboard!.instantiateViewController(withIdentifier: "List") as! ListViewController

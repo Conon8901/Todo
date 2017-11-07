@@ -16,8 +16,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var navBar: UINavigationBar!
     
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    
     var saveData = UserDefaults.standard
     
     var filesDict = [String: [String]]()
@@ -105,7 +103,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let preFolderName = saveData.object(forKey: "@folderName") as! String
-        let fileName = self.appDelegate.movingFileName
+        let fileName = variables.shared.movingFileName
         
         let preKey = preFolderName + "@" + fileName
         
@@ -124,7 +122,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 saveData.set(filesDict, forKey: "@dictData")
                 
-                appDelegate.isFromListView = true
+                variables.shared.isFromListView = true
                 
                 self.dismiss(animated: true, completion: nil)
             } else {
@@ -144,7 +142,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     
                     self.saveData.set(self.filesDict, forKey: "@dictData")
                     
-                    self.appDelegate.isFromListView = true
+                    variables.shared.isFromListView = true
                     
                     self.dismiss(animated: true, completion: nil)
                 }
@@ -173,7 +171,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 saveData.set(filesDict, forKey: "@dictData")
                 
-                appDelegate.isFromListView = true
+                variables.shared.isFromListView = true
                 
                 self.dismiss(animated: true, completion: nil)
             } else {
@@ -193,7 +191,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     
                     self.saveData.set(self.filesDict, forKey: "@dictData")
                     
-                    self.appDelegate.isFromListView = true
+                    variables.shared.isFromListView = true
                     
                     self.dismiss(animated: true, completion: nil)
                 }

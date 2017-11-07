@@ -49,3 +49,11 @@ extension UITextView {
         self.autocapitalizationType = .none
     }
 }
+
+class variables {
+    static let shared = variables()
+    
+    var isFromListView = false
+    
+    var movingFileName = ""
+}
