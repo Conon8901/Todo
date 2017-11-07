@@ -149,10 +149,10 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     func setDateText(span: TimeInterval) {
         if span > 60 {
-            if span > 3600 {
-                if span > 86400 {
-                    if span > 2592000 {
-                        if span > 31536000 {
+            if span > 60*60 {
+                if span > 60*60*24 {
+                    if span > 60*60*24*30 {
+                        if span > 60*60*24*365 {
                             dateField.text = String(format: NSLocalizedString("AGO_YEAR", comment: ""), Int(span/31536000))
                         } else {
                             dateField.text = String(format: NSLocalizedString("AGO_MONTH", comment: ""), Int(span/2592000))

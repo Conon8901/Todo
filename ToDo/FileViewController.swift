@@ -116,39 +116,23 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         if searchBar.text!.isEmpty {
             fileName = filesDict[openedFolder]![indexPath.row]
-            
-            key = openedFolder + "@" + fileName
-            
-            cell?.textLabel?.text = fileName
-            
-            if let subtitle = saveData.object(forKey: key + "@memo") as! String? {
-                cell?.detailTextLabel?.text = subtitle
-            }
-            
-            if let isChecked = saveData.object(forKey: key + "@check") as! Bool? {
-                if isChecked {
-                    cell?.accessoryType = .checkmark
-                } else {
-                    cell?.accessoryType = .none
-                }
-            }
         } else {
             fileName = searchArray[indexPath.row]
-            
-            key = openedFolder + "@" + fileName
-            
-            cell?.textLabel?.text = fileName
-            
-            if let subtitle = saveData.object(forKey: key + "@memo") as! String? {
-                cell?.detailTextLabel?.text = subtitle
-            }
-            
-            if let isChecked = saveData.object(forKey: key + "@check") as! Bool? {
-                if isChecked {
-                    cell?.accessoryType = .checkmark
-                } else {
-                    cell?.accessoryType = .none
-                }
+        }
+        
+        key = openedFolder + "@" + fileName
+        
+        cell?.textLabel?.text = fileName
+        
+        if let subtitle = saveData.object(forKey: key + "@memo") as! String? {
+            cell?.detailTextLabel?.text = subtitle
+        }
+        
+        if let isChecked = saveData.object(forKey: key + "@check") as! Bool? {
+            if isChecked {
+                cell?.accessoryType = .checkmark
+            } else {
+                cell?.accessoryType = .none
             }
         }
         

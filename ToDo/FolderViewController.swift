@@ -273,21 +273,21 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         self.saveData.set(self.filesDict, forKey: "@dictData")
                         
+                        var movingHeight: CGFloat = 0
+                        
                         if self.searchBar.text!.isEmpty {
                             if self.folderNameArray.count >= self.numberOfCellsInScreen {
-                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.folderNameArray.count) - self.view.frame.height
-                                
-                                self.table.scroll(y: movingHeight)
+                                movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.folderNameArray.count) - self.view.frame.height
                             }
                         } else {
                             self.assignSearchResult()
                             
                             if self.searchArray.count >= self.numberOfCellsInScreen {
-                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
-                                
-                                self.table.scroll(y: movingHeight)
+                                movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
                             }
                         }
+                        
+                        self.table.scroll(y: movingHeight)
                         
                         self.checkIsArrayEmpty()
                         
