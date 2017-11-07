@@ -135,6 +135,13 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                 self.folderNameArray[index] = textField.text!
                             }
                             
+                            self.filesDict[textField.text!] = self.filesDict[preFolderName]
+                            self.filesDict[preFolderName] = nil
+                            
+                            self.saveData.set(self.filesDict, forKey: "@dictData")
+                            
+                            self.saveData.set(self.folderNameArray, forKey: "@folders")
+                            
                             if let files = self.filesDict[preFolderName] {
                                 for fileName in files {
                                     let preKey = preFolderName + "@" + fileName
@@ -149,13 +156,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     self.checkIsArrayEmpty()
                                 }
                             }
-                            
-                            self.filesDict[textField.text!] = self.filesDict[preFolderName]
-                            self.filesDict[preFolderName] = nil
-                            
-                            self.saveData.set(self.filesDict, forKey: "@dictData")
-                            
-                            self.saveData.set(self.folderNameArray, forKey: "@folders")
                             
                             self.table.reloadData()
                         } else {
@@ -228,9 +228,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 searchArray.remove(at: indexPath.row)
             }
             
-            saveData.set(filesDict, forKey: "@dictData")
-            
             tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
+            
+            saveData.set(filesDict, forKey: "@dictData")
             
             saveData.set(folderNameArray, forKey: "@folders")
             
@@ -269,9 +269,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         self.filesDict[textField.text!] = []
                         
-                        self.saveData.set(self.folderNameArray, forKey: "@folders")
-                        
                         self.saveData.set(self.filesDict, forKey: "@dictData")
+                        
+                        self.saveData.set(self.folderNameArray, forKey: "@folders")
                         
                         var movingHeight: CGFloat = 0
                         
@@ -399,7 +399,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             message: message,
             preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CLOSE", comment: ""), style: .default))
         
         self.present(alert, animated: true, completion: nil)
     }

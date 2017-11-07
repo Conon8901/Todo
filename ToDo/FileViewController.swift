@@ -122,9 +122,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         cell?.textLabel?.text = fileName
         
-        if let subtitle = saveData.object(forKey: key + "@memo") as! String? {
-            cell?.detailTextLabel?.text = subtitle
-        }
+        cell?.detailTextLabel?.text = saveData.object(forKey: key + "@memo") as! String?
         
         if let isChecked = saveData.object(forKey: key + "@check") as! Bool? {
             if isChecked {
@@ -152,20 +150,19 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 if !isBlank {
                     if self.filesDict[self.openedFolder]?.index(of: textField.text!) == nil {
                         if !textField.text!.contains("@") {
+                            var preKey = ""
+                            var postKey = ""
+                            
                             if self.searchBar.text!.isEmpty {
-                                let preKey = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
-                                let postKey = self.openedFolder + "@" + textField.text!
-                                
-                                self.resaveDate(pre: preKey, post: postKey)
+                                preKey = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
+                                postKey = self.openedFolder + "@" + textField.text!
                                 
                                 self.filesDict[self.openedFolder]?[indexPath.row] = textField.text!
                             } else {
                                 let fileName = self.searchArray[indexPath.row]
                                 
-                                let preKey = self.openedFolder + "@" + self.searchArray[indexPath.row]
-                                let postKey = self.openedFolder + "@" + textField.text!
-                                
-                                self.resaveDate(pre: preKey, post: postKey)
+                                preKey = self.openedFolder + "@" + self.searchArray[indexPath.row]
+                                postKey = self.openedFolder + "@" + textField.text!
                                 
                                 self.searchArray[indexPath.row] = textField.text!
                                 
@@ -178,6 +175,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             }
                             
                             self.saveData.set(self.filesDict, forKey: "@dictData")
+                            
+                            self.resaveDate(pre: preKey, post: postKey)
                             
                             self.table.reloadData()
                         } else {
@@ -231,26 +230,28 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_DELETE", comment: "")) { (action, index) -> Void in
+            var key = ""
+            
             if self.searchBar.text!.isEmpty {
-                let key = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
-                self.removeAllObject(key: key)
+                key = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
                 
                 self.filesDict[self.openedFolder]?.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
             } else {
-                let key = self.openedFolder + "@" + self.searchArray[indexPath.row]
-                self.removeAllObject(key: key)
+                key = self.openedFolder + "@" + self.searchArray[indexPath.row]
                 
                 self.filesDict[self.openedFolder]!.remove(at: self.filesDict[self.openedFolder]!.index(of: self.searchArray[indexPath.row])!)
                 self.searchArray.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
             }
+            
+            tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
+            
+            self.saveData.set(self.filesDict, forKey: "@dictData")
+            
+            self.removeAllObject(key: key)
             
             if self.filesDict[self.openedFolder]!.count < self.numberOfCellsInScreen {
                 self.table.scroll(y: -self.statusNavHeight)
             }
-            
-            self.saveData.set(self.filesDict, forKey: "@dictData")
             
             self.checkIsArrayEmpty()
         }
@@ -306,25 +307,25 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.saveData.set(false, forKey: key + "@ison")
                         self.saveData.set(false, forKey: key + "@check")
                         
+                        self.saveData.set(self.filesDict, forKey: "@dictData")
+                        
+                        var movingHeight: CGFloat = 0
+                        
                         if self.searchBar.text!.isEmpty {
                             if self.filesDict[self.openedFolder]!.count >= self.numberOfCellsInScreen {
-                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.filesDict[self.openedFolder]!.count) - self.view.frame.height
-                                
-                                self.table.scroll(y: movingHeight)
+                                movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.filesDict[self.openedFolder]!.count) - self.view.frame.height
                             }
                         } else {
                             self.assignSearchResult()
                             
                             if self.searchArray.count >= self.numberOfCellsInScreen {
-                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
-                                
-                                self.table.scroll(y: movingHeight)
+                                movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
                             }
                         }
                         
-                        self.checkIsArrayEmpty()
+                        self.table.scroll(y: movingHeight)
                         
-                        self.saveData.set(self.filesDict, forKey: "@dictData")
+                        self.checkIsArrayEmpty()
                         
                         self.table.reloadData()
                     } else {
@@ -364,21 +365,21 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if recognizer.state == .began {
                 if let cell = table.cellForRow(at: indexPath!) {
                     if cell.accessoryType == .none {
-                        cell.accessoryType = .checkmark
-                        
                         if searchBar.text!.isEmpty {
                             saveData.set(true, forKey: openedFolder + "@" + filesDict[openedFolder]![indexPath!.row] + "@check")
                         } else {
                             saveData.set(true, forKey: openedFolder + "@" + searchArray[indexPath!.row] + "@check")
                         }
-                    } else {
-                        cell.accessoryType = .none
                         
+                        cell.accessoryType = .checkmark
+                    } else {
                         if searchBar.text!.isEmpty {
                             saveData.set(false, forKey: openedFolder + "@" + filesDict[openedFolder]![indexPath!.row] + "@check")
                         } else {
                             saveData.set(false, forKey: openedFolder + "@" + searchArray[indexPath!.row] + "@check")
                         }
+                        
+                        cell.accessoryType = .none
                     }
                 }
             }
@@ -433,9 +434,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.filesDict[self.openedFolder] = []
                 self.searchArray = []
                 
-                self.editButton.isEnabled = true
-                
                 self.saveData.set(self.filesDict, forKey: "@dictData")
+                
+                self.editButton.isEnabled = true
                 
                 self.table.reloadData()
             }
@@ -516,7 +517,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             message: message,
             preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CLOSE", comment: ""), style: .default))
         
         self.present(alert, animated: true, completion: nil)
     }

@@ -118,9 +118,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 let index = filesDict[preFolderName]!.index(of: fileName)!
                 filesDict[preFolderName]?.remove(at: index)
                 
-                resaveDate(pre: preKey, post: postKey)
-                
                 saveData.set(filesDict, forKey: "@dictData")
+                
+                resaveDate(pre: preKey, post: postKey)
                 
                 variables.shared.isFromListView = true
                 
@@ -138,9 +138,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     let index = self.filesDict[preFolderName]!.index(of: fileName)!
                     self.filesDict[preFolderName]?.remove(at: index)
                     
-                    self.resaveDate(pre: preKey, post: postKey)
-                    
                     self.saveData.set(self.filesDict, forKey: "@dictData")
+                    
+                    self.resaveDate(pre: preKey, post: postKey)
                     
                     variables.shared.isFromListView = true
                     
@@ -167,9 +167,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 let index = filesDict[preFolderName]!.index(of: fileName)!
                 filesDict[preFolderName]?.remove(at: index)
                 
-                resaveDate(pre: preKey, post: postKey)
-                
                 saveData.set(filesDict, forKey: "@dictData")
+                
+                resaveDate(pre: preKey, post: postKey)
                 
                 variables.shared.isFromListView = true
                 
@@ -187,9 +187,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     let index = self.filesDict[preFolderName]!.index(of: fileName)!
                     self.filesDict[preFolderName]?.remove(at: index)
                     
-                    self.resaveDate(pre: preKey, post: postKey)
-                    
                     self.saveData.set(self.filesDict, forKey: "@dictData")
+                    
+                    self.resaveDate(pre: preKey, post: postKey)
                     
                     variables.shared.isFromListView = true
                     
@@ -224,11 +224,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     if !textField.text!.contains("@") {
                         self.listNameArray.append(textField.text!)
                         
-                        self.saveData.set(self.listNameArray, forKey: "@folders")
-                        
                         self.filesDict[textField.text!] = []
                         
                         self.saveData.set(self.filesDict, forKey: "@dictData")
+                        
+                        self.saveData.set(self.listNameArray, forKey: "@folders")
                         
                         if self.searchBar.text!.isEmpty {
                             if self.listNameArray.count >= self.numberOfCellsInScreen {
@@ -336,7 +336,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             message: message,
             preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CLOSE", comment: ""), style: .default))
         
         self.present(alert, animated: true, completion: nil)
     }
