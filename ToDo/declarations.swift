@@ -8,6 +8,16 @@
 
 import UIKit
 
+extension String {
+    func partialMatch(target: String) -> Bool {
+        return self.lowercased(with: .current).contains(target.lowercased(with: .current))
+    }
+    
+    func exactMatch(target: String) -> Bool {
+        return self.lowercased(with: .current) == target.lowercased(with: .current)
+    }
+}
+
 extension UITableView {
     func scroll(x: CGFloat = 0, y: CGFloat) {
         let offset = CGPoint(x: Int(x), y: Int(y))

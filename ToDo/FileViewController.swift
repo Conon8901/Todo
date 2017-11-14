@@ -275,10 +275,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let movingFile = filesDict[openedFolder]?[sourceIndexPath.row]
+        let movingItem = filesDict[openedFolder]![sourceIndexPath.row]
         
         filesDict[openedFolder]?.remove(at: sourceIndexPath.row)
-        filesDict[openedFolder]?.insert(movingFile!, at: destinationIndexPath.row)
+        filesDict[openedFolder]?.insert(movingItem, at: destinationIndexPath.row)
         
         saveData.set(filesDict, forKey: "@dictData")
         
@@ -314,16 +314,18 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         if self.searchBar.text!.isEmpty {
                             if self.filesDict[self.openedFolder]!.count >= self.numberOfCellsInScreen {
                                 movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.filesDict[self.openedFolder]!.count) - self.view.frame.height
+                                
+                                self.table.scroll(y: movingHeight)
                             }
                         } else {
                             self.assignSearchResult()
                             
                             if self.searchArray.count >= self.numberOfCellsInScreen {
                                 movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
+                                
+                                self.table.scroll(y: movingHeight)
                             }
                         }
-                        
-                        self.table.scroll(y: movingHeight)
                         
                         self.checkIsArrayEmpty()
                         
@@ -551,11 +553,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         switch searchBar.selectedScopeButtonIndex {
         case 0:
             searchArray = filesDict[openedFolder]!.filter {
-                $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current))
+                $0.partialMatch(target: searchBar.text!)
             }
         case 1:
             searchArray = filesDict[openedFolder]!.filter {
-                $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current)
+                $0.exactMatch(target: searchBar.text!)
             }
         default:
             break

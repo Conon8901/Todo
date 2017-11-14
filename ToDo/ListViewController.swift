@@ -227,7 +227,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.filesDict[textField.text!] = []
                         
                         self.saveData.set(self.filesDict, forKey: "@dictData")
-                        
                         self.saveData.set(self.listNameArray, forKey: "@folders")
                         
                         if self.searchBar.text!.isEmpty {
@@ -347,11 +346,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         switch searchBar.selectedScopeButtonIndex {
         case 0:
             searchArray = listNameArray.filter {
-                $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current))
+                $0.partialMatch(target: searchBar.text!)
             }
         case 1:
             searchArray = listNameArray.filter {
-                $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current)
+                $0.exactMatch(target: searchBar.text!)
             }
         default:
             break

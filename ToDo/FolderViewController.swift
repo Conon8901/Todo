@@ -139,7 +139,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             self.filesDict[preFolderName] = nil
                             
                             self.saveData.set(self.filesDict, forKey: "@dictData")
-                            
                             self.saveData.set(self.folderNameArray, forKey: "@folders")
                             
                             if let files = self.filesDict[preFolderName] {
@@ -231,7 +230,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
             
             saveData.set(filesDict, forKey: "@dictData")
-            
             saveData.set(folderNameArray, forKey: "@folders")
             
             checkIsArrayEmpty()
@@ -243,10 +241,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let movingFolder = folderNameArray[sourceIndexPath.row]
+        let movingItem = folderNameArray[sourceIndexPath.row]
         
         folderNameArray.remove(at: sourceIndexPath.row)
-        folderNameArray.insert(movingFolder, at: destinationIndexPath.row)
+        folderNameArray.insert(movingItem, at: destinationIndexPath.row)
         
         saveData.set(folderNameArray, forKey: "@folders")
     }
@@ -270,7 +268,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         self.filesDict[textField.text!] = []
                         
                         self.saveData.set(self.filesDict, forKey: "@dictData")
-                        
                         self.saveData.set(self.folderNameArray, forKey: "@folders")
                         
                         var movingHeight: CGFloat = 0
@@ -278,16 +275,18 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         if self.searchBar.text!.isEmpty {
                             if self.folderNameArray.count >= self.numberOfCellsInScreen {
                                 movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.folderNameArray.count) - self.view.frame.height
+                                
+                                self.table.scroll(y: movingHeight)
                             }
                         } else {
                             self.assignSearchResult()
                             
                             if self.searchArray.count >= self.numberOfCellsInScreen {
                                 movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
+                                
+                                self.table.scroll(y: movingHeight)
                             }
                         }
-                        
-                        self.table.scroll(y: movingHeight)
                         
                         self.checkIsArrayEmpty()
                         
@@ -433,11 +432,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         switch searchBar.selectedScopeButtonIndex {
         case 0:
             searchArray = folderNameArray.filter {
-                $0.lowercased(with: .current).contains(searchBar.text!.lowercased(with: .current))
+                $0.partialMatch(target: searchBar.text!)
             }
         case 1:
             searchArray = folderNameArray.filter {
-                $0.lowercased(with: .current) == searchBar.text!.lowercased(with: .current)
+                $0.exactMatch(target: searchBar.text!)
             }
         default:
             break
