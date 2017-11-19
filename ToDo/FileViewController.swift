@@ -426,21 +426,36 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             preferredStyle: .alert)
         
         let deleteAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DELETE", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
-            let files = self.filesDict[self.openedFolder]!
-            
-            if !files.isEmpty {
-                for fileName in files {
-                    self.removeAllObject(key: self.openedFolder + "@" + fileName)
+            if self.searchBar.text!.isEmpty {
+                let files = self.filesDict[self.openedFolder]!
+                
+                if !files.isEmpty {
+                    files.forEach({ self.removeAllObject(key: self.openedFolder + "@" + $0) })
+                    
+                    self.filesDict[self.openedFolder] = []
+                    self.searchArray = []
+                    
+                    self.saveData.set(self.filesDict, forKey: "@dictData")
+                    
+                    self.editButton.isEnabled = true
+                    
+                    self.table.reloadData()
                 }
-                
-                self.filesDict[self.openedFolder] = []
-                self.searchArray = []
-                
-                self.saveData.set(self.filesDict, forKey: "@dictData")
-                
-                self.editButton.isEnabled = true
-                
-                self.table.reloadData()
+            } else {
+                if !self.searchArray.isEmpty {
+                    self.searchArray.forEach({ self.removeAllObject(key: self.openedFolder + "@" + $0) })
+                    
+                    for i in self.searchArray {
+                        let index = self.filesDict[self.openedFolder]!.index(of: i)!
+                        self.filesDict[self.openedFolder]?.remove(at: index)
+                        
+                        self.searchArray = []
+                        
+                        self.saveData.set(self.filesDict, forKey: "@dictData")
+                        
+                        self.table.reloadData()
+                    }
+                }
             }
         }
         
@@ -471,7 +486,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         self.view.gestureRecognizers?.removeAll()
     }
-    
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text!.isEmpty {

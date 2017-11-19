@@ -124,7 +124,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     func showsDateParts(_ bool: Bool) {
         dateField.isHidden = !bool
         datePicker.isHidden = !bool
-        dateLabel.isHidden = !bool
     }
     
     func setDate() {
