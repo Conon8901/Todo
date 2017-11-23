@@ -15,6 +15,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet var table: UITableView!
     @IBOutlet var editButton: UIBarButtonItem!
     @IBOutlet var searchBar: UISearchBar!
+    @IBOutlet var pickByDateButton: UIBarButtonItem!
     
     var deleteAllButton: UIBarButtonItem?
     
@@ -36,10 +37,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         table.dataSource = self
         table.delegate = self
+        table.setUp()
         
         searchBar.delegate = self
-        
-        table.setUp()
         searchBar.setUp()
         
         filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
@@ -52,7 +52,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         deleteAllButton?.title = NSLocalizedString("ALERT_TITLE_DELETEALL", comment: "")
         deleteAllButton?.isEnabled = true
-        deleteAllButton?.tintColor = UIColor(white: 1, alpha: 1)
+        deleteAllButton?.tintColor = .white
         
         deleteAllButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(FileViewController.deleteAll))
         
@@ -491,8 +491,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if searchBar.text!.isEmpty {
             searchArray.removeAll()
             searchArray = filesDict[openedFolder]!
+            
+            pickByDateButton.isEnabled = true
         } else {
             assignSearchResult()
+            
+            pickByDateButton.isEnabled = false
         }
         
         checkIsArrayEmpty()
@@ -523,6 +527,123 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @objc func closeKeyboard() {
         searchBar.endEditing(true)
+    }
+    
+    // MARK: - Toolbar
+    
+    fileprivate func extractedFunc() {
+        let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Date") as! DateViewController
+        self.present(nextView, animated: true)
+    }
+    
+    @IBAction func pickByDate() {//searchBarとの併用
+        var tmpArray = [String]()
+        
+        let action = UIAlertController(title: NSLocalizedString("ALERT_TITLE_DATE", comment: ""), message: NSLocalizedString("ALERT_MESSAGE_DATE", comment: ""), preferredStyle: .actionSheet)
+        
+        let year = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_YEAR", comment: ""), style: .default, handler: {
+            (action: UIAlertAction!) in
+            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_YEAR", comment: "")
+            
+            for file in self.filesDict[self.openedFolder]! {
+                let key = self.openedFolder + "@" + file + "@date"
+                if let date = self.saveData.object(forKey: key) as! Date? {
+                    if date.timeIntervalSinceNow < 60*60*24*365 {
+                        tmpArray.append(file)
+                    }
+                }
+            }
+            
+            variables.shared.dateArray = tmpArray
+            
+            self.modalToDate()
+        })
+        
+        let halfYear = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_HALF", comment: ""), style: .default, handler: {
+            (action: UIAlertAction!) in
+            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_HALF", comment: "")
+            
+            for file in self.filesDict[self.openedFolder]! {
+                let key = self.openedFolder + "@" + file + "@date"
+                if let date = self.saveData.object(forKey: key) as! Date? {
+                    if date.timeIntervalSinceNow < 60*60*24*183 {
+                        tmpArray.append(file)
+                    }
+                }
+            }
+            
+            variables.shared.dateArray = tmpArray
+            
+            self.modalToDate()
+        })
+        
+        let month = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_MONTH", comment: ""), style: .default, handler: {
+            (action: UIAlertAction!) in
+            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_MONTH", comment: "")
+            
+            for file in self.filesDict[self.openedFolder]! {
+                let key = self.openedFolder + "@" + file + "@date"
+                if let date = self.saveData.object(forKey: key) as! Date? {
+                    if date.timeIntervalSinceNow < 60*60*24*30 {
+                        tmpArray.append(file)
+                    }
+                }
+            }
+            
+            variables.shared.dateArray = tmpArray
+            
+            self.modalToDate()
+        })
+        
+        let week = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_WEEK", comment: ""), style: .default, handler: {
+            (action: UIAlertAction!) in
+            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_WEEK", comment: "")
+            
+            for file in self.filesDict[self.openedFolder]! {
+                let key = self.openedFolder + "@" + file + "@date"
+                if let date = self.saveData.object(forKey: key) as! Date? {
+                    if date.timeIntervalSinceNow < 60*60*24*7 {
+                        tmpArray.append(file)
+                    }
+                }
+            }
+            
+            variables.shared.dateArray = tmpArray
+            
+            self.modalToDate()
+        })
+        
+        let finished = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_FINISHED", comment: ""), style: .default, handler: {
+            (action: UIAlertAction!) in
+            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_FINISHED", comment: "")
+            
+            for file in self.filesDict[self.openedFolder]! {
+                let key = self.openedFolder + "@" + file + "@date"
+                if let date = self.saveData.object(forKey: key) as! Date? {
+                    if date.timeIntervalSinceNow < 0 {
+                        tmpArray.append(file)
+                    }
+                }
+            }
+            
+            variables.shared.dateArray = tmpArray
+            
+            self.modalToDate()
+        })
+        
+        let cancel = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel, handler: {
+            (action: UIAlertAction!) in
+            
+        })
+        
+        action.addAction(year)
+        action.addAction(halfYear)
+        action.addAction(month)
+        action.addAction(week)
+        action.addAction(finished)
+        action.addAction(cancel)
+        
+        self.present(action, animated: true, completion: nil)
     }
     
     // MARK: - Method
@@ -595,6 +716,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         saveData.set(savedisCheckeded, forKey: post + "@check")
         
         removeAllObject(key: pre)
+    }
+    
+    func modalToDate() {
+        let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Date") as! DateViewController
+        self.present(nextView, animated: true)
     }
     
     // MARK: - Others

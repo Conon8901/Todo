@@ -66,4 +66,8 @@ class variables {
     var isFromListView = false
     
     var movingFileName = ""
+    
+    var condition = ""
+    
+    var dateArray = [String]()
 }

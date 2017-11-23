@@ -16,6 +16,7 @@
 		112E64931EE2D3B80048DB21 /* ToDoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112E64921EE2D3B80048DB21 /* ToDoUITests.swift */; };
 		112E64A11EE2D5680048DB21 /* FileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112E64A01EE2D5680048DB21 /* FileViewController.swift */; };
 		113624131FA8911B00361C93 /* declarations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113624121FA8911B00361C93 /* declarations.swift */; };
+		116A3E241FC43E9E00D4D7C5 /* DateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116A3E231FC43E9E00D4D7C5 /* DateViewController.swift */; };
 		118D15561F5ED85B0091412B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 118D15581F5ED85B0091412B /* Localizable.strings */; };
 		118D15661F629FDF0091412B /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118D15651F629FDF0091412B /* ListViewController.swift */; };
 		11AC14A21F88F76E007CE23D /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 11AC14A41F88F76E007CE23D /* Localizable.stringsdict */; };
@@ -55,6 +56,7 @@
 		112E64941EE2D3B80048DB21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		112E64A01EE2D5680048DB21 /* FileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileViewController.swift; sourceTree = "<group>"; };
 		113624121FA8911B00361C93 /* declarations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = declarations.swift; sourceTree = "<group>"; };
+		116A3E231FC43E9E00D4D7C5 /* DateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateViewController.swift; sourceTree = "<group>"; };
 		118D15571F5ED85B0091412B /* Base */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		118D155B1F5EE4B20091412B /* ja */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		118D155C1F5EEA9E0091412B /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				112E64741EE2D3B80048DB21 /* FolderViewController.swift */,
 				112E64A01EE2D5680048DB21 /* FileViewController.swift */,
 				118D15651F629FDF0091412B /* ListViewController.swift */,
+				116A3E231FC43E9E00D4D7C5 /* DateViewController.swift */,
 				11C2FAF91F4E9FA30080A9B2 /* MemoViewController.swift */,
 				113624121FA8911B00361C93 /* declarations.swift */,
 				112E64761EE2D3B80048DB21 /* Main.storyboard */,
@@ -309,6 +312,7 @@
 			files = (
 				113624131FA8911B00361C93 /* declarations.swift in Sources */,
 				11C2FAFA1F4E9FA30080A9B2 /* MemoViewController.swift in Sources */,
+				116A3E241FC43E9E00D4D7C5 /* DateViewController.swift in Sources */,
 				112E64A11EE2D5680048DB21 /* FileViewController.swift in Sources */,
 				112E64751EE2D3B80048DB21 /* FolderViewController.swift in Sources */,
 				118D15661F629FDF0091412B /* ListViewController.swift in Sources */,
