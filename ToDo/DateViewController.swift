@@ -11,7 +11,6 @@ import UIKit
 class DateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet var table: UITableView!
-    @IBOutlet var navBar: UINavigationBar!
     
     var dateArray = [String]()
     
@@ -23,14 +22,13 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
         table.rowHeight = 60
         table.allowsSelection = false
         
-        navBar.topItem?.title = variables.shared.condition
+        navigationItem.title = variables.shared.condition
         
         dateArray = variables.shared.dateArray
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

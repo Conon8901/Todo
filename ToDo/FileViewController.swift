@@ -613,9 +613,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.modalToDate()
         })
         
-        let finished = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_FINISHED", comment: ""), style: .default, handler: {
+        let finished = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_TIMESUP", comment: ""), style: .default, handler: {
             (action: UIAlertAction!) in
-            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_FINISHED", comment: "")
+            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_TIMESUP", comment: "")
             
             for file in self.filesDict[self.openedFolder]! {
                 let key = self.openedFolder + "@" + file + "@date"
@@ -719,7 +719,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func modalToDate() {
-        let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Date") as! DateViewController
+        let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Date") as! UINavigationController
         self.present(nextView, animated: true)
     }
     
