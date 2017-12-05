@@ -379,8 +379,8 @@
                                     <action selector="switchChanged" destination="cFD-wo-LKb" eventType="valueChanged" id="zdc-gd-1bW"/>
                                 </connections>
                             </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="日時" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A0h-Rs-Qai">
-                                <rect key="frame" x="128" y="323" width="60" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="期限" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A0h-Rs-Qai">
+                                <rect key="frame" x="16" y="323" width="157" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -417,7 +417,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2876" y="134"/>
+            <point key="canvasLocation" x="2876" y="133.5832083958021"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="cNz-Bm-z0t">

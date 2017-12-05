@@ -25,7 +25,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     var key = ""
     
-    // MARK: - Basics
+    // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +42,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         placeholder.text = NSLocalizedString("LABEL_NOTE", comment: "")
         
-        dateLabel.text = NSLocalizedString("LABEL_LIMIT", comment: "")
+        dateLabel.text = NSLocalizedString("LABEL_DUE", comment: "")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -111,7 +111,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         saveData.set(dateSwitch.isOn, forKey: key + "@ison")
     }
     
-    // MARK: - Method
+    // MARK: - Methods
     
     func chackShowPlaceHolder() {
         if memoTextView.text.isEmpty {

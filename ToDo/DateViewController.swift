@@ -10,6 +10,8 @@ import UIKit
 
 class DateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    // MARK: - Declare
+    
     @IBOutlet var table: UITableView!
     
     var dateArray = [String]()
@@ -26,10 +28,12 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         dateArray = variables.shared.dateArray
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dateArray.count
@@ -42,6 +46,8 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         return cell!
     }
+    
+    // MARK: - Others
     
     @IBAction func tapCancel() {
         self.dismiss(animated: true, completion: nil)

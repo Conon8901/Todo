@@ -30,7 +30,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var numberOfCellsInScreen = 0
     
-    // MARK: - Basics
+    // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -613,9 +613,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.modalToDate()
         })
         
-        let finished = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_TIMESUP", comment: ""), style: .default, handler: {
+        let finished = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_OVER", comment: ""), style: .default, handler: {
             (action: UIAlertAction!) in
-            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_TIMESUP", comment: "")
+            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_OVER", comment: "")
             
             for file in self.filesDict[self.openedFolder]! {
                 let key = self.openedFolder + "@" + file + "@date"
@@ -646,7 +646,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.present(action, animated: true, completion: nil)
     }
     
-    // MARK: - Method
+    // MARK: - Methods
     
     func showalert(message: String) {
         let alert = UIAlertController(

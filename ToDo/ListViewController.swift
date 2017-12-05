@@ -25,7 +25,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var numberOfCellsInScreen = 0
     
-    // MARK: - Basics
+    // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -327,7 +327,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         searchBar.endEditing(true)
     }
     
-    // MARK: - Method
+    // MARK: - Methods
     
     func showalert(message: String) {
         let alert = UIAlertController(

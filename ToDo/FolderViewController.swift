@@ -27,7 +27,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     var numberOfCellsInScreen = 0
     
-    // MARK: - Basics
+    // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -390,7 +390,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         searchBar.endEditing(true)
     }
     
-    // MARK: - Method
+    // MARK: - Methods
     
     func showalert(message: String) {
         let alert = UIAlertController(
