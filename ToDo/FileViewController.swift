@@ -511,8 +511,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             checkIsArrayEmpty()
             
             table.reloadData()
-            
-            searchBar.becomeFirstResponder()
         }
     }
     
@@ -531,12 +529,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     // MARK: - Toolbar
     
-    fileprivate func extractedFunc() {
-        let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Date") as! DateViewController
-        self.present(nextView, animated: true)
-    }
-    
-    @IBAction func pickByDate() {//searchBarとの併用
+    @IBAction func pickByDate() {
         var tmpArray = [String]()
         
         let action = UIAlertController(title: NSLocalizedString("ALERT_TITLE_DATE", comment: ""), message: NSLocalizedString("ALERT_MESSAGE_DATE", comment: ""), preferredStyle: .actionSheet)

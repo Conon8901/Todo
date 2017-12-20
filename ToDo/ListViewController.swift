@@ -311,8 +311,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             showSearchResult()
             
             table.reloadData()
-            
-            searchBar.becomeFirstResponder()
         }
     }
     
