@@ -62,9 +62,11 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             showsDateParts(false)
         }
         
-        setDate()
+        setDatePicker()
         
-        chackShowPlaceHolder()
+        setDateText()
+        
+        checkShowPlaceHolder()
         
         navigationItem.title = fileName
     }
@@ -80,21 +82,9 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - TextView
     
     func textViewDidChange(_ textView: UITextView) {
-        chackShowPlaceHolder()
+        checkShowPlaceHolder()
         
         saveData.set(memoTextView.text!, forKey: key + "@memo")
-    }
-    
-    // MARK: DatePicker
-    
-    @IBAction func changeDate() {
-        if datePicker.date < Date() {
-            setDateText(span: Date().timeIntervalSince(datePicker.date))
-        } else {
-            dateField.text = formatter.string(from: datePicker.date)
-        }
-        
-        saveData.set(datePicker.date, forKey: key + "@date")
     }
     
     // MARK: Switch
@@ -103,7 +93,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         if dateSwitch.isOn {
             showsDateParts(true)
             
-            setDate()
+            setDatePicker()
         } else {
             showsDateParts(false)
         }
@@ -113,7 +103,17 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - Methods
     
-    func chackShowPlaceHolder() {
+    func setDateText() {
+        if datePicker.date < Date() {
+            setDateText(span: Date().timeIntervalSince(datePicker.date))
+        } else {
+            dateField.text = formatter.string(from: datePicker.date)
+        }
+        
+        saveData.set(datePicker.date, forKey: key + "@date")
+    }
+    
+    func checkShowPlaceHolder() {
         if memoTextView.text.isEmpty {
             placeholder.isHidden = false
         } else {
@@ -126,7 +126,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         datePicker.isHidden = !bool
     }
     
-    func setDate() {
+    func setDatePicker() {
         if saveData.object(forKey: key + "@date") == nil {
             datePicker.date = Date()
             
