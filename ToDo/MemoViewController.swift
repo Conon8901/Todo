@@ -87,6 +87,18 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         saveData.set(memoTextView.text!, forKey: key + "@memo")
     }
     
+    // MARK: DatePicker
+    
+    @IBAction func changeDate() {
+        if datePicker.date < Date() {
+            setDateText(span: Date().timeIntervalSince(datePicker.date))
+        } else {
+            dateField.text = formatter.string(from: datePicker.date)
+        }
+        
+        saveData.set(datePicker.date, forKey: key + "@date")
+    }
+
     // MARK: Switch
     
     @IBAction func switchChanged() {
