@@ -374,6 +374,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             checkIsArrayEmpty()
             
             table.reloadData()
+            
+            searchBar.becomeFirstResponder()
         }
     }
     

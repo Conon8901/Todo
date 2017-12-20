@@ -62,11 +62,9 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             showsDateParts(false)
         }
         
-        setDatePicker()
+        setDate()
         
-        setDateText()
-        
-        checkShowPlaceHolder()
+        chackShowPlaceHolder()
         
         navigationItem.title = fileName
     }
@@ -82,7 +80,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - TextView
     
     func textViewDidChange(_ textView: UITextView) {
-        checkShowPlaceHolder()
+        chackShowPlaceHolder()
         
         saveData.set(memoTextView.text!, forKey: key + "@memo")
     }
@@ -90,26 +88,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: DatePicker
     
     @IBAction func changeDate() {
-        setDateText()
-    }
-    
-    // MARK: Switch
-    
-    @IBAction func switchChanged() {
-        if dateSwitch.isOn {
-            showsDateParts(true)
-            
-            setDatePicker()
-        } else {
-            showsDateParts(false)
-        }
-        
-        saveData.set(dateSwitch.isOn, forKey: key + "@ison")
-    }
-    
-    // MARK: - Methods
-    
-    func setDateText() {
         if datePicker.date < Date() {
             setDateText(span: Date().timeIntervalSince(datePicker.date))
         } else {
@@ -119,7 +97,23 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         saveData.set(datePicker.date, forKey: key + "@date")
     }
     
-    func checkShowPlaceHolder() {
+    // MARK: Switch
+    
+    @IBAction func switchChanged() {
+        if dateSwitch.isOn {
+            showsDateParts(true)
+            
+            setDate()
+        } else {
+            showsDateParts(false)
+        }
+        
+        saveData.set(dateSwitch.isOn, forKey: key + "@ison")
+    }
+    
+    // MARK: - Methods
+    
+    func chackShowPlaceHolder() {
         if memoTextView.text.isEmpty {
             placeholder.isHidden = false
         } else {
@@ -132,7 +126,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         datePicker.isHidden = !bool
     }
     
-    func setDatePicker() {
+    func setDate() {
         if saveData.object(forKey: key + "@date") == nil {
             datePicker.date = Date()
             
