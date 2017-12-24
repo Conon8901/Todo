@@ -367,16 +367,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.reloadData()
     }
     
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        if !searchBar.text!.isEmpty {
-            assignSearchResult()
-            
-            checkIsArrayEmpty()
-            
-            table.reloadData()
-        }
-    }
-    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         searchBar.resignFirstResponder()
@@ -427,17 +417,22 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     func assignSearchResult() {
         searchArray.removeAll()
         
-        switch searchBar.selectedScopeButtonIndex {
-        case 0:
-            searchArray = folderNameArray.filter {
-                $0.partialMatch(target: searchBar.text!)
+        if saveData.object(forKey: "@dictData") != nil {
+            let dict = saveData.object(forKey: "@dictData") as! [String: [String]]
+            
+            for key in dict.keys {
+                var hoge = false
+                
+                for value in dict[key]! {
+                    if value.partialMatch(target: searchBar.text!) {
+                        hoge = true
+                    }
+                }
+                
+                if hoge {
+                    searchArray.append(key)
+                }
             }
-        case 1:
-            searchArray = folderNameArray.filter {
-                $0.exactMatch(target: searchBar.text!)
-            }
-        default:
-            break
         }
     }
     

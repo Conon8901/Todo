@@ -41,11 +41,6 @@ extension UISearchBar {
     func setUp() {
         self.enablesReturnKeyAutomatically = false
         self.autocapitalizationType = .none
-        
-        let partial = NSLocalizedString("SCOPE_PARTIAL", comment: "")
-        let exact = NSLocalizedString("SCOPE_EXACT", comment: "")
-        
-        self.scopeButtonTitles = [partial, exact]
     }
 }
 
