@@ -30,10 +30,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         table.dataSource = self
         table.delegate = self
+        table.setUp()
         
         searchBar.delegate = self
-        
-        table.setUp()
         searchBar.setUp()
         
         editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")

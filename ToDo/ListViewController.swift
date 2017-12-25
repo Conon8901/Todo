@@ -28,7 +28,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         table.dataSource = self
         table.delegate = self
-        
         table.setUp()
         
         listNameArray = saveData.object(forKey: "@folders") as! [String]

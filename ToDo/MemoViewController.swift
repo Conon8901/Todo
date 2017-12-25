@@ -13,7 +13,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - Declare
     
     @IBOutlet var memoTextView: UITextView!
-    @IBOutlet var placeholder: UILabel!
     @IBOutlet var dateSwitch: UISwitch!
     @IBOutlet var dateField: UITextField!
     @IBOutlet var datePicker: UIDatePicker!
@@ -31,7 +30,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         
         memoTextView.delegate = self
-        
         memoTextView.setUp()
         
         datePicker.minimumDate = Date()
@@ -39,8 +37,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         formatter.dateStyle = .short
         formatter.timeStyle = .short
-        
-        placeholder.text = NSLocalizedString("LABEL_NOTE", comment: "")
         
         dateLabel.text = NSLocalizedString("LABEL_DUE", comment: "")
     }
@@ -66,8 +62,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         setDateText()
         
-        checkShowPlaceHolder()
-        
         navigationItem.title = fileName
     }
     
@@ -82,8 +76,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - TextView
     
     func textViewDidChange(_ textView: UITextView) {
-        checkShowPlaceHolder()
-        
         saveData.set(memoTextView.text!, forKey: key + "@memo")
     }
     
@@ -123,14 +115,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         }
         
         saveData.set(datePicker.date, forKey: key + "@date")
-    }
-    
-    func checkShowPlaceHolder() {
-        if memoTextView.text.isEmpty {
-            placeholder.isHidden = false
-        } else {
-            placeholder.isHidden = true
-        }
     }
     
     func showsDateParts(_ bool: Bool) {
