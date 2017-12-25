@@ -19,11 +19,6 @@ extension String {
 }
 
 extension UITableView {
-    func scroll(x: CGFloat = 0, y: CGFloat) {
-        let offset = CGPoint(x: Int(x), y: Int(y))
-        setContentOffset(offset, animated: true)
-    }
-    
     func setUp() {
         self.rowHeight = 60
         self.keyboardDismissMode = .interactive

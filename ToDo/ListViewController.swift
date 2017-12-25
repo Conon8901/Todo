@@ -13,7 +13,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - Declare
     
     @IBOutlet var table: UITableView!
-    @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var navBar: UINavigationBar!
     
     var saveData = UserDefaults.standard
@@ -21,9 +20,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var filesDict = [String: [String]]()
     
     var listNameArray = [String]()
-    var searchArray = [String]()
-    
-    var numberOfCellsInScreen = 0
     
     // MARK: - LifeCycle
     
@@ -33,16 +29,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.dataSource = self
         table.delegate = self
         
-        searchBar.delegate = self
-        
         table.setUp()
-        searchBar.setUp()
         
         listNameArray = saveData.object(forKey: "@folders") as! [String]
         
         filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
-        
-        numberOfCellsInScreen = Int(ceil((view.frame.height - (UIApplication.shared.statusBarFrame.height + navBar.frame.height + searchBar.frame.height)) / table.rowHeight))
         
         navBar.topItem?.title = NSLocalizedString("NAV_TITLE_FOLDER", comment: "")
     }
@@ -54,21 +45,13 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchBar.text!.isEmpty {
-            return listNameArray.count
-        } else {
-            return searchArray.count
-        }
+        return listNameArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "List")
         
-        if searchBar.text!.isEmpty {
-            cell?.textLabel?.text = listNameArray[indexPath.row]
-        } else {
-            cell?.textLabel?.text = searchArray[indexPath.row]
-        }
+        cell?.textLabel?.text = listNameArray[indexPath.row]
         
         cell?.textLabel?.numberOfLines = 0
         
@@ -86,18 +69,10 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         let folderName = saveData.object(forKey: "@folderName") as! String
         
-        if searchBar.text!.isEmpty {
-            if listNameArray[indexPath.row] != folderName {
-                return indexPath
-            } else {
-                return nil
-            }
+        if listNameArray[indexPath.row] != folderName {
+            return indexPath
         } else {
-            if searchArray[indexPath.row] != folderName {
-                return indexPath
-            } else {
-                return nil
-            }
+            return nil
         }
     }
     
@@ -107,104 +82,53 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let preKey = preFolderName + "@" + fileName
         
-        if searchBar.text!.isEmpty {
-            let fileIndex = filesDict[listNameArray[indexPath.row]]!.index(of: fileName)
+        let fileIndex = filesDict[listNameArray[indexPath.row]]!.index(of: fileName)
+        
+        let postKey = listNameArray[indexPath.row] + "@" + fileName
+        
+        if fileIndex == nil {
+            filesDict[listNameArray[indexPath.row]]!.append(fileName)
             
-            let postKey = listNameArray[indexPath.row] + "@" + fileName
+            let index = filesDict[preFolderName]!.index(of: fileName)!
+            filesDict[preFolderName]?.remove(at: index)
             
-            if fileIndex == nil {
-                filesDict[listNameArray[indexPath.row]]!.append(fileName)
-                
-                let index = filesDict[preFolderName]!.index(of: fileName)!
-                filesDict[preFolderName]?.remove(at: index)
-                
-                saveData.set(filesDict, forKey: "@dictData")
-                
-                resaveDate(pre: preKey, post: postKey)
-                
-                variables.shared.isFromListView = true
-                
-                self.dismiss(animated: true, completion: nil)
-            } else {
-                let alert = UIAlertController(
-                    title: NSLocalizedString("ALERT_TITLE_REPLACE", comment: ""),
-                    message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FILE", comment: ""),
-                    preferredStyle: .alert)
-                
-                let replaceAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_REPLACE", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
-                    self.filesDict[self.listNameArray[indexPath.row]]!.remove(at: fileIndex!)
-                    self.filesDict[self.listNameArray[indexPath.row]]!.append(fileName)
-                    
-                    let index = self.filesDict[preFolderName]!.index(of: fileName)!
-                    self.filesDict[preFolderName]?.remove(at: index)
-                    
-                    self.saveData.set(self.filesDict, forKey: "@dictData")
-                    
-                    self.resaveDate(pre: preKey, post: postKey)
-                    
-                    variables.shared.isFromListView = true
-                    
-                    self.dismiss(animated: true, completion: nil)
-                }
-                
-                let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
-                    self.table.deselectCell()
-                }
-                
-                alert.addAction(cancelAction)
-                alert.addAction(replaceAction)
-                
-                present(alert, animated: true, completion: nil)
-            }
+            saveData.set(filesDict, forKey: "@dictData")
+            
+            resaveDate(pre: preKey, post: postKey)
+            
+            variables.shared.isFromListView = true
+            
+            self.dismiss(animated: true, completion: nil)
         } else {
-            let fileIndex = filesDict[searchArray[indexPath.row]]!.index(of: fileName)
+            let alert = UIAlertController(
+                title: NSLocalizedString("ALERT_TITLE_REPLACE", comment: ""),
+                message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FILE", comment: ""),
+                preferredStyle: .alert)
             
-            let postKey = searchArray[indexPath.row] + "@" + fileName
-            
-            if fileIndex == nil {
-                filesDict[searchArray[indexPath.row]]!.append(fileName)
+            let replaceAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_REPLACE", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+                self.filesDict[self.listNameArray[indexPath.row]]!.remove(at: fileIndex!)
+                self.filesDict[self.listNameArray[indexPath.row]]!.append(fileName)
                 
-                let index = filesDict[preFolderName]!.index(of: fileName)!
-                filesDict[preFolderName]?.remove(at: index)
+                let index = self.filesDict[preFolderName]!.index(of: fileName)!
+                self.filesDict[preFolderName]?.remove(at: index)
                 
-                saveData.set(filesDict, forKey: "@dictData")
+                self.saveData.set(self.filesDict, forKey: "@dictData")
                 
-                resaveDate(pre: preKey, post: postKey)
+                self.resaveDate(pre: preKey, post: postKey)
                 
                 variables.shared.isFromListView = true
                 
                 self.dismiss(animated: true, completion: nil)
-            } else {
-                let alert = UIAlertController(
-                    title: NSLocalizedString("ALERT_TITLE_REPLACE", comment: ""),
-                    message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FILE", comment: ""),
-                    preferredStyle: .alert)
-                
-                let replaceAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_REPLACE", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
-                    self.filesDict[self.searchArray[indexPath.row]]!.remove(at: fileIndex!)
-                    self.filesDict[self.searchArray[indexPath.row]]!.append(fileName)
-                    
-                    let index = self.filesDict[preFolderName]!.index(of: fileName)!
-                    self.filesDict[preFolderName]?.remove(at: index)
-                    
-                    self.saveData.set(self.filesDict, forKey: "@dictData")
-                    
-                    self.resaveDate(pre: preKey, post: postKey)
-                    
-                    variables.shared.isFromListView = true
-                    
-                    self.dismiss(animated: true, completion: nil)
-                }
-                
-                let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
-                    self.table.deselectCell()
-                }
-                
-                alert.addAction(cancelAction)
-                alert.addAction(replaceAction)
-                
-                present(alert, animated: true, completion: nil)
             }
+            
+            let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+                self.table.deselectCell()
+            }
+            
+            alert.addAction(cancelAction)
+            alert.addAction(replaceAction)
+            
+            present(alert, animated: true, completion: nil)
         }
     }
     
@@ -228,22 +152,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.saveData.set(self.filesDict, forKey: "@dictData")
                         self.saveData.set(self.listNameArray, forKey: "@folders")
-                        
-                        if self.searchBar.text!.isEmpty {
-                            if self.listNameArray.count >= self.numberOfCellsInScreen {
-                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.listNameArray.count) - self.view.frame.height
-                                
-                                self.table.scroll(y: movingHeight)
-                            }
-                        } else {
-                            if self.searchArray.count >= self.numberOfCellsInScreen {
-                                self.showSearchResult()
-                                
-                                let movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.listNameArray.count) - self.view.frame.height
-                                
-                                self.table.scroll(y: movingHeight)
-                            }
-                        }
                         
                         self.table.reloadData()
                     } else {
@@ -276,55 +184,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         present(alert, animated: true, completion: nil)
     }
     
-    // MARK: - searchBar
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.endEditing(true)
-    }
-    
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(true, animated: true)
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ListViewController.closeKeyboard))
-        self.view.addGestureRecognizer(tapGesture)
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchBar.setShowsCancelButton(false, animated: true)
-        
-        self.view.gestureRecognizers?.removeAll()
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.text!.isEmpty {
-            searchArray.removeAll()
-            searchArray = listNameArray
-        } else {
-            showSearchResult()
-        }
-        
-        table.reloadData()
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        if !searchBar.text!.isEmpty {
-            showSearchResult()
-            
-            table.reloadData()
-        }
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = ""
-        searchBar.resignFirstResponder()
-        
-        table.reloadData()
-    }
-    
-    @objc func closeKeyboard() {
-        searchBar.endEditing(true)
-    }
-    
     // MARK: - Methods
     
     func showalert(message: String) {
@@ -336,23 +195,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         alert.addAction(UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CLOSE", comment: ""), style: .default))
         
         self.present(alert, animated: true, completion: nil)
-    }
-    
-    func showSearchResult() {
-        searchArray.removeAll()
-        
-        switch searchBar.selectedScopeButtonIndex {
-        case 0:
-            searchArray = listNameArray.filter {
-                $0.partialMatch(target: searchBar.text!)
-            }
-        case 1:
-            searchArray = listNameArray.filter {
-                $0.exactMatch(target: searchBar.text!)
-            }
-        default:
-            break
-        }
     }
     
     func resaveDate(pre: String, post: String) {

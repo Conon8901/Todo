@@ -21,13 +21,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var saveData = UserDefaults.standard
     
     var filesDict = [String: [String]]()
-    var searchArray = [String]()
     
     var openedFolder = ""
-    
-    var statusNavHeight: CGFloat = 0.0
-    
-    var numberOfCellsInScreen = 0
     
     // MARK: - LifeCycle
     
@@ -42,8 +37,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         openedFolder = saveData.object(forKey: "@folderName") as! String
         
-        searchArray = filesDict[openedFolder]!
-        
         editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
         
         deleteAllButton?.title = NSLocalizedString("ALERT_TITLE_DELETEALL", comment: "")
@@ -53,10 +46,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         deleteAllButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(FileViewController.deleteAll))
         
         self.navigationItem.leftBarButtonItem = nil
-        
-        statusNavHeight = UIApplication.shared.statusBarFrame.height + self.navigationController!.navigationBar.frame.height + self.navigationController!.toolbar.frame.height
-        
-        numberOfCellsInScreen = Int(ceil((view.frame.height - statusNavHeight) / table.rowHeight))
         
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.putCheckmark))
         table.addGestureRecognizer(longPressRecognizer)
@@ -206,10 +195,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             self.removeAllObject(key: key)
             
-            if self.filesDict[self.openedFolder]!.count < self.numberOfCellsInScreen {
-                self.table.scroll(y: 0)
-            }
-            
             self.checkIsArrayEmpty()
         }
         
@@ -261,14 +246,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.saveData.set(false, forKey: key + "@check")
                         
                         self.saveData.set(self.filesDict, forKey: "@dictData")
-                        
-                        var movingHeight: CGFloat = 0
-                        
-                        if self.filesDict[self.openedFolder]!.count >= self.numberOfCellsInScreen {
-                            movingHeight = self.table.rowHeight * CGFloat(self.filesDict[self.openedFolder]!.count) - self.view.frame.height
-                            
-                            self.table.scroll(y: movingHeight)
-                        }
                         
                         self.checkIsArrayEmpty()
                         
@@ -362,19 +339,18 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let deleteAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DELETE", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
             let files = self.filesDict[self.openedFolder]!
+            
+            if !files.isEmpty {
+                files.forEach({ self.removeAllObject(key: self.openedFolder + "@" + $0) })
                 
-                if !files.isEmpty {
-                    files.forEach({ self.removeAllObject(key: self.openedFolder + "@" + $0) })
-                    
-                    self.filesDict[self.openedFolder] = []
-                    self.searchArray = []
-                    
-                    self.saveData.set(self.filesDict, forKey: "@dictData")
-                    
-                    self.editButton.isEnabled = true
-                    
-                    self.table.reloadData()
-                }
+                self.filesDict[self.openedFolder] = []
+                
+                self.saveData.set(self.filesDict, forKey: "@dictData")
+                
+                self.editButton.isEnabled = true
+                
+                self.table.reloadData()
+            }
         }
         
         let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
@@ -513,10 +489,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func checkIsArrayEmpty() {
         if filesDict[openedFolder]!.isEmpty {
-                editButton.isEnabled = false
-            } else {
-                editButton.isEnabled = true
-            }
+            editButton.isEnabled = false
+        } else {
+            editButton.isEnabled = true
+        }
     }
     
     func removeAllObject(key: String) {

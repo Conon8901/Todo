@@ -23,10 +23,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     var folderNameArray = [String]()
     var searchArray = [String]()
     
-    var statusNavHeight: CGFloat = 0.0
-    
-    var numberOfCellsInScreen = 0
-    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -39,10 +35,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         table.setUp()
         searchBar.setUp()
-        
-        statusNavHeight = UIApplication.shared.statusBarFrame.height + self.navigationController!.navigationBar.frame.height
-        
-        numberOfCellsInScreen = Int(ceil((view.frame.height - (statusNavHeight + searchBar.frame.height)) / table.rowHeight))
         
         editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
         
@@ -233,10 +225,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             saveData.set(folderNameArray, forKey: "@folders")
             
             checkIsArrayEmpty()
-            
-            if folderNameArray.count < numberOfCellsInScreen {
-                table.scroll(y: -statusNavHeight)
-            }
         }
     }
     
@@ -269,24 +257,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         self.saveData.set(self.filesDict, forKey: "@dictData")
                         self.saveData.set(self.folderNameArray, forKey: "@folders")
-                        
-                        var movingHeight: CGFloat = 0
-                        
-                        if self.searchBar.text!.isEmpty {
-                            if self.folderNameArray.count >= self.numberOfCellsInScreen {
-                                movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.folderNameArray.count) - self.view.frame.height
-                                
-                                self.table.scroll(y: movingHeight)
-                            }
-                        } else {
-                            self.assignSearchResult()
-                            
-                            if self.searchArray.count >= self.numberOfCellsInScreen {
-                                movingHeight = self.searchBar.frame.height + self.table.rowHeight * CGFloat(self.searchArray.count) - self.view.frame.height
-                                
-                                self.table.scroll(y: movingHeight)
-                            }
-                        }
                         
                         self.checkIsArrayEmpty()
                         

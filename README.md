@@ -4,5 +4,7 @@
 
     アイコン
     レイアウト
+    スクロール
+    autolayout
     CoreData
     SearchController
