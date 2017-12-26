@@ -34,6 +34,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         searchBar.delegate = self
         searchBar.setUp()
+        searchBar.placeholder = NSLocalizedString("SEARCH_PLACEHOLDER", comment: "")
         
         editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
         
