@@ -3,8 +3,7 @@
 その他
 
     アイコン
-    レイアウト
+    デザイン
     スクロール
-    autolayout
     CoreData
     SearchController

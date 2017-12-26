@@ -153,6 +153,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.saveData.set(self.listNameArray, forKey: "@folders")
                         
                         self.table.reloadData()
+                        
+                        self.table.scrollToRow(at: [0,self.filesDict.keys.count-1], at: .bottom, animated: true)
                     } else {
                         self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                         

@@ -186,10 +186,16 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             present(alert, animated: true, completion: nil)
         } else {
+            variables.shared.includingFiles.removeAll()
+            
             if searchBar.text!.isEmpty {
                 saveData.set(folderNameArray[indexPath.row], forKey: "@folderName")
             } else {
                 saveData.set(searchArray[indexPath.row], forKey: "@folderName")
+                
+                variables.shared.includingFiles = filesDict[folderNameArray[indexPath.row]]!.filter({
+                    $0.partialMatch(target: searchBar.text!)
+                })
             }
             
             let nextView = self.storyboard!.instantiateViewController(withIdentifier: "File") as! FileViewController
@@ -218,7 +224,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 searchArray.remove(at: indexPath.row)
             }
             
-            tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
+            tableView.reloadData()
             
             saveData.set(filesDict, forKey: "@dictData")
             saveData.set(folderNameArray, forKey: "@folders")
@@ -260,6 +266,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         self.checkIsArrayEmpty()
                         
                         self.table.reloadData()
+                        
+                        self.table.scrollToRow(at: [0,self.filesDict.keys.count-1], at: .bottom, animated: true)
                     } else {
                         self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                         
@@ -390,15 +398,15 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             let dict = saveData.object(forKey: "@dictData") as! [String: [String]]
             
             for key in dict.keys {
-                var hoge = false
+                var isIncluding = false
                 
                 for value in dict[key]! {
                     if value.partialMatch(target: searchBar.text!) {
-                        hoge = true
+                        isIncluding = true
                     }
                 }
                 
-                if hoge {
+                if isIncluding {
                     searchArray.append(key)
                 }
             }

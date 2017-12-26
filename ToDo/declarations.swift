@@ -12,10 +12,6 @@ extension String {
     func partialMatch(target: String) -> Bool {
         return self.lowercased(with: .current).contains(target.lowercased(with: .current))
     }
-    
-    func exactMatch(target: String) -> Bool {
-        return self.lowercased(with: .current) == target.lowercased(with: .current)
-    }
 }
 
 extension UITableView {
@@ -56,6 +52,8 @@ class variables {
     var isFromListView = false
     
     var movingFileName = ""
+    
+    var includingFiles = [String]()
     
     var condition = ""
     

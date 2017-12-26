@@ -109,6 +109,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         }
         
+        let searcharray = variables.shared.includingFiles
+        
+        if searcharray.index(of: fileName) != nil {
+            cell?.backgroundColor = UIColor(white: 224/255, alpha: 1)
+        } else {
+            cell?.backgroundColor = .white
+        }
+        
         return cell!
     }
     
@@ -189,7 +197,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             self.filesDict[self.openedFolder]?.remove(at: indexPath.row)
             
-            tableView.deleteRows(at: [indexPath as IndexPath], with: .automatic)
+            tableView.reloadData()
             
             self.saveData.set(self.filesDict, forKey: "@dictData")
             
@@ -250,6 +258,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.checkIsArrayEmpty()
                         
                         self.table.reloadData()
+                        
+                        self.table.scrollToRow(at: [0,self.filesDict[self.openedFolder]!.count-1], at: .bottom, animated: true)
+                        
                     } else {
                         self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                         
