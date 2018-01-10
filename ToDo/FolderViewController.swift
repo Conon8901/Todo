@@ -22,6 +22,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     var folderNameArray = [String]()
     var searchArray = [String]()
+    var searchDict = [String: [String]]()
     
     // MARK: - LifeCycle
     
@@ -88,8 +89,18 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         if searchBar.text!.isEmpty {
             cell?.textLabel?.text = folderNameArray[indexPath.row]
+            
+            cell?.detailTextLabel?.text = ""
         } else {
             cell?.textLabel?.text = searchArray[indexPath.row]
+            
+            var includingFiles = ""
+            for files in searchDict[cell!.textLabel!.text!]! {
+                includingFiles += files + ", "
+            }
+            includingFiles = String(includingFiles.prefix(includingFiles.count - 2))
+            
+            cell?.detailTextLabel?.text = includingFiles
         }
         
         cell?.textLabel?.numberOfLines = 0
@@ -194,9 +205,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             } else {
                 saveData.set(searchArray[indexPath.row], forKey: "@folderName")
                 
-                variables.shared.includingFiles = filesDict[folderNameArray[indexPath.row]]!.filter({
-                    $0.partialMatch(target: searchBar.text!)
-                })
+                variables.shared.includingFiles = searchDict[searchArray[indexPath.row]]!
             }
             
             let nextView = self.storyboard!.instantiateViewController(withIdentifier: "File") as! FileViewController
@@ -268,7 +277,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         self.table.reloadData()
                         
-                        self.table.scrollToRow(at: [0,self.filesDict.keys.count-1], at: .bottom, animated: true)
+                        self.table.scrollToRow(at: [0,self.folderNameArray.count-1], at: .bottom, animated: true)
                     } else {
                         self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                         
@@ -394,6 +403,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func assignSearchResult() {
         searchArray.removeAll()
+        searchDict.removeAll()
         
         if saveData.object(forKey: "@dictData") != nil {
             let dict = saveData.object(forKey: "@dictData") as! [String: [String]]
@@ -404,6 +414,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 for value in dict[key]! {
                     if value.partialMatch(target: searchBar.text!) {
                         isIncluding = true
+                        
+                        if searchDict[key] == nil {
+                            searchDict[key] = [value]
+                        } else {
+                            searchDict[key]?.append(value)
+                        }
                     }
                 }
                 
