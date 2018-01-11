@@ -408,7 +408,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         if saveData.object(forKey: "@dictData") != nil {
             let dict = saveData.object(forKey: "@dictData") as! [String: [String]]
             
-            for key in dict.keys {
+            for key in folderNameArray {
                 var isIncluding = false
                 
                 for value in dict[key]! {
