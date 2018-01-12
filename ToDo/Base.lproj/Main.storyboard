@@ -5,6 +5,8 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -372,7 +374,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="oc5-h8-qBm">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="メモ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cvE-yM-Cu1">
+                                <rect key="frame" x="72" y="88" width="29" height="17"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="29" id="QiI-s4-qaW"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="メモ" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="oc5-h8-qBm">
                                 <rect key="frame" x="67" y="80" width="240" height="128"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -428,12 +439,14 @@
                             <constraint firstItem="5cl-b8-eKw" firstAttribute="top" relation="lessThanOrEqual" secondItem="MTr-aY-Twc" secondAttribute="bottom" constant="30" id="0X3-dl-3wr"/>
                             <constraint firstItem="MTr-aY-Twc" firstAttribute="top" relation="lessThanOrEqual" secondItem="oc5-h8-qBm" secondAttribute="bottom" constant="50" id="3QD-RC-eTo"/>
                             <constraint firstItem="aq9-6o-wXO" firstAttribute="centerX" secondItem="Die-Zc-TEL" secondAttribute="centerX" id="EQE-4j-Kqh"/>
+                            <constraint firstItem="cvE-yM-Cu1" firstAttribute="leading" secondItem="oc5-h8-qBm" secondAttribute="leadingMargin" constant="-3" id="FHc-Zu-3qz"/>
                             <constraint firstItem="oc5-h8-qBm" firstAttribute="centerX" secondItem="Die-Zc-TEL" secondAttribute="centerX" id="I6U-U1-N0U"/>
                             <constraint firstItem="oc5-h8-qBm" firstAttribute="top" relation="lessThanOrEqual" secondItem="1sW-zE-nvK" secondAttribute="bottom" constant="80" id="NjW-BH-BMs"/>
                             <constraint firstAttribute="trailing" secondItem="aq9-6o-wXO" secondAttribute="trailing" id="OFn-xY-DSY"/>
                             <constraint firstItem="oc5-h8-qBm" firstAttribute="top" relation="greaterThanOrEqual" secondItem="1sW-zE-nvK" secondAttribute="bottom" constant="20" id="VLe-Ef-vg9"/>
                             <constraint firstItem="BwM-8w-AQz" firstAttribute="top" relation="lessThanOrEqual" secondItem="aq9-6o-wXO" secondAttribute="bottom" constant="10" id="VXI-Ji-cGO"/>
                             <constraint firstItem="MTr-aY-Twc" firstAttribute="centerX" secondItem="Die-Zc-TEL" secondAttribute="centerX" id="gag-pc-Vln"/>
+                            <constraint firstItem="cvE-yM-Cu1" firstAttribute="top" secondItem="oc5-h8-qBm" secondAttribute="top" constant="8" id="hYU-Tx-w9g"/>
                             <constraint firstItem="aq9-6o-wXO" firstAttribute="top" relation="lessThanOrEqual" secondItem="5cl-b8-eKw" secondAttribute="bottom" constant="15" id="j0r-wN-ujP"/>
                             <constraint firstItem="aq9-6o-wXO" firstAttribute="leading" secondItem="Die-Zc-TEL" secondAttribute="leading" id="sF3-Zo-c6C"/>
                             <constraint firstItem="5cl-b8-eKw" firstAttribute="centerX" secondItem="Die-Zc-TEL" secondAttribute="centerX" id="sPL-Hy-MOu"/>
@@ -449,6 +462,7 @@
                         <outlet property="datePicker" destination="aq9-6o-wXO" id="Vg6-iU-Bsm"/>
                         <outlet property="dateSwitch" destination="HU6-fN-tgQ" id="grg-dZ-GAT"/>
                         <outlet property="memoTextView" destination="oc5-h8-qBm" id="h20-al-HmZ"/>
+                        <outlet property="placeHolder" destination="cvE-yM-Cu1" id="j8Q-ha-T7P"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r6V-NM-7Yf" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -5,6 +5,4 @@
     アイコン
     デザイン
     スクロール
-    CoreData
-    SearchController
     textviewにplaceholderセット

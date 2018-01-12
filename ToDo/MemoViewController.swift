@@ -13,6 +13,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - Declare
     
     @IBOutlet var memoTextView: UITextView!
+    @IBOutlet var placeHolder: UILabel!
     @IBOutlet var dateSwitch: UISwitch!
     @IBOutlet var dateField: UITextField!
     @IBOutlet var datePicker: UIDatePicker!
@@ -38,6 +39,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         formatter.dateStyle = .short
         formatter.timeStyle = .short
         
+        placeHolder.text = NSLocalizedString("LABEL_NOTE", comment: "")
         dateLabel.text = NSLocalizedString("LABEL_DUE", comment: "")
     }
     
@@ -51,6 +53,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         memoTextView.text = saveData.object(forKey: key + "@memo") as! String
         
         dateSwitch.isOn = saveData.object(forKey: key + "@ison") as! Bool
+        
+        checkShowsPlaceHolder()
         
         if dateSwitch.isOn {
             showsDateParts(true)
@@ -76,6 +80,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - TextView
     
     func textViewDidChange(_ textView: UITextView) {
+        checkShowsPlaceHolder()
+        
         saveData.set(memoTextView.text!, forKey: key + "@memo")
     }
     
@@ -120,6 +126,14 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     func showsDateParts(_ bool: Bool) {
         dateField.isHidden = !bool
         datePicker.isHidden = !bool
+    }
+    
+    func checkShowsPlaceHolder() {
+        if memoTextView.text == "" {
+            placeHolder.isHidden = false
+        } else {
+            placeHolder.isHidden = true
+        }
     }
     
     func setDatePicker() {
