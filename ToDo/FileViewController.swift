@@ -197,13 +197,21 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             self.filesDict[self.openedFolder]?.remove(at: indexPath.row)
             
-            tableView.reloadData()
+            tableView.isScrollEnabled = false
             
-            self.saveData.set(self.filesDict, forKey: "@dictData")
+            tableView.scrollToRow(at: [0,indexPath.row-1], at: .bottom, animated: true)
             
-            self.removeAllObject(key: key)
-            
-            self.checkIsArrayEmpty()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                tableView.isScrollEnabled = true
+                
+                tableView.reloadData()
+                
+                self.saveData.set(self.filesDict, forKey: "@dictData")
+                
+                self.removeAllObject(key: key)
+                
+                self.checkIsArrayEmpty()
+            }
         }
         
         deleteButton.backgroundColor = .red

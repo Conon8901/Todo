@@ -234,12 +234,20 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 searchArray.remove(at: indexPath.row)
             }
             
-            tableView.reloadData()
+            table.isScrollEnabled = false
             
-            saveData.set(filesDict, forKey: "@dictData")
-            saveData.set(folderNameArray, forKey: "@folders")
+            table.scrollToRow(at: [0,indexPath.row-1], at: .bottom, animated: true)
             
-            checkIsArrayEmpty()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                tableView.isScrollEnabled = true
+                
+                tableView.reloadData()
+                
+                self.saveData.set(self.filesDict, forKey: "@dictData")
+                self.saveData.set(self.folderNameArray, forKey: "@folders")
+                
+                self.checkIsArrayEmpty()
+            }
         }
     }
     
