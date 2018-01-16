@@ -199,7 +199,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             tableView.isScrollEnabled = false
             
-            tableView.scrollToRow(at: [0,indexPath.row-1], at: .bottom, animated: true)
+            if indexPath.row != 0 {
+                tableView.scrollToRow(at: [0,indexPath.row-1], at: .bottom, animated: true)
+            }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 tableView.isScrollEnabled = true

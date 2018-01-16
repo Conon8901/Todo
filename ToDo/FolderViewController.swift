@@ -236,7 +236,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             table.isScrollEnabled = false
             
-            table.scrollToRow(at: [0,indexPath.row-1], at: .bottom, animated: true)
+            if indexPath.row != 0 {
+                table.scrollToRow(at: [0,indexPath.row-1], at: .bottom, animated: true)
+            }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 tableView.isScrollEnabled = true
