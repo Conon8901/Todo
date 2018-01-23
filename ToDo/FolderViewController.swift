@@ -59,15 +59,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         checkIsArrayEmpty()
         
-        let indexPath = table.indexPathForSelectedRow
-        
-        table.reloadData()
-        
-        table.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
-            self.table.deselectCell()
-        }
+        self.table.deselectCell()
     }
     
     override func didReceiveMemoryWarning() {
@@ -215,7 +207,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            var maxIndex = 0
+            
             if searchBar.text!.isEmpty {
+                maxIndex = folderNameArray.count - 1
+                
                 for fileName in filesDict[folderNameArray[indexPath.row]]! {
                     removeAllObject(key: folderNameArray[indexPath.row] + "@" + fileName)
                 }
@@ -224,6 +220,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 
                 folderNameArray.remove(at: indexPath.row)
             } else {
+                maxIndex = searchArray.count - 1
+                
                 for fileName in filesDict[searchArray[indexPath.row]]! {
                     removeAllObject(key: searchArray[indexPath.row] + "@" + fileName)
                 }
@@ -234,22 +232,20 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 searchArray.remove(at: indexPath.row)
             }
             
-            table.isScrollEnabled = false
+            tableView.reloadData()
             
-            if indexPath.row != 0 {
-                table.scrollToRow(at: [0,indexPath.row-1], at: .bottom, animated: true)
+            if indexPath.row >= maxIndex - 1 {
+                tableView.scrollToRow(at: [0,maxIndex - 1], at: .bottom, animated: true)
+            } else {
+                let visibleLastCell = folderNameArray.index(of: tableView.visibleCells.last!.textLabel!.text!)! - 1
+                
+                tableView.scrollToRow(at: [0,visibleLastCell], at: .bottom, animated: true)
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                tableView.isScrollEnabled = true
-                
-                tableView.reloadData()
-                
-                self.saveData.set(self.filesDict, forKey: "@dictData")
-                self.saveData.set(self.folderNameArray, forKey: "@folders")
-                
-                self.checkIsArrayEmpty()
-            }
+            self.saveData.set(self.filesDict, forKey: "@dictData")
+            self.saveData.set(self.folderNameArray, forKey: "@folders")
+            
+            self.checkIsArrayEmpty()
         }
     }
     

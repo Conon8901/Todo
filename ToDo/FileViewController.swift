@@ -66,15 +66,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         checkIsArrayEmpty()
         
-        let indexPath = table.indexPathForSelectedRow
-        
-        table.reloadData()
-        
-        table.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.0) {
-            self.table.deselectCell()
-        }
+        self.table.deselectCell()
     }
     
     override func didReceiveMemoryWarning() {
@@ -195,25 +187,25 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             key = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
             
+            let maxIndex = self.filesDict[self.openedFolder]!.count - 1
+            
             self.filesDict[self.openedFolder]?.remove(at: indexPath.row)
             
-            tableView.isScrollEnabled = false
+            tableView.reloadData()
             
-            if indexPath.row != 0 {
-                tableView.scrollToRow(at: [0,indexPath.row-1], at: .bottom, animated: true)
+            if indexPath.row >= maxIndex - 1 {
+                tableView.scrollToRow(at: [0,maxIndex - 1], at: .bottom, animated: true)
+            } else {
+                let visibleLastCell = self.filesDict[self.openedFolder]!.index(of: tableView.visibleCells.last!.textLabel!.text!)! - 1
+                
+                tableView.scrollToRow(at: [0,visibleLastCell], at: .bottom, animated: true)
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                tableView.isScrollEnabled = true
-                
-                tableView.reloadData()
-                
-                self.saveData.set(self.filesDict, forKey: "@dictData")
-                
-                self.removeAllObject(key: key)
-                
-                self.checkIsArrayEmpty()
-            }
+            self.saveData.set(self.filesDict, forKey: "@dictData")
+            
+            self.removeAllObject(key: key)
+            
+            self.checkIsArrayEmpty()
         }
         
         deleteButton.backgroundColor = .red
