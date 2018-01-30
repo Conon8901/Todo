@@ -21,6 +21,7 @@
 		118D15661F629FDF0091412B /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118D15651F629FDF0091412B /* ListViewController.swift */; };
 		11AC14A21F88F76E007CE23D /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 11AC14A41F88F76E007CE23D /* Localizable.stringsdict */; };
 		11C2FAFA1F4E9FA30080A9B2 /* MemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C2FAF91F4E9FA30080A9B2 /* MemoViewController.swift */; };
+		11F7B7DF20208B72003A20C9 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 11F7B7DE20208B72003A20C9 /* icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		11AC14AE1F890AE8007CE23D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.stringsdict"; sourceTree = "<group>"; };
 		11AC14AF1F890AEB007CE23D /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ko; path = ko.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		11C2FAF91F4E9FA30080A9B2 /* MemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
+		11F7B7DE20208B72003A20C9 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 		112E64711EE2D3B80048DB21 /* ToDo */ = {
 			isa = PBXGroup;
 			children = (
+				11F7B7DE20208B72003A20C9 /* icon.png */,
 				112E64721EE2D3B80048DB21 /* AppDelegate.swift */,
 				112E64741EE2D3B80048DB21 /* FolderViewController.swift */,
 				112E64A01EE2D5680048DB21 /* FileViewController.swift */,
@@ -283,6 +286,7 @@
 			files = (
 				112E647D1EE2D3B80048DB21 /* LaunchScreen.storyboard in Resources */,
 				118D15561F5ED85B0091412B /* Localizable.strings in Resources */,
+				11F7B7DF20208B72003A20C9 /* icon.png in Resources */,
 				112E647A1EE2D3B80048DB21 /* Assets.xcassets in Resources */,
 				112E64781EE2D3B80048DB21 /* Main.storyboard in Resources */,
 				11AC14A21F88F76E007CE23D /* Localizable.stringsdict in Resources */,
