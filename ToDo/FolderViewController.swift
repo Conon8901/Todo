@@ -235,7 +235,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             tableView.reloadData()
             
             if indexPath.row >= maxIndex - 1 {
-                tableView.scrollToRow(at: [0,maxIndex - 1], at: .bottom, animated: true)
+                if indexPath.row != 0 {
+                    tableView.scrollToRow(at: [0,maxIndex - 1], at: .bottom, animated: true)
+                }
             } else {
                 let visibleLastCell = folderNameArray.index(of: tableView.visibleCells.last!.textLabel!.text!)! - 1
                 
