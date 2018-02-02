@@ -17,11 +17,13 @@
 		112E64A11EE2D5680048DB21 /* FileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112E64A01EE2D5680048DB21 /* FileViewController.swift */; };
 		113624131FA8911B00361C93 /* declarations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 113624121FA8911B00361C93 /* declarations.swift */; };
 		116A3E241FC43E9E00D4D7C5 /* DateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 116A3E231FC43E9E00D4D7C5 /* DateViewController.swift */; };
+		116E797120235FD900D3F0D7 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 116E797020235FD800D3F0D7 /* logo.png */; };
 		118D15561F5ED85B0091412B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 118D15581F5ED85B0091412B /* Localizable.strings */; };
 		118D15661F629FDF0091412B /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 118D15651F629FDF0091412B /* ListViewController.swift */; };
 		11AC14A21F88F76E007CE23D /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 11AC14A41F88F76E007CE23D /* Localizable.stringsdict */; };
 		11C2FAFA1F4E9FA30080A9B2 /* MemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C2FAF91F4E9FA30080A9B2 /* MemoViewController.swift */; };
 		11F7B7E12020A0FA003A20C9 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 11F7B7E02020A0FA003A20C9 /* icon.png */; };
+		11F7B7EA202345B4003A20C9 /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 11F7B7E8202345B4003A20C9 /* background.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +60,7 @@
 		112E64A01EE2D5680048DB21 /* FileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileViewController.swift; sourceTree = "<group>"; };
 		113624121FA8911B00361C93 /* declarations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = declarations.swift; sourceTree = "<group>"; };
 		116A3E231FC43E9E00D4D7C5 /* DateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateViewController.swift; sourceTree = "<group>"; };
+		116E797020235FD800D3F0D7 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		118D15571F5ED85B0091412B /* Base */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		118D155B1F5EE4B20091412B /* ja */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		118D155C1F5EEA9E0091412B /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -79,6 +82,7 @@
 		11AC14AF1F890AEB007CE23D /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ko; path = ko.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		11C2FAF91F4E9FA30080A9B2 /* MemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
 		11F7B7E02020A0FA003A20C9 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		11F7B7E8202345B4003A20C9 /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = background.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +133,8 @@
 		112E64711EE2D3B80048DB21 /* ToDo */ = {
 			isa = PBXGroup;
 			children = (
+				116E797020235FD800D3F0D7 /* logo.png */,
+				11F7B7E8202345B4003A20C9 /* background.jpg */,
 				11F7B7E02020A0FA003A20C9 /* icon.png */,
 				112E64721EE2D3B80048DB21 /* AppDelegate.swift */,
 				112E64741EE2D3B80048DB21 /* FolderViewController.swift */,
@@ -286,7 +292,9 @@
 			files = (
 				112E647D1EE2D3B80048DB21 /* LaunchScreen.storyboard in Resources */,
 				118D15561F5ED85B0091412B /* Localizable.strings in Resources */,
+				11F7B7EA202345B4003A20C9 /* background.jpg in Resources */,
 				11F7B7E12020A0FA003A20C9 /* icon.png in Resources */,
+				116E797120235FD900D3F0D7 /* logo.png in Resources */,
 				112E647A1EE2D3B80048DB21 /* Assets.xcassets in Resources */,
 				112E64781EE2D3B80048DB21 /* Main.storyboard in Resources */,
 				11AC14A21F88F76E007CE23D /* Localizable.stringsdict in Resources */,

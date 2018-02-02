@@ -537,7 +537,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func modalToDate() {
-        let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Date") as! UINavigationController
+        let nextView = self.storyboard!.instantiateViewController(withIdentifier: "DateNav") as! UINavigationController
         self.present(nextView, animated: true)
     }
     
