@@ -9,11 +9,11 @@
 -->
 <plist version="1.0">
     <dict>
-        <key>AGO_YEAR</key>
+        <key>TEXT_DUE_PAST_YEAR</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
-            <string>%#@years@</string>
-            <key>years</key>
+            <string>%#@pYears@</string>
+            <key>pYears</key>
             <dict>
                 <key>NSStringFormatSpecTypeKey</key>
                 <string>NSStringPluralRuleType</string>
@@ -23,11 +23,11 @@
                 <string>%d年前</string>
             </dict>
         </dict>
-        <key>AGO_MONTH</key>
+        <key>TEXT_DUE_PAST_MONTH</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
-            <string>%#@months@</string>
-            <key>months</key>
+            <string>%#@pMonths@</string>
+            <key>pMonths</key>
             <dict>
                 <key>NSStringFormatSpecTypeKey</key>
                 <string>NSStringPluralRuleType</string>
@@ -37,11 +37,11 @@
                 <string>%d个月前</string>
             </dict>
         </dict>
-        <key>AGO_DAY</key>
+        <key>TEXT_DUE_PAST_DAY</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
-            <string>%#@days@</string>
-            <key>days</key>
+            <string>%#@pDays@</string>
+            <key>pDays</key>
             <dict>
                 <key>NSStringFormatSpecTypeKey</key>
                 <string>NSStringPluralRuleType</string>
@@ -51,11 +51,11 @@
                 <string>%d天前</string>
             </dict>
         </dict>
-        <key>AGO_HOUR</key>
+        <key>TEXT_DUE_PAST_HOUR</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
-            <string>%#@hours@</string>
-            <key>hours</key>
+            <string>%#@pHours@</string>
+            <key>pHours</key>
             <dict>
                 <key>NSStringFormatSpecTypeKey</key>
                 <string>NSStringPluralRuleType</string>
@@ -65,11 +65,11 @@
                 <string>%d小时前</string>
             </dict>
         </dict>
-        <key>AGO_MINUTE</key>
+        <key>TEXT_DUE_PAST_MINUTE</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
-            <string>%#@minutes@</string>
-            <key>minutes</key>
+            <string>%#@pMinutes@</string>
+            <key>pMinutes</key>
             <dict>
                 <key>NSStringFormatSpecTypeKey</key>
                 <string>NSStringPluralRuleType</string>
@@ -77,6 +77,76 @@
                 <string>d</string>
                 <key>other</key>
                 <string>%d分钟前</string>
+            </dict>
+        </dict>
+        <key>TEXT_DUE_FUTURE_YEAR</key>
+        <dict>
+            <key>NSStringLocalizedFormatKey</key>
+            <string>%#@fYears@</string>
+            <key>fYears</key>
+            <dict>
+                <key>NSStringFormatSpecTypeKey</key>
+                <string>NSStringPluralRuleType</string>
+                <key>NSStringFormatValueTypeKey</key>
+                <string>d</string>
+                <key>other</key>
+                <string>在%d年内</string>
+            </dict>
+        </dict>
+        <key>TEXT_DUE_FUTURE_MONTH</key>
+        <dict>
+            <key>NSStringLocalizedFormatKey</key>
+            <string>%#@fMonths@</string>
+            <key>fMonths</key>
+            <dict>
+                <key>NSStringFormatSpecTypeKey</key>
+                <string>NSStringPluralRuleType</string>
+                <key>NSStringFormatValueTypeKey</key>
+                <string>d</string>
+                <key>other</key>
+                <string>在%d个月内</string>
+            </dict>
+        </dict>
+        <key>TEXT_DUE_FUTURE_DAY</key>
+        <dict>
+            <key>NSStringLocalizedFormatKey</key>
+            <string>%#@fDays@</string>
+            <key>fDays</key>
+            <dict>
+                <key>NSStringFormatSpecTypeKey</key>
+                <string>NSStringPluralRuleType</string>
+                <key>NSStringFormatValueTypeKey</key>
+                <string>d</string>
+                <key>other</key>
+                <string>在%d天内</string>
+            </dict>
+        </dict>
+        <key>TEXT_DUE_FUTURE_HOUR</key>
+        <dict>
+            <key>NSStringLocalizedFormatKey</key>
+            <string>%#@fHours@</string>
+            <key>fHours</key>
+            <dict>
+                <key>NSStringFormatSpecTypeKey</key>
+                <string>NSStringPluralRuleType</string>
+                <key>NSStringFormatValueTypeKey</key>
+                <string>d</string>
+                <key>other</key>
+                <string>在%d小时内</string>
+            </dict>
+        </dict>
+        <key>TEXT_DUE_FUTURE_MINUTE</key>
+        <dict>
+            <key>NSStringLocalizedFormatKey</key>
+            <string>%#@fMinutes@</string>
+            <key>fMinutes</key>
+            <dict>
+                <key>NSStringFormatSpecTypeKey</key>
+                <string>NSStringPluralRuleType</string>
+                <key>NSStringFormatValueTypeKey</key>
+                <string>d</string>
+                <key>other</key>
+                <string>在%d分钟内</string>
             </dict>
         </dict>
     </dict>

@@ -21,8 +21,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     var saveData = UserDefaults.standard
     
-    let formatter = DateFormatter()
-    
     var key = ""
     
     // MARK: - LifeCycle
@@ -35,9 +33,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         datePicker.minimumDate = Date()
         datePicker.maximumDate = Date(timeInterval: 60*60*24*2000, since: Date())
-        
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
         
         placeHolder.text = NSLocalizedString("LABEL_NOTE", comment: "")
         dateLabel.text = NSLocalizedString("LABEL_DUE", comment: "")
@@ -88,11 +83,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: DatePicker
     
     @IBAction func changeDate() {
-        if datePicker.date < Date() {
-            setDateText(span: Date().timeIntervalSince(datePicker.date))
-        } else {
-            dateField.text = formatter.string(from: datePicker.date)
-        }
+        setDateText(span: Date().timeIntervalSince(datePicker.date))
         
         saveData.set(datePicker.date, forKey: key + "@date")
     }
@@ -114,11 +105,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - Methods
     
     func setDateText() {
-        if datePicker.date < Date() {
-            setDateText(span: Date().timeIntervalSince(datePicker.date))
-        } else {
-            dateField.text = formatter.string(from: datePicker.date)
-        }
+        setDateText(span: Date().timeIntervalSince(datePicker.date))
         
         saveData.set(datePicker.date, forKey: key + "@date")
     }
@@ -140,7 +127,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         if saveData.object(forKey: key + "@date") == nil {
             datePicker.date = Date()
             
-            dateField.text = formatter.string(from: Date())
+            dateField.text = ""
         } else {
             let savedDate = saveData.object(forKey: key + "@date") as! Date
             
@@ -157,26 +144,52 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     }
     
     func setDateText(span: TimeInterval) {
-        if span > 60 {
-            if span > 60*60 {
-                if span > 60*60*24 {
-                    if span > 60*60*24*30 {
-                        if span > 60*60*24*365 {
-                            dateField.text = String(format: NSLocalizedString("AGO_YEAR", comment: ""), Int(span/31536000))
+        if span > 0 {
+            if span > 60 {
+                if span > 60*60 {
+                    if span > 60*60*24 {
+                        if span > 60*60*24*30 {
+                            if span > 60*60*24*365 {
+                                dateField.text = String(format: NSLocalizedString("TEXT_DUE_PAST_YEAR", comment: ""), Int(span/31536000))
+                            } else {
+                                dateField.text = String(format: NSLocalizedString("TEXT_DUE_PAST_MONTH", comment: ""), Int(span/2592000))
+                            }
                         } else {
-                            dateField.text = String(format: NSLocalizedString("AGO_MONTH", comment: ""), Int(span/2592000))
+                            dateField.text = String(format: NSLocalizedString("TEXT_DUE_PAST_DAY", comment: ""), Int(span/86400))
                         }
                     } else {
-                        dateField.text = String(format: NSLocalizedString("AGO_DAY", comment: ""), Int(span/86400))
+                        dateField.text = String(format: NSLocalizedString("TEXT_DUE_PAST_HOUR", comment: ""), Int(span/3600))
                     }
                 } else {
-                    dateField.text = String(format: NSLocalizedString("AGO_HOUR", comment: ""), Int(span/3600))
+                    dateField.text = String(format: NSLocalizedString("TEXT_DUE_PAST_MINUTE", comment: ""), Int(span/60))
                 }
             } else {
-                dateField.text = String(format: NSLocalizedString("AGO_MINUTE", comment: ""), Int(span/60))
+                dateField.text = NSLocalizedString("TEXT_DUE_PRESENT", comment: "")
+            }
+        } else if span < 0 {
+            if span < -60 {
+                if span < -60*60 {
+                    if span < -60*60*24 {
+                        if span < -60*60*24*30 {
+                            if span < -60*60*24*365 {
+                                dateField.text = String(format: NSLocalizedString("TEXT_DUE_FUTURE_YEAR", comment: ""), Int(-span/31536000))
+                            } else {
+                                dateField.text = String(format: NSLocalizedString("TEXT_DUE_FUTURE_MONTH", comment: ""), Int(-span/2592000))
+                            }
+                        } else {
+                            dateField.text = String(format: NSLocalizedString("TEXT_DUE_FUTURE_DAY", comment: ""), Int(-span/86400))
+                        }
+                    } else {
+                        dateField.text = String(format: NSLocalizedString("TEXT_DUE_FUTURE_HOUR", comment: ""), Int(-span/3600))
+                    }
+                } else {
+                    dateField.text = String(format: NSLocalizedString("TEXT_DUE_FUTURE_MINUTE", comment: ""), Int(-span/60))
+                }
+            } else {
+                dateField.text = NSLocalizedString("TEXT_DUE_PRESENT", comment: "")
             }
         } else {
-            dateField.text = formatter.string(from: datePicker.date)
+            dateField.text = NSLocalizedString("TEXT_DUE_PRESENT", comment: "")
         }
     }
     
