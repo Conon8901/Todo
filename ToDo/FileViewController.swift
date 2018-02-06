@@ -39,10 +39,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
         
-        deleteAllButton?.title = NSLocalizedString("ALERT_TITLE_DELETEALL", comment: "")
-        deleteAllButton?.isEnabled = true
-        deleteAllButton?.tintColor = .white
-        
         deleteAllButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(FileViewController.deleteAll))
         
         self.navigationItem.leftBarButtonItem = nil
