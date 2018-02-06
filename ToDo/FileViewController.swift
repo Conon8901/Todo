@@ -172,7 +172,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             saveData.set(filesDict[openedFolder]![indexPath.row], forKey: "@fileName")
             
-            let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Memo") as! MemoViewController
+            let nextView = self.storyboard!.instantiateViewController(withIdentifier: "MemoNav") as! UINavigationController
             self.navigationController?.pushViewController(nextView, animated: true)
         }
     }
@@ -211,7 +211,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_MOVE", comment: "")) { (action, index) -> Void in
             variables.shared.movingFileName = self.filesDict[self.openedFolder]![indexPath.row]
             
-            let nextView = self.storyboard!.instantiateViewController(withIdentifier: "List") as! ListViewController
+            let nextView = self.storyboard!.instantiateViewController(withIdentifier: "ListNav") as! UINavigationController
             self.present(nextView, animated: true)
         }
         

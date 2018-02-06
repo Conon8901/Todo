@@ -10,7 +10,7 @@ Memo
 
 その他
 
-    デザイン
-    Listのnavbar/toolbarの下線
+    toolbarの上線
+    safearea
     
 バグ洗い

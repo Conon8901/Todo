@@ -13,7 +13,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - Declare
     
     @IBOutlet var table: UITableView!
-    @IBOutlet var navBar: UINavigationBar!
     
     var saveData = UserDefaults.standard
     
@@ -34,7 +33,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
-        navBar.topItem?.title = NSLocalizedString("NAV_TITLE_FOLDER", comment: "")
+        navigationItem.title = NSLocalizedString("NAV_TITLE_FOLDER", comment: "")
     }
     
     override func didReceiveMemoryWarning() {
