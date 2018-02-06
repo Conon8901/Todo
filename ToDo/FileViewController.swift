@@ -384,42 +384,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let action = UIAlertController(title: NSLocalizedString("ALERT_TITLE_DATE", comment: ""), message: NSLocalizedString("ALERT_MESSAGE_DATE", comment: ""), preferredStyle: .actionSheet)
         
-        let year = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_YEAR", comment: ""), style: .default, handler: {
-            (action: UIAlertAction!) in
-            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_YEAR", comment: "")
-            
-            for file in self.filesDict[self.openedFolder]! {
-                let key = self.openedFolder + "@" + file + "@date"
-                if let date = self.saveData.object(forKey: key) as! Date? {
-                    if date.timeIntervalSinceNow < 60*60*24*365 {
-                        tmpArray.append(file)
-                    }
-                }
-            }
-            
-            variables.shared.dateArray = tmpArray
-            
-            self.modalToDate()
-        })
-        
-        let halfYear = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_HALF", comment: ""), style: .default, handler: {
-            (action: UIAlertAction!) in
-            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_HALF", comment: "")
-            
-            for file in self.filesDict[self.openedFolder]! {
-                let key = self.openedFolder + "@" + file + "@date"
-                if let date = self.saveData.object(forKey: key) as! Date? {
-                    if date.timeIntervalSinceNow < 60*60*24*183 {
-                        tmpArray.append(file)
-                    }
-                }
-            }
-            
-            variables.shared.dateArray = tmpArray
-            
-            self.modalToDate()
-        })
-        
         let month = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_MONTH", comment: ""), style: .default, handler: {
             (action: UIAlertAction!) in
             variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_MONTH", comment: "")
@@ -479,8 +443,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
         })
         
-        action.addAction(year)
-        action.addAction(halfYear)
         action.addAction(month)
         action.addAction(week)
         action.addAction(finished)

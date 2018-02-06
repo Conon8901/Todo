@@ -1,173 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!--
-   Localizable.stringsdict.plist
-   ToDo
-
-   Created by 黒岩修 on 2017/10/07.
-   Copyright (c) 2017年 黒岩修. All rights reserved.
--->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-    <dict>
-        <key>TEXT_DUE_PAST_YEAR</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@pYears@</string>
-            <key>pYears</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>il y a 1 an</string>
-                <key>other</key>
-                <string>il y a %d ans</string>
-            </dict>
-        </dict>
-        <key>TEXT_DUE_PAST_MONTH</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@pMonths@</string>
-            <key>pMonths</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>il y a 1 mois</string>
-                <key>other</key>
-                <string>il y a %d mois</string>
-            </dict>
-        </dict>
-        <key>TEXT_DUE_PAST_DAY</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@pDays@</string>
-            <key>pDays</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>il y a 1 jour</string>
-                <key>other</key>
-                <string>il y a %d jours</string>
-            </dict>
-        </dict>
-        <key>TEXT_DUE_PAST_HOUR</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@pHours@</string>
-            <key>pHours</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>il y a 1 heure</string>
-                <key>other</key>
-                <string>il y a %d heures</string>
-            </dict>
-        </dict>
-        <key>TEXT_DUE_PAST_MINUTE</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@pMinutes@</string>
-            <key>pMinutes</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>il y a 1 minute</string>
-                <key>other</key>
-                <string>il y a %d minutes</string>
-            </dict>
-        </dict>
-        <key>TEXT_DUE_FUTURE_YEAR</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@fYears@</string>
-            <key>fYears</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>dans 1 an</string>
-                <key>other</key>
-                <string>dans %d ans</string>
-            </dict>
-        </dict>
-        <key>TEXT_DUE_FUTURE_MONTH</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@fMonths@</string>
-            <key>fMonths</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>dans 1 mois</string>
-                <key>other</key>
-                <string>dans %d mois</string>
-            </dict>
-        </dict>
-        <key>TEXT_DUE_FUTURE_DAY</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@fDays@</string>
-            <key>fDays</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>dans 1 jour</string>
-                <key>other</key>
-                <string>dans %d jours</string>
-            </dict>
-        </dict>
-        <key>TEXT_DUE_FUTURE_HOUR</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@fHours@</string>
-            <key>fHours</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>dans 1 heure</string>
-                <key>other</key>
-                <string>dans %d heures</string>
-            </dict>
-        </dict>
-        <key>TEXT_DUE_FUTURE_MINUTE</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@fMinutes@</string>
-            <key>fMinutes</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>dans 1 minute</string>
-                <key>other</key>
-                <string>dans %d minutes</string>
-            </dict>
-        </dict>
-    </dict>
+<dict>
+	<key>TEXT_DUE_PAST_MONTH</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@pMonths@</string>
+		<key>pMonths</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>il y a 1 mois</string>
+			<key>other</key>
+			<string>il y a %d mois</string>
+		</dict>
+	</dict>
+	<key>TEXT_DUE_PAST_DAY</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@pDays@</string>
+		<key>pDays</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>il y a 1 jour</string>
+			<key>other</key>
+			<string>il y a %d jours</string>
+		</dict>
+	</dict>
+	<key>TEXT_DUE_PAST_HOUR</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@pHours@</string>
+		<key>pHours</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>il y a 1 heure</string>
+			<key>other</key>
+			<string>il y a %d heures</string>
+		</dict>
+	</dict>
+	<key>TEXT_DUE_PAST_MINUTE</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@pMinutes@</string>
+		<key>pMinutes</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>il y a 1 minute</string>
+			<key>other</key>
+			<string>il y a %d minutes</string>
+		</dict>
+	</dict>
+	<key>TEXT_DUE_FUTURE_MONTH</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@fMonths@</string>
+		<key>fMonths</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>dans 1 mois</string>
+			<key>other</key>
+			<string>dans %d mois</string>
+		</dict>
+	</dict>
+	<key>TEXT_DUE_FUTURE_DAY</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@fDays@</string>
+		<key>fDays</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>dans 1 jour</string>
+			<key>other</key>
+			<string>dans %d jours</string>
+		</dict>
+	</dict>
+	<key>TEXT_DUE_FUTURE_HOUR</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@fHours@</string>
+		<key>fHours</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>dans 1 heure</string>
+			<key>other</key>
+			<string>dans %d heures</string>
+		</dict>
+	</dict>
+	<key>TEXT_DUE_FUTURE_MINUTE</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@fMinutes@</string>
+		<key>fMinutes</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>d</string>
+			<key>one</key>
+			<string>dans 1 minute</string>
+			<key>other</key>
+			<string>dans %d minutes</string>
+		</dict>
+	</dict>
+</dict>
 </plist>

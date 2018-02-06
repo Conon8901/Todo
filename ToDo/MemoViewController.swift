@@ -149,11 +149,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
                 if span > 60*60 {
                     if span > 60*60*24 {
                         if span > 60*60*24*30 {
-                            if span > 60*60*24*365 {
-                                dateField.text = String(format: NSLocalizedString("TEXT_DUE_PAST_YEAR", comment: ""), Int(span/31536000))
-                            } else {
-                                dateField.text = String(format: NSLocalizedString("TEXT_DUE_PAST_MONTH", comment: ""), Int(span/2592000))
-                            }
+                            dateField.text = String(format: NSLocalizedString("TEXT_DUE_PAST_MONTH", comment: ""), Int(span/2592000))
                         } else {
                             dateField.text = String(format: NSLocalizedString("TEXT_DUE_PAST_DAY", comment: ""), Int(span/86400))
                         }
@@ -171,11 +167,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
                 if span < -60*60 {
                     if span < -60*60*24 {
                         if span < -60*60*24*30 {
-                            if span < -60*60*24*365 {
-                                dateField.text = String(format: NSLocalizedString("TEXT_DUE_FUTURE_YEAR", comment: ""), Int(-span/31536000))
-                            } else {
-                                dateField.text = String(format: NSLocalizedString("TEXT_DUE_FUTURE_MONTH", comment: ""), Int(-span/2592000))
-                            }
+                            dateField.text = String(format: NSLocalizedString("TEXT_DUE_FUTURE_MONTH", comment: ""), Int(-span/2592000))
                         } else {
                             dateField.text = String(format: NSLocalizedString("TEXT_DUE_FUTURE_DAY", comment: ""), Int(-span/86400))
                         }

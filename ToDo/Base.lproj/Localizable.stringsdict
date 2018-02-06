@@ -9,22 +9,6 @@
 -->
 <plist version="1.0">
     <dict>
-        <key>TEXT_DUE_PAST_YEAR</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@pYears@</string>
-            <key>pYears</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>1 year ago</string>
-                <key>other</key>
-                <string>%d years ago</string>
-            </dict>
-        </dict>
         <key>TEXT_DUE_PAST_MONTH</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
@@ -87,22 +71,6 @@
                 <string>1 minute ago</string>
                 <key>other</key>
                 <string>%d minutes ago</string>
-            </dict>
-        </dict>
-        <key>TEXT_DUE_FUTURE_YEAR</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@fYears@</string>
-            <key>fYears</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>in 1 year</string>
-                <key>other</key>
-                <string>in %d years</string>
             </dict>
         </dict>
         <key>TEXT_DUE_FUTURE_MONTH</key>

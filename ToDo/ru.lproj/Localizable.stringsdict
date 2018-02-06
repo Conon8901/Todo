@@ -9,26 +9,6 @@
 -->
 <plist version="1.0">
     <dict>
-        <key>TEXT_DUE_PAST_YEAR</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@pYears@</string>
-            <key>pYears</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>%d год назад</string>
-                <key>few</key>
-                <string>%d года назад</string>
-                <key>many</key>
-                <string>%d лет назад</string>
-                <key>other</key>
-                <string>ошибка</string>
-            </dict>
-        </dict>
         <key>TEXT_DUE_PAST_MONTH</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
@@ -105,26 +85,6 @@
                 <string>%d минуты назад</string>
                 <key>many</key>
                 <string>%d минут назад</string>
-                <key>other</key>
-                <string>ошибка</string>
-            </dict>
-        </dict>
-        <key>TEXT_DUE_FUTURE_YEAR</key>
-        <dict>
-            <key>NSStringLocalizedFormatKey</key>
-            <string>%#@fYears@</string>
-            <key>fYears</key>
-            <dict>
-                <key>NSStringFormatSpecTypeKey</key>
-                <string>NSStringPluralRuleType</string>
-                <key>NSStringFormatValueTypeKey</key>
-                <string>d</string>
-                <key>one</key>
-                <string>через %d год</string>
-                <key>few</key>
-                <string>через %d года</string>
-                <key>many</key>
-                <string>через %d лет</string>
                 <key>other</key>
                 <string>ошибка</string>
             </dict>
