@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="osd-wA-16a">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="osd-wA-16a">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -8,6 +8,7 @@
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -15,10 +16,6 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController storyboardIdentifier="Folder" id="BYZ-38-t0r" customClass="FolderViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -66,11 +63,12 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="ykn-f0-c68" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Pom-Rx-Pkx"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ykn-f0-c68" secondAttribute="bottom" id="QCA-Mk-pSr"/>
-                            <constraint firstAttribute="trailing" secondItem="ykn-f0-c68" secondAttribute="trailing" id="nMm-eM-LWB"/>
-                            <constraint firstItem="ykn-f0-c68" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="rgJ-Q2-zFp"/>
+                            <constraint firstItem="ykn-f0-c68" firstAttribute="top" secondItem="cBG-hD-OBY" secondAttribute="top" id="Pom-Rx-Pkx"/>
+                            <constraint firstItem="cBG-hD-OBY" firstAttribute="bottom" secondItem="ykn-f0-c68" secondAttribute="bottom" id="QCA-Mk-pSr"/>
+                            <constraint firstItem="cBG-hD-OBY" firstAttribute="trailing" secondItem="ykn-f0-c68" secondAttribute="trailing" id="nMm-eM-LWB"/>
+                            <constraint firstItem="ykn-f0-c68" firstAttribute="leading" secondItem="cBG-hD-OBY" secondAttribute="leading" id="rgJ-Q2-zFp"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="cBG-hD-OBY"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="f0x-eF-eWW" appends="YES" id="LyC-aY-oQr"/>
                         </connections>
@@ -109,10 +107,6 @@
         <scene sceneID="QOp-mh-yap">
             <objects>
                 <viewController storyboardIdentifier="File" id="7DH-dA-Yea" customClass="FileViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="cUG-4e-nrk"/>
-                        <viewControllerLayoutGuide type="bottom" id="tll-Wm-hxy"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Znx-qs-Gg9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -161,14 +155,15 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="40m-Kp-Nxk" secondAttribute="trailing" id="0kq-XN-cwo"/>
+                            <constraint firstItem="qeD-lA-a5H" firstAttribute="trailing" secondItem="40m-Kp-Nxk" secondAttribute="trailing" id="0kq-XN-cwo"/>
                             <constraint firstItem="x7u-v2-9XE" firstAttribute="top" secondItem="40m-Kp-Nxk" secondAttribute="bottom" id="2VH-XT-aoz"/>
-                            <constraint firstItem="x7u-v2-9XE" firstAttribute="leading" secondItem="Znx-qs-Gg9" secondAttribute="leading" id="UI2-JX-7gR"/>
-                            <constraint firstItem="tll-Wm-hxy" firstAttribute="top" secondItem="x7u-v2-9XE" secondAttribute="bottom" id="W7l-Vf-kjW"/>
-                            <constraint firstItem="40m-Kp-Nxk" firstAttribute="top" secondItem="cUG-4e-nrk" secondAttribute="bottom" id="XKF-N6-Fib"/>
-                            <constraint firstItem="40m-Kp-Nxk" firstAttribute="leading" secondItem="Znx-qs-Gg9" secondAttribute="leading" id="cgg-gj-PDY"/>
-                            <constraint firstAttribute="trailing" secondItem="x7u-v2-9XE" secondAttribute="trailing" id="wst-h9-jUq"/>
+                            <constraint firstItem="x7u-v2-9XE" firstAttribute="leading" secondItem="qeD-lA-a5H" secondAttribute="leading" id="UI2-JX-7gR"/>
+                            <constraint firstItem="qeD-lA-a5H" firstAttribute="bottom" secondItem="x7u-v2-9XE" secondAttribute="bottom" id="W7l-Vf-kjW"/>
+                            <constraint firstItem="40m-Kp-Nxk" firstAttribute="top" secondItem="qeD-lA-a5H" secondAttribute="top" id="XKF-N6-Fib"/>
+                            <constraint firstItem="40m-Kp-Nxk" firstAttribute="leading" secondItem="qeD-lA-a5H" secondAttribute="leading" id="cgg-gj-PDY"/>
+                            <constraint firstItem="qeD-lA-a5H" firstAttribute="trailing" secondItem="x7u-v2-9XE" secondAttribute="trailing" id="wst-h9-jUq"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="qeD-lA-a5H"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="upi-Sc-Blt" appends="YES" id="VsG-4E-aFO"/>
                         </connections>
@@ -206,10 +201,6 @@
         <scene sceneID="wMn-L4-S2b">
             <objects>
                 <viewController storyboardIdentifier="List" id="tW4-FO-QSh" customClass="ListViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="SBV-Tw-Fd2"/>
-                        <viewControllerLayoutGuide type="bottom" id="r6r-aZ-Pqv"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="QSM-p2-XnS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -238,14 +229,15 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="r6r-aZ-Pqv" firstAttribute="top" secondItem="SZL-GO-xF7" secondAttribute="bottom" id="1Vi-5p-Yh2"/>
-                            <constraint firstAttribute="trailing" secondItem="KLf-nV-diI" secondAttribute="trailing" id="ElL-5f-40Q"/>
-                            <constraint firstItem="KLf-nV-diI" firstAttribute="leading" secondItem="QSM-p2-XnS" secondAttribute="leading" id="SbL-CL-Upc"/>
-                            <constraint firstItem="SZL-GO-xF7" firstAttribute="top" secondItem="SBV-Tw-Fd2" secondAttribute="bottom" id="Yt0-uP-IhW"/>
+                            <constraint firstItem="hpe-q4-ZrJ" firstAttribute="bottom" secondItem="SZL-GO-xF7" secondAttribute="bottom" id="1Vi-5p-Yh2"/>
+                            <constraint firstItem="hpe-q4-ZrJ" firstAttribute="trailing" secondItem="KLf-nV-diI" secondAttribute="trailing" id="ElL-5f-40Q"/>
+                            <constraint firstItem="KLf-nV-diI" firstAttribute="leading" secondItem="hpe-q4-ZrJ" secondAttribute="leading" id="SbL-CL-Upc"/>
+                            <constraint firstItem="SZL-GO-xF7" firstAttribute="top" secondItem="hpe-q4-ZrJ" secondAttribute="top" id="Yt0-uP-IhW"/>
                             <constraint firstItem="KLf-nV-diI" firstAttribute="top" secondItem="QSM-p2-XnS" secondAttribute="top" id="dTu-5q-s19"/>
-                            <constraint firstAttribute="trailing" secondItem="SZL-GO-xF7" secondAttribute="trailing" id="igG-wS-Y1T"/>
-                            <constraint firstItem="SZL-GO-xF7" firstAttribute="leading" secondItem="QSM-p2-XnS" secondAttribute="leading" id="whG-sq-jhg"/>
+                            <constraint firstItem="hpe-q4-ZrJ" firstAttribute="trailing" secondItem="SZL-GO-xF7" secondAttribute="trailing" id="igG-wS-Y1T"/>
+                            <constraint firstItem="SZL-GO-xF7" firstAttribute="leading" secondItem="hpe-q4-ZrJ" secondAttribute="leading" id="whG-sq-jhg"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="hpe-q4-ZrJ"/>
                     </view>
                     <navigationItem key="navigationItem" title="Folder" id="erV-DB-vxn">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="gTa-34-Eo5">
@@ -271,10 +263,6 @@
         <scene sceneID="Crb-rA-7lm">
             <objects>
                 <viewController storyboardIdentifier="Date" id="HqG-u5-mZW" customClass="DateViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ove-EA-XT0"/>
-                        <viewControllerLayoutGuide type="bottom" id="cce-Pg-hus"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="2Xi-rk-lcx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -296,11 +284,12 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="FNS-aR-7Bp" secondAttribute="trailing" id="gLs-KH-YCQ"/>
-                            <constraint firstItem="FNS-aR-7Bp" firstAttribute="top" secondItem="ove-EA-XT0" secondAttribute="bottom" id="i31-fe-hHa"/>
-                            <constraint firstItem="FNS-aR-7Bp" firstAttribute="leading" secondItem="2Xi-rk-lcx" secondAttribute="leading" id="zSH-Xt-fcK"/>
-                            <constraint firstItem="cce-Pg-hus" firstAttribute="top" secondItem="FNS-aR-7Bp" secondAttribute="bottom" id="zcE-Jb-Ck8"/>
+                            <constraint firstItem="ssD-Be-Rmh" firstAttribute="trailing" secondItem="FNS-aR-7Bp" secondAttribute="trailing" id="gLs-KH-YCQ"/>
+                            <constraint firstItem="FNS-aR-7Bp" firstAttribute="top" secondItem="ssD-Be-Rmh" secondAttribute="top" id="i31-fe-hHa"/>
+                            <constraint firstItem="FNS-aR-7Bp" firstAttribute="leading" secondItem="ssD-Be-Rmh" secondAttribute="leading" id="zSH-Xt-fcK"/>
+                            <constraint firstItem="ssD-Be-Rmh" firstAttribute="bottom" secondItem="FNS-aR-7Bp" secondAttribute="bottom" id="zcE-Jb-Ck8"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="ssD-Be-Rmh"/>
                     </view>
                     <navigationItem key="navigationItem" title="Condition" id="eeQ-pe-MVx">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="Kd8-iw-y1Y">
@@ -357,10 +346,6 @@
         <scene sceneID="vO1-Qm-wuQ">
             <objects>
                 <viewController storyboardIdentifier="Memo" id="cFD-wo-LKb" customClass="MemoViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="1sW-zE-nvK"/>
-                        <viewControllerLayoutGuide type="bottom" id="BwM-8w-AQz"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Die-Zc-TEL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -429,20 +414,21 @@
                         <constraints>
                             <constraint firstItem="5cl-b8-eKw" firstAttribute="top" relation="lessThanOrEqual" secondItem="MTr-aY-Twc" secondAttribute="bottom" constant="30" id="0X3-dl-3wr"/>
                             <constraint firstItem="MTr-aY-Twc" firstAttribute="top" relation="lessThanOrEqual" secondItem="oc5-h8-qBm" secondAttribute="bottom" constant="50" id="3QD-RC-eTo"/>
-                            <constraint firstItem="aq9-6o-wXO" firstAttribute="centerX" secondItem="Die-Zc-TEL" secondAttribute="centerX" id="EQE-4j-Kqh"/>
+                            <constraint firstItem="aq9-6o-wXO" firstAttribute="centerX" secondItem="V9T-RN-kK6" secondAttribute="centerX" id="EQE-4j-Kqh"/>
                             <constraint firstItem="oc5-h8-qBm" firstAttribute="leadingMargin" secondItem="cvE-yM-Cu1" secondAttribute="leading" constant="3" id="FHc-Zu-3qz"/>
-                            <constraint firstItem="oc5-h8-qBm" firstAttribute="centerX" secondItem="Die-Zc-TEL" secondAttribute="centerX" id="I6U-U1-N0U"/>
-                            <constraint firstItem="oc5-h8-qBm" firstAttribute="top" relation="lessThanOrEqual" secondItem="1sW-zE-nvK" secondAttribute="bottom" constant="80" id="NjW-BH-BMs"/>
-                            <constraint firstAttribute="trailing" secondItem="aq9-6o-wXO" secondAttribute="trailing" id="OFn-xY-DSY"/>
-                            <constraint firstItem="oc5-h8-qBm" firstAttribute="top" relation="greaterThanOrEqual" secondItem="1sW-zE-nvK" secondAttribute="bottom" constant="20" id="VLe-Ef-vg9"/>
-                            <constraint firstItem="BwM-8w-AQz" firstAttribute="top" relation="lessThanOrEqual" secondItem="aq9-6o-wXO" secondAttribute="bottom" constant="10" id="VXI-Ji-cGO"/>
+                            <constraint firstItem="oc5-h8-qBm" firstAttribute="centerX" secondItem="V9T-RN-kK6" secondAttribute="centerX" id="I6U-U1-N0U"/>
+                            <constraint firstItem="oc5-h8-qBm" firstAttribute="top" relation="lessThanOrEqual" secondItem="V9T-RN-kK6" secondAttribute="top" constant="80" id="NjW-BH-BMs"/>
+                            <constraint firstItem="V9T-RN-kK6" firstAttribute="trailing" secondItem="aq9-6o-wXO" secondAttribute="trailing" id="OFn-xY-DSY"/>
+                            <constraint firstItem="oc5-h8-qBm" firstAttribute="top" relation="greaterThanOrEqual" secondItem="V9T-RN-kK6" secondAttribute="top" constant="20" id="VLe-Ef-vg9"/>
+                            <constraint firstItem="V9T-RN-kK6" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="aq9-6o-wXO" secondAttribute="bottom" constant="10" id="VXI-Ji-cGO"/>
                             <constraint firstItem="oc5-h8-qBm" firstAttribute="trailingMargin" relation="lessThanOrEqual" secondItem="cvE-yM-Cu1" secondAttribute="trailing" constant="198" id="fzB-zd-TPp"/>
-                            <constraint firstItem="MTr-aY-Twc" firstAttribute="centerX" secondItem="Die-Zc-TEL" secondAttribute="centerX" id="gag-pc-Vln"/>
+                            <constraint firstItem="MTr-aY-Twc" firstAttribute="centerX" secondItem="V9T-RN-kK6" secondAttribute="centerX" id="gag-pc-Vln"/>
                             <constraint firstItem="cvE-yM-Cu1" firstAttribute="top" secondItem="oc5-h8-qBm" secondAttribute="top" constant="8" id="hYU-Tx-w9g"/>
                             <constraint firstItem="aq9-6o-wXO" firstAttribute="top" relation="lessThanOrEqual" secondItem="5cl-b8-eKw" secondAttribute="bottom" constant="15" id="j0r-wN-ujP"/>
-                            <constraint firstItem="aq9-6o-wXO" firstAttribute="leading" secondItem="Die-Zc-TEL" secondAttribute="leading" id="sF3-Zo-c6C"/>
-                            <constraint firstItem="5cl-b8-eKw" firstAttribute="centerX" secondItem="Die-Zc-TEL" secondAttribute="centerX" id="sPL-Hy-MOu"/>
+                            <constraint firstItem="aq9-6o-wXO" firstAttribute="leading" secondItem="V9T-RN-kK6" secondAttribute="leading" id="sF3-Zo-c6C"/>
+                            <constraint firstItem="5cl-b8-eKw" firstAttribute="centerX" secondItem="V9T-RN-kK6" secondAttribute="centerX" id="sPL-Hy-MOu"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="V9T-RN-kK6"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="gNg-7B-E45" appends="YES" id="a93-7v-uLg"/>
                         </connections>
