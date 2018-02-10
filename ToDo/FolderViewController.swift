@@ -59,7 +59,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         checkIsArrayEmpty()
         
-        self.table.deselectCell()
+        table.deselectCell()
     }
     
     override func didReceiveMemoryWarning() {

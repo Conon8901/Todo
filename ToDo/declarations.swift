@@ -51,6 +51,8 @@ class variables {
     
     var isFromListView = false
     
+    var isFromMemoView = false
+    
     var movingFileName = ""
     
     var includingFiles = [String]()

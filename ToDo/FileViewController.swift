@@ -22,6 +22,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var filesDict = [String: [String]]()
     
+    var cellIndex: IndexPath = [0,0]
+    
     var openedFolder = ""
     
     // MARK: - LifeCycle
@@ -60,9 +62,23 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             variables.shared.isFromListView = false
         }
         
+        if let indexPathForSelectedRow = table.indexPathForSelectedRow {
+            cellIndex = indexPathForSelectedRow
+        }
+        
         checkIsArrayEmpty()
         
-        self.table.deselectCell()
+        table.reloadData()
+        
+        if variables.shared.isFromMemoView {
+            table.selectRow(at: cellIndex, animated: false, scrollPosition: .none)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                self.table.deselectRow(at: self.cellIndex, animated: true)
+                
+                variables.shared.isFromMemoView = false
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -172,7 +188,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             saveData.set(filesDict[openedFolder]![indexPath.row], forKey: "@fileName")
             
-            let nextView = self.storyboard!.instantiateViewController(withIdentifier: "MemoNav") as! UINavigationController
+            let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Memo") as! MemoViewController
             self.navigationController?.pushViewController(nextView, animated: true)
         }
     }

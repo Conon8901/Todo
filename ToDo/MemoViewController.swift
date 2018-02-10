@@ -66,6 +66,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         memoTextView.resignFirstResponder()
+        
+        variables.shared.isFromMemoView = true
     }
     
     override func didReceiveMemoryWarning() {
