@@ -66,8 +66,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             cellIndex = indexPathForSelectedRow
         }
         
-        checkIsArrayEmpty()
-        
         table.reloadData()
         
         if variables.shared.isFromMemoView {
@@ -79,6 +77,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 variables.shared.isFromMemoView = false
             }
         }
+        
+        checkIsArrayEmpty()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        variables.shared.isFromFileView = true
     }
     
     override func didReceiveMemoryWarning() {

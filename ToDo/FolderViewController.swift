@@ -24,6 +24,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     var searchArray = [String]()
     var searchDict = [String: [String]]()
     
+    var cellIndex: IndexPath = [0,0]
+    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -57,9 +59,23 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             saveData.set(filesDict, forKey: "@dictData")
         }
         
-        checkIsArrayEmpty()
+        if let indexPathForSelectedRow = table.indexPathForSelectedRow {
+            cellIndex = indexPathForSelectedRow
+        }
         
-        table.deselectCell()
+        table.reloadData()
+        
+        if variables.shared.isFromFileView {
+            table.selectRow(at: cellIndex, animated: false, scrollPosition: .none)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                self.table.deselectRow(at: self.cellIndex, animated: true)
+                
+                variables.shared.isFromFileView = false
+            }
+        }
+        
+        checkIsArrayEmpty()
     }
     
     override func didReceiveMemoryWarning() {

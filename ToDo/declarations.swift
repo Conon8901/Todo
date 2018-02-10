@@ -49,6 +49,8 @@ extension UITextView {
 class variables {
     static let shared = variables()
     
+    var isFromFileView = false
+    
     var isFromListView = false
     
     var isFromMemoView = false
