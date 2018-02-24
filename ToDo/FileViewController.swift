@@ -183,6 +183,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 textField.text = self.filesDict[self.openedFolder]?[indexPath.row]
                 
                 textField.textAlignment = .left
+                
+                textField.clearButtonMode = .whileEditing
             }
             
             alert.addAction(cancelAction)

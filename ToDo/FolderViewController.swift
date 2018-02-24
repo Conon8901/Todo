@@ -36,8 +36,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         table.setUp()
         
         searchBar.delegate = self
-        searchBar.setUp()
         searchBar.placeholder = NSLocalizedString("SEARCH_PLACEHOLDER", comment: "")
+        searchBar.setUp()
         
         editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
         
@@ -199,6 +199,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 }
                 
                 textField.textAlignment = .left
+                
+                textField.clearButtonMode = .whileEditing
             }
             
             alert.addAction(cancelAction)
