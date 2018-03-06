@@ -29,7 +29,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         
         memoTextView.delegate = self
-        memoTextView.setUp()
+        memoTextView.text = ""
         
         datePicker.minimumDate = Date()
         datePicker.maximumDate = Date(timeInterval: 60*60*24*2000, since: Date())
@@ -93,6 +93,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: Switch
     
     @IBAction func switchChanged() {
+        memoTextView.resignFirstResponder()
+        
         if dateSwitch.isOn {
             showsDateParts(true)
             

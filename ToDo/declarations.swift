@@ -35,17 +35,6 @@ extension UISearchBar {
     }
 }
 
-extension UITextView {
-    func setUp() {
-        self.text = ""
-        self.layer.borderColor = UIColor(red: 205/255, green: 205/255, blue: 205/255, alpha: 1.0).cgColor
-        self.layer.borderWidth = 0.5
-        self.layer.cornerRadius = 6
-        self.layer.masksToBounds = true
-        self.autocapitalizationType = .none
-    }
-}
-
 class variables {
     static let shared = variables()
     
