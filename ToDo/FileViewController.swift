@@ -66,7 +66,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             cellIndex = indexPathForSelectedRow
         }
         
-        table.reloadData()
+        table.reload()
         
         if variables.shared.isFromMemoView {
             table.selectRow(at: cellIndex, animated: false, scrollPosition: .none)
@@ -155,7 +155,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             
                             self.resaveDate(pre: preKey, post: postKey)
                             
-                            self.table.reloadData()
+                            self.table.reload()
                         } else {
                             self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                             
@@ -209,7 +209,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             self.filesDict[self.openedFolder]?.remove(at: indexPath.row)
             
-            tableView.reloadData()
+            tableView.reload()
             
             if indexPath.row >= maxIndex - 1 {
                 if indexPath.row != 0 {
@@ -250,7 +250,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         saveData.set(filesDict, forKey: "@dictData")
         
-        table.reloadData()
+        table.reload()
     }
     
     @IBAction func add() {
@@ -279,7 +279,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.checkIsArrayEmpty()
                         
-                        self.table.reloadData()
+                        self.table.reload()
                         
                         self.table.scrollToRow(at: [0,self.filesDict[self.openedFolder]!.count-1], at: .bottom, animated: true)
                         
@@ -382,7 +382,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 self.editButton.isEnabled = true
                 
-                self.table.reloadData()
+                self.table.reload()
             }
         }
         

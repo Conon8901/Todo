@@ -63,7 +63,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             cellIndex = indexPathForSelectedRow
         }
         
-        table.reloadData()
+        table.reload()
         
         if variables.shared.isFromFileView {
             table.selectRow(at: cellIndex, animated: false, scrollPosition: .none)
@@ -167,7 +167,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                 }
                             }
                             
-                            self.table.reloadData()
+                            self.table.reload()
                         } else {
                             self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                             
@@ -250,7 +250,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 searchArray.remove(at: indexPath.row)
             }
             
-            tableView.reloadData()
+            tableView.reload()
             
             if indexPath.row >= maxIndex - 1 {
                 if indexPath.row != 0 {
@@ -301,7 +301,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         self.checkIsArrayEmpty()
                         
-                        self.table.reloadData()
+                        self.table.reload()
                         
                         self.table.scrollToRow(at: [0,self.folderNameArray.count-1], at: .bottom, animated: true)
                     } else {
@@ -377,14 +377,14 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             checkIsArrayEmpty()
         }
         
-        table.reloadData()
+        table.reload()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         searchBar.resignFirstResponder()
         
-        table.reloadData()
+        table.reload()
     }
     
     @objc func closeKeyboard() {

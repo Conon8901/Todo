@@ -151,7 +151,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.saveData.set(self.filesDict, forKey: "@dictData")
                         self.saveData.set(self.listNameArray, forKey: "@folders")
                         
-                        self.table.reloadData()
+                        self.table.reload()
                         
                         self.table.scrollToRow(at: [0,self.filesDict.keys.count-1], at: .bottom, animated: true)
                     } else {

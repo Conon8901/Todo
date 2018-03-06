@@ -26,6 +26,11 @@ extension UITableView {
             self.deselectRow(at: indexPathForSelectedRow, animated: true)
         }
     }
+    
+    func reload() {
+        self.reloadData()
+        self.tableFooterView = UIView()
+    }
 }
 
 extension UISearchBar {
