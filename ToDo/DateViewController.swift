@@ -23,6 +23,7 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
         table.delegate = self
         table.rowHeight = 60
         table.allowsSelection = false
+        table.tableFooterView = UIView()
         
         navigationItem.title = variables.shared.condition
         

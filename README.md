@@ -4,7 +4,9 @@ Memo
         
     期限指定をカレンダー表示
     
-    アラート
+    通知
+    
+    NavigationBarのマークを変更(folder_add/file_add/*_edit)
 
 申請
 

@@ -48,6 +48,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.putCheckmark))
         table.addGestureRecognizer(longPressRecognizer)
         
+        deleteAllButton?.tintColor = .red
+        
         navigationItem.backBarButtonItem = UIBarButtonItem(title: openedFolder, style: .plain, target: nil, action: nil)
     }
     
