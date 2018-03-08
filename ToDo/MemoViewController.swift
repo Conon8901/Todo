@@ -57,9 +57,9 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             showsDateParts(false)
         }
         
-        setDatePicker()
-        
-        setDateText()
+        if saveData.object(forKey: key + "@date") != nil {
+            setDatePicker()
+        }
         
         navigationItem.title = fileName
     }
@@ -98,7 +98,13 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         if dateSwitch.isOn {
             showsDateParts(true)
             
-            setDatePicker()
+            if saveData.object(forKey: key + "@date") == nil {
+                datePicker.date = Date()
+                
+                dateField.text = NSLocalizedString("TEXT_DUE_PRESENT", comment: "")
+            } else {
+                setDatePicker()
+            }
         } else {
             showsDateParts(false)
         }
@@ -107,12 +113,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     }
     
     // MARK: - Methods
-    
-    func setDateText() {
-        setDateText(span: Date().timeIntervalSince(datePicker.date))
-        
-        saveData.set(datePicker.date, forKey: key + "@date")
-    }
     
     func showsDateParts(_ bool: Bool) {
         dateField.isHidden = !bool
@@ -128,23 +128,17 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     }
     
     func setDatePicker() {
-        if saveData.object(forKey: key + "@date") == nil {
-            datePicker.date = Date()
-            
-            dateField.text = ""
-        } else {
-            let savedDate = saveData.object(forKey: key + "@date") as! Date
-            
-            let span = Date().timeIntervalSince(savedDate)
-            
-            setDateText(span: span)
-            
-            if span > 60 {
-                datePicker.minimumDate = savedDate
-            }
-            
-            datePicker.date = savedDate
+        let savedDate = saveData.object(forKey: key + "@date") as! Date
+        
+        let span = Date().timeIntervalSince(savedDate)
+        
+        setDateText(span: span)
+        
+        if span > 60 {
+            datePicker.minimumDate = savedDate
         }
+        
+        datePicker.date = savedDate
     }
     
     func setDateText(span: TimeInterval) {
@@ -187,6 +181,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         } else {
             dateField.text = NSLocalizedString("TEXT_DUE_PRESENT", comment: "")
         }
+        
+        saveData.set(datePicker.date, forKey: key + "@date")
     }
     
     // MARK: - Others
