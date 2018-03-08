@@ -13,6 +13,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     // MARK: - Declare
     
     @IBOutlet var table: UITableView!
+    @IBOutlet var addButton: UIBarButtonItem!
     @IBOutlet var editButton: UIBarButtonItem!
     @IBOutlet var searchBar: UISearchBar!
     
@@ -369,9 +370,14 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text!.isEmpty {
+            addButton.isEnabled = true
+            editButton.isEnabled = true
+            
             searchArray.removeAll()
             searchArray = folderNameArray
         } else {
+            addButton.isEnabled = false
+            
             assignSearchResult()
             
             checkIsArrayEmpty()
@@ -381,6 +387,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        addButton.isEnabled = true
+        editButton.isEnabled = true
+        
         searchBar.text = ""
         searchBar.resignFirstResponder()
         

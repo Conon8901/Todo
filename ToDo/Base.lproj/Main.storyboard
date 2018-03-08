@@ -90,6 +90,7 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="addButton" destination="c4h-3X-LVY" id="onh-7W-ARX"/>
                         <outlet property="editButton" destination="brS-NQ-fPn" id="2j5-Kl-gB4"/>
                         <outlet property="searchBar" destination="cIE-X2-7Ia" id="OAa-eZ-O8I"/>
                         <outlet property="table" destination="ykn-f0-c68" id="SVj-xQ-GsE"/>
