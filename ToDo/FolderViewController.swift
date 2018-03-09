@@ -134,18 +134,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         if !textField.text!.contains("@") {
                             var preFolderName = ""
                             
-                            if self.searchBar.text!.isEmpty {
-                                preFolderName = self.folderNameArray[indexPath.row]
-                                
-                                self.folderNameArray[indexPath.row] = textField.text!
-                            } else {
-                                preFolderName = self.searchArray[indexPath.row]
-                                
-                                self.searchArray[indexPath.row] = textField.text!
-                                
-                                let index = self.folderNameArray.index(of: self.searchArray[indexPath.row])!
-                                self.folderNameArray[index] = textField.text!
-                            }
+                            preFolderName = self.folderNameArray[indexPath.row]
+                            
+                            self.folderNameArray[indexPath.row] = textField.text!
                             
                             self.filesDict[textField.text!] = self.filesDict[preFolderName]
                             self.filesDict[preFolderName] = nil
@@ -159,12 +150,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     let postKey = textField.text! + "@" + fileName
                                     
                                     self.resaveDate(pre: preKey, post: postKey)
-                                }
-                                
-                                if !self.searchBar.text!.isEmpty {
-                                    self.assignSearchResult()
-                                    
-                                    self.checkIsArrayEmpty()
                                 }
                             }
                             
@@ -193,11 +178,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             }
             
             alert.addTextField { (textField: UITextField!) -> Void in
-                if self.searchBar.text!.isEmpty {
-                    textField.text = self.folderNameArray[indexPath.row]
-                } else {
-                    textField.text = self.searchArray[indexPath.row]
-                }
+                textField.text = self.folderNameArray[indexPath.row]
                 
                 textField.textAlignment = .left
                 
@@ -224,32 +205,25 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        if searchBar.text!.isEmpty {
+            return .delete
+        } else {
+            return .none
+        }
+    }
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            var maxIndex = 0
+            let maxIndex = folderNameArray.count - 1
             
-            if searchBar.text!.isEmpty {
-                maxIndex = folderNameArray.count - 1
-                
-                for fileName in filesDict[folderNameArray[indexPath.row]]! {
-                    removeAllObject(key: folderNameArray[indexPath.row] + "@" + fileName)
-                }
-                
-                filesDict[folderNameArray[indexPath.row]] = nil
-                
-                folderNameArray.remove(at: indexPath.row)
-            } else {
-                maxIndex = searchArray.count - 1
-                
-                for fileName in filesDict[searchArray[indexPath.row]]! {
-                    removeAllObject(key: searchArray[indexPath.row] + "@" + fileName)
-                }
-                
-                filesDict[searchArray[indexPath.row]] = nil
-                
-                folderNameArray.remove(at: folderNameArray.index(of: searchArray[indexPath.row])!)
-                searchArray.remove(at: indexPath.row)
+            for fileName in filesDict[folderNameArray[indexPath.row]]! {
+                removeAllObject(key: folderNameArray[indexPath.row] + "@" + fileName)
             }
+            
+            filesDict[folderNameArray[indexPath.row]] = nil
+            
+            folderNameArray.remove(at: indexPath.row)
             
             tableView.reload()
             
