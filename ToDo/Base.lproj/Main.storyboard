@@ -394,27 +394,27 @@
                                     <action selector="changeDate" destination="cFD-wo-LKb" eventType="valueChanged" id="4ch-3i-wr4"/>
                                 </connections>
                             </datePicker>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5cl-b8-eKw">
-                                <rect key="frame" x="197" y="309" width="148" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="148" id="CMl-pR-de4"/>
-                                </constraints>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="HU6-fN-tgQ">
                                 <rect key="frame" x="63" y="309" width="51" height="31"/>
                                 <connections>
                                     <action selector="switchChanged" destination="cFD-wo-LKb" eventType="valueChanged" id="zdc-gd-1bW"/>
                                 </connections>
                             </switch>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5cl-b8-eKw">
+                                <rect key="frame" x="241" y="309" width="118" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="118" id="CMl-pR-de4"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="aJO-uM-gjb" firstAttribute="top" secondItem="oc5-h8-qBm" secondAttribute="bottom" constant="16" id="63V-63-OYD"/>
-                            <constraint firstItem="V9T-RN-kK6" firstAttribute="trailing" secondItem="5cl-b8-eKw" secondAttribute="trailing" constant="30" id="88z-Qd-uFN"/>
+                            <constraint firstItem="5cl-b8-eKw" firstAttribute="trailing" secondItem="V9T-RN-kK6" secondAttribute="trailing" constant="-16" id="88z-Qd-uFN"/>
                             <constraint firstItem="aq9-6o-wXO" firstAttribute="centerX" secondItem="V9T-RN-kK6" secondAttribute="centerX" id="EQE-4j-Kqh"/>
                             <constraint firstItem="oc5-h8-qBm" firstAttribute="leadingMargin" secondItem="cvE-yM-Cu1" secondAttribute="leading" constant="3" id="FHc-Zu-3qz"/>
                             <constraint firstItem="oc5-h8-qBm" firstAttribute="centerX" secondItem="V9T-RN-kK6" secondAttribute="centerX" id="I6U-U1-N0U"/>
