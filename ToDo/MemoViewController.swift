@@ -31,8 +31,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         memoTextView.delegate = self
         memoTextView.text = ""
         
-        datePicker.minimumDate = Date()
-        datePicker.maximumDate = Date(timeInterval: 60*60*24*2000, since: Date())
+        setRange()
         
         placeHolder.text = NSLocalizedString("LABEL_NOTE", comment: "")
         dateLabel.text = NSLocalizedString("LABEL_DUE", comment: "")
@@ -97,6 +96,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         if dateSwitch.isOn {
             showsDateParts(true)
+            
+            setRange()
             
             if saveData.object(forKey: key + "@date") == nil {
                 datePicker.date = Date()
@@ -185,6 +186,11 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         }
         
         saveData.set(datePicker.date, forKey: key + "@date")
+    }
+    
+    func setRange() {
+        datePicker.minimumDate = Date()
+        datePicker.maximumDate = Date(timeInterval: 60*60*24*2000, since: Date())
     }
     
     // MARK: - Others

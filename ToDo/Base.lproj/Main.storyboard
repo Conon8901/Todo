@@ -385,7 +385,7 @@
                                     <constraint firstAttribute="height" constant="1" id="RG8-9v-bmN"/>
                                 </constraints>
                             </view>
-                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="5" translatesAutoresizingMaskIntoConstraints="NO" id="aq9-6o-wXO">
+                            <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="aq9-6o-wXO">
                                 <rect key="frame" x="0.0" y="367" width="375" height="216"/>
                                 <date key="date" timeIntervalSinceReferenceDate="526810307.10774302">
                                     <!--2017-09-11 08:11:47 +0000-->
