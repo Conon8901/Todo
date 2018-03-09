@@ -340,10 +340,17 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
             
+            searchBar.isUserInteractionEnabled = true
+            searchBar.alpha = 1
+            searchBar.endEditing(true)
+            
             editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
+            
+            searchBar.isUserInteractionEnabled = false
+            searchBar.alpha = 0.75
             
             editButton.title = NSLocalizedString("NAV_BUTTON_DONE", comment: "")
         }
@@ -377,10 +384,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             searchArray = folderNameArray
         } else {
             addButton.isEnabled = false
+            editButton.isEnabled = false
             
             assignSearchResult()
-            
-            checkIsArrayEmpty()
         }
         
         table.reload()
