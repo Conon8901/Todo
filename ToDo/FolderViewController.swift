@@ -139,7 +139,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             self.folderNameArray[indexPath.row] = textField.text!
                             
                             self.filesDict[textField.text!] = self.filesDict[preFolderName]
-                            self.filesDict[preFolderName] = nil
                             
                             self.saveData.set(self.filesDict, forKey: "@dictData")
                             self.saveData.set(self.folderNameArray, forKey: "@folders")
@@ -152,6 +151,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     self.resaveDate(pre: preKey, post: postKey)
                                 }
                             }
+                            
+                            self.filesDict[preFolderName] = nil
                             
                             self.table.reload()
                         } else {
