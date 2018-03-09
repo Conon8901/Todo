@@ -107,6 +107,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             }
         } else {
             showsDateParts(false)
+            
+            saveData.set(datePicker.date, forKey: key + "@date")
         }
         
         saveData.set(dateSwitch.isOn, forKey: key + "@ison")
