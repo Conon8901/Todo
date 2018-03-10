@@ -113,6 +113,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         }
         
         saveData.set(dateSwitch.isOn, forKey: key + "@ison")
+        
+        saveData.set(datePicker.date, forKey: key + "@date")
     }
     
     // MARK: - Methods
@@ -184,8 +186,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         } else {
             dateField.text = NSLocalizedString("TEXT_DUE_PRESENT", comment: "")
         }
-        
-        saveData.set(datePicker.date, forKey: key + "@date")
     }
     
     func setRange() {
