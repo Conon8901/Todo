@@ -16,6 +16,8 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var dateArray = [String]()
     
+    var isArrayNil = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,13 +39,28 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dateArray.count
+        if dateArray.count == 0 {
+            isArrayNil = true
+            
+            return 1
+        } else {
+            isArrayNil = false
+            
+            return dateArray.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Date")
         
-        cell?.textLabel?.text = dateArray[indexPath.row]
+        if isArrayNil {
+            cell?.textLabel?.text = NSLocalizedString("CELL_LABEL_NIL", comment: "")
+            cell?.textLabel?.textColor = .gray
+            
+            cell?.textLabel?.textAlignment = .center
+        } else {
+            cell?.textLabel?.text = dateArray[indexPath.row]
+        }
         
         return cell!
     }

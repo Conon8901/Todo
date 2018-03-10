@@ -202,7 +202,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_DELETE", comment: "")) { (action, index) -> Void in
+        let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_BUTTON_DELETE", comment: "")) { (action, index) -> Void in
             var key = ""
             
             key = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
@@ -232,7 +232,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         deleteButton.backgroundColor = .red
         
-        let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_MOVE", comment: "")) { (action, index) -> Void in
+        let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_BUTTON_MOVE", comment: "")) { (action, index) -> Void in
             variables.shared.movingFileName = self.filesDict[self.openedFolder]![indexPath.row]
             
             let nextView = self.storyboard!.instantiateViewController(withIdentifier: "ListNav") as! UINavigationController
