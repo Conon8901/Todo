@@ -162,7 +162,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         }
                     } else {
                         if textField.text != self.folderNameArray[indexPath.row] {
-                            self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FOLDER", comment: ""))
+                            self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
                         }
                         
                         self.table.deselectCell()
@@ -286,7 +286,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         self.table.deselectCell()
                     }
                 } else {
-                    self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FOLDER", comment: ""))
+                    self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
                     
                     self.table.deselectCell()
                 }

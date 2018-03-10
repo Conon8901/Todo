@@ -100,7 +100,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             let alert = UIAlertController(
                 title: NSLocalizedString("ALERT_TITLE_REPLACE", comment: ""),
-                message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FILE", comment: ""),
+                message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""),
                 preferredStyle: .alert)
             
             let replaceAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_REPLACE", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
@@ -160,7 +160,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.table.deselectCell()
                     }
                 } else {
-                    self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FOLDER", comment: ""))
+                    self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
                     
                     self.table.deselectCell()
                 }

@@ -165,7 +165,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         }
                     } else {
                         if textField.text != self.filesDict[self.openedFolder]?[indexPath.row] {
-                            self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FILE", comment: ""))
+                            self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
                         }
                         
                         self.table.deselectCell()
@@ -291,7 +291,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.table.deselectCell()
                     }
                 } else {
-                    self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME_FILE", comment: ""))
+                    self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
                     
                     self.table.deselectCell()
                 }
