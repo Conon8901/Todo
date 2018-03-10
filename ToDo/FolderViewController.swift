@@ -27,6 +27,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     var cellIndex: IndexPath = [0,0]
     
+    var isDataNil = false
+    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -86,33 +88,54 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchBar.text!.isEmpty {
-            return folderNameArray.count
+        if folderNameArray.count == 0 {
+            isDataNil = true
+            
+            return 1
         } else {
-            return searchArray.count
+            isDataNil = false
+            
+            if searchBar.text!.isEmpty {
+                return folderNameArray.count
+            } else {
+                return searchArray.count
+            }
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Folder")
         
-        if searchBar.text!.isEmpty {
-            cell?.textLabel?.text = folderNameArray[indexPath.row]
+        if isDataNil {
+            cell?.textLabel?.text = NSLocalizedString("CELL_LABEL_ADD_CATEGORY", comment: "")
+            cell?.textLabel?.textColor = .gray
             
             cell?.detailTextLabel?.text = ""
+            
+            table.allowsSelection = false
         } else {
-            cell?.textLabel?.text = searchArray[indexPath.row]
-            
-            var includingFiles = ""
-            for files in searchDict[cell!.textLabel!.text!]! {
-                includingFiles += files + ", "
+            if searchBar.text!.isEmpty {
+                cell?.textLabel?.text = folderNameArray[indexPath.row]
+                
+                cell?.detailTextLabel?.text = ""
+            } else {
+                cell?.textLabel?.text = searchArray[indexPath.row]
+                
+                var includingFiles = ""
+                for files in searchDict[cell!.textLabel!.text!]! {
+                    includingFiles += files + ", "
+                }
+                includingFiles = String(includingFiles.prefix(includingFiles.count - 2))
+                
+                cell?.detailTextLabel?.text = includingFiles
             }
-            includingFiles = String(includingFiles.prefix(includingFiles.count - 2))
             
-            cell?.detailTextLabel?.text = includingFiles
+            cell?.textLabel?.textColor = .black
+            
+            cell?.textLabel?.numberOfLines = 0
+            
+            table.allowsSelection = true
         }
-        
-        cell?.textLabel?.numberOfLines = 0
         
         return cell!
     }
@@ -216,32 +239,34 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let maxIndex = folderNameArray.count - 1
-            
-            for fileName in filesDict[folderNameArray[indexPath.row]]! {
-                removeAllObject(key: folderNameArray[indexPath.row] + "@" + fileName)
-            }
-            
-            filesDict[folderNameArray[indexPath.row]] = nil
-            
-            folderNameArray.remove(at: indexPath.row)
-            
-            tableView.reload()
-            
-            if indexPath.row >= maxIndex - 1 {
-                if indexPath.row != 0 {
-                    tableView.scrollToRow(at: [0,maxIndex - 1], at: .bottom, animated: true)
-                }
-            } else {
-                let visibleLastCell = folderNameArray.index(of: tableView.visibleCells.last!.textLabel!.text!)! - 1
+            if !isDataNil {
+                let maxIndex = folderNameArray.count - 1
                 
-                tableView.scrollToRow(at: [0,visibleLastCell], at: .bottom, animated: true)
+                for fileName in filesDict[folderNameArray[indexPath.row]]! {
+                    removeAllObject(key: folderNameArray[indexPath.row] + "@" + fileName)
+                }
+                
+                filesDict[folderNameArray[indexPath.row]] = nil
+                
+                folderNameArray.remove(at: indexPath.row)
+                
+                tableView.reload()
+                
+                if indexPath.row >= maxIndex - 1 {
+                    if indexPath.row != 0 {
+                        tableView.scrollToRow(at: [0,maxIndex - 1], at: .bottom, animated: true)
+                    }
+                } else {
+                    let visibleLastCell = folderNameArray.index(of: tableView.visibleCells.last!.textLabel!.text!)! - 1
+                    
+                    tableView.scrollToRow(at: [0,visibleLastCell], at: .bottom, animated: true)
+                }
+                
+                self.saveData.set(self.filesDict, forKey: "@dictData")
+                self.saveData.set(self.folderNameArray, forKey: "@folders")
+                
+                self.checkIsArrayEmpty()
             }
-            
-            self.saveData.set(self.filesDict, forKey: "@dictData")
-            self.saveData.set(self.folderNameArray, forKey: "@folders")
-            
-            self.checkIsArrayEmpty()
         }
     }
     

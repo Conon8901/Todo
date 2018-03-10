@@ -111,7 +111,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let cell = tableView.dequeueReusableCell(withIdentifier: "File")
         
         if isDataNil {
-            cell?.textLabel?.text = NSLocalizedString("CELL_LABEL_ADDITEM", comment: "")
+            cell?.textLabel?.text = NSLocalizedString("CELL_LABEL_ADD_TASK", comment: "")
             cell?.textLabel?.textColor = .gray
             
             cell?.detailTextLabel?.text = ""
