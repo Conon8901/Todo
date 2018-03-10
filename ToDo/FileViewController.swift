@@ -26,6 +26,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var openedFolder = ""
     
+    var isDataNil = false
+    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -94,37 +96,59 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filesDict[openedFolder]!.count
+        if filesDict[openedFolder]!.count == 0 {
+            isDataNil = true
+            
+            return 1
+        } else {
+            isDataNil = false
+            
+            return filesDict[openedFolder]!.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "File")
         
-        var fileName = ""
-        var key = ""
-        
-        fileName = filesDict[openedFolder]![indexPath.row]
-        
-        key = openedFolder + "@" + fileName
-        
-        cell?.textLabel?.text = fileName
-        
-        cell?.detailTextLabel?.text = saveData.object(forKey: key + "@memo") as! String?
-        
-        if let isChecked = saveData.object(forKey: key + "@check") as! Bool? {
-            if isChecked {
-                cell?.accessoryType = .checkmark
-            } else {
-                cell?.accessoryType = .none
-            }
-        }
-        
-        let searcharray = variables.shared.includingFiles
-        
-        if searcharray.index(of: fileName) != nil {
-            cell?.backgroundColor = UIColor(white: 224/255, alpha: 1)
+        if isDataNil {
+            cell?.textLabel?.text = NSLocalizedString("CELL_LABEL_ADDITEM", comment: "")
+            cell?.textLabel?.textColor = .gray
+            
+            cell?.detailTextLabel?.text = ""
+            
+            cell?.accessoryType = .none
+            
+            table.allowsSelection = false
         } else {
-            cell?.backgroundColor = .white
+            var fileName = ""
+            var key = ""
+            
+            fileName = filesDict[openedFolder]![indexPath.row]
+            
+            key = openedFolder + "@" + fileName
+            
+            cell?.textLabel?.text = fileName
+            cell?.textLabel?.textColor = .black
+            
+            cell?.detailTextLabel?.text = saveData.object(forKey: key + "@memo") as! String?
+            
+            if let isChecked = saveData.object(forKey: key + "@check") as! Bool? {
+                if isChecked {
+                    cell?.accessoryType = .checkmark
+                } else {
+                    cell?.accessoryType = .none
+                }
+            }
+            
+            let searcharray = variables.shared.includingFiles
+            
+            if searcharray.index(of: fileName) != nil {
+                cell?.backgroundColor = UIColor(white: 224/255, alpha: 1)
+            } else {
+                cell?.backgroundColor = .white
+            }
+            
+            table.allowsSelection = true
         }
         
         return cell!
@@ -203,40 +227,45 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_BUTTON_DELETE", comment: "")) { (action, index) -> Void in
-            var key = ""
-            
-            key = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
-            
-            let maxIndex = self.filesDict[self.openedFolder]!.count - 1
-            
-            self.filesDict[self.openedFolder]?.remove(at: indexPath.row)
-            
-            tableView.reload()
-            
-            if indexPath.row >= maxIndex - 1 {
-                if indexPath.row != 0 {
-                    tableView.scrollToRow(at: [0,maxIndex - 1], at: .bottom, animated: true)
-                }
-            } else {
-                let visibleLastCell = self.filesDict[self.openedFolder]!.index(of: tableView.visibleCells.last!.textLabel!.text!)! - 1
+            if !self.isDataNil {
+                var key = ""
                 
-                tableView.scrollToRow(at: [0,visibleLastCell], at: .bottom, animated: true)
+                key = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
+                
+                let maxIndex = self.filesDict[self.openedFolder]!.count - 1
+                
+                self.filesDict[self.openedFolder]?.remove(at: indexPath.row)
+                
+                tableView.reload()
+                
+                if indexPath.row >= maxIndex - 1 {
+                    if indexPath.row != 0 {
+                        tableView.scrollToRow(at: [0,maxIndex - 1], at: .bottom, animated: true)
+                    }
+                } else {
+                    let visibleLastCell = self.filesDict[self.openedFolder]!.index(of: tableView.visibleCells.last!.textLabel!.text!)! - 1
+                    
+                    tableView.scrollToRow(at: [0,visibleLastCell], at: .bottom, animated: true)
+                }
+                
+                self.saveData.set(self.filesDict, forKey: "@dictData")
+                
+                self.removeAllObject(key: key)
+                
+                self.checkIsArrayEmpty()
             }
             
-            self.saveData.set(self.filesDict, forKey: "@dictData")
-            
-            self.removeAllObject(key: key)
-            
-            self.checkIsArrayEmpty()
         }
         
         deleteButton.backgroundColor = .red
         
         let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_BUTTON_MOVE", comment: "")) { (action, index) -> Void in
-            variables.shared.movingFileName = self.filesDict[self.openedFolder]![indexPath.row]
-            
-            let nextView = self.storyboard!.instantiateViewController(withIdentifier: "ListNav") as! UINavigationController
-            self.present(nextView, animated: true)
+            if !self.isDataNil {
+                variables.shared.movingFileName = self.filesDict[self.openedFolder]![indexPath.row]
+                
+                let nextView = self.storyboard!.instantiateViewController(withIdentifier: "ListNav") as! UINavigationController
+                self.present(nextView, animated: true)
+            }
         }
         
         moveButton.backgroundColor = .lightGray
