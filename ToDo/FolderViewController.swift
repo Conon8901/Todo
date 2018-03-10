@@ -42,7 +42,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
         
-        navigationItem.title = NSLocalizedString("NAV_TITLE_FOLDER", comment: "")
+        navigationItem.title = NSLocalizedString("NAV_TITLE_CATEGORY", comment: "")
     }
     
     override func viewWillAppear(_ animated: Bool) {

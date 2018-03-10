@@ -33,7 +33,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
-        navigationItem.title = NSLocalizedString("NAV_TITLE_FOLDER", comment: "")
+        navigationItem.title = NSLocalizedString("NAV_TITLE_CATEGORY", comment: "")
     }
     
     override func didReceiveMemoryWarning() {
