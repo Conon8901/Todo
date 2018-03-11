@@ -38,6 +38,17 @@ extension UISearchBar {
         self.enablesReturnKeyAutomatically = false
         self.autocapitalizationType = .none
     }
+    
+    func enable(_ bool: Bool) {
+        if bool {
+            self.isUserInteractionEnabled = true
+            self.alpha = 1
+            self.endEditing(true)
+        } else {
+            self.isUserInteractionEnabled = false
+            self.alpha = 0.75
+        }
+    }
 }
 
 class variables {

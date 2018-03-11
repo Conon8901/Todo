@@ -78,7 +78,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             }
         }
         
-        checkIsArrayEmpty()
+        setEditButton()
     }
     
     override func didReceiveMemoryWarning() {
@@ -265,7 +265,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 self.saveData.set(self.filesDict, forKey: "@dictData")
                 self.saveData.set(self.folderNameArray, forKey: "@folders")
                 
-                self.checkIsArrayEmpty()
+                self.setEditButton()
             }
         }
     }
@@ -300,7 +300,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         self.saveData.set(self.filesDict, forKey: "@dictData")
                         self.saveData.set(self.folderNameArray, forKey: "@folders")
                         
-                        self.checkIsArrayEmpty()
+                        self.setEditButton()
                         
                         self.table.reload()
                         
@@ -340,17 +340,14 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
             
-            searchBar.isUserInteractionEnabled = true
-            searchBar.alpha = 1
-            searchBar.endEditing(true)
+            searchBar.enable(true)
             
             editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             
-            searchBar.isUserInteractionEnabled = false
-            searchBar.alpha = 0.75
+            searchBar.enable(false)
             
             editButton.title = NSLocalizedString("NAV_BUTTON_DONE", comment: "")
         }
@@ -419,12 +416,16 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         self.present(alert, animated: true, completion: nil)
     }
     
-    func checkIsArrayEmpty() {
+    func setEditButton() {
         if searchBar.text!.isEmpty {
             if folderNameArray.isEmpty {
                 editButton.isEnabled = false
+                
+                searchBar.enable(false)
             } else {
                 editButton.isEnabled = true
+                
+                searchBar.enable(true)
             }
         } else {
             if searchArray.isEmpty {
@@ -432,6 +433,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             } else {
                 editButton.isEnabled = true
             }
+            
+            searchBar.enable(false)
         }
     }
     
