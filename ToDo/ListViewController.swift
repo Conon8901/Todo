@@ -16,9 +16,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var saveData = UserDefaults.standard
     
-    var filesDict = [String: [String]]()
+    var tasksDict = [String: [String]]()
     
-    var listNameArray = [String]()
+    var categoriesArray = [String]()
     
     // MARK: - LifeCycle
     
@@ -29,9 +29,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.delegate = self
         table.setUp()
         
-        listNameArray = saveData.object(forKey: "@folders") as! [String]
+        categoriesArray = saveData.object(forKey: "@folders") as! [String]
         
-        filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
+        tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
         navigationItem.title = NSLocalizedString("NAV_TITLE_CATEGORY", comment: "")
     }
@@ -43,13 +43,13 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return listNameArray.count
+        return categoriesArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "List")
         
-        cell?.textLabel?.text = listNameArray[indexPath.row]
+        cell?.textLabel?.text = categoriesArray[indexPath.row]
         
         cell?.textLabel?.numberOfLines = 0
         
@@ -65,9 +65,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        let folderName = saveData.object(forKey: "@folderName") as! String
+        let preCategory = saveData.object(forKey: "@folderName") as! String
         
-        if listNameArray[indexPath.row] != folderName {
+        if categoriesArray[indexPath.row] != preCategory {
             return indexPath
         } else {
             return nil
@@ -75,24 +75,24 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let preFolderName = saveData.object(forKey: "@folderName") as! String
-        let fileName = variables.shared.movingFileName
+        let preCategory = saveData.object(forKey: "@folderName") as! String
+        let taskName = variables.shared.movingTaskName
         
-        let preKey = preFolderName + "@" + fileName
+        let preKey = preCategory + "@" + taskName
         
-        let fileIndex = filesDict[listNameArray[indexPath.row]]!.index(of: fileName)
+        let taskIndex = tasksDict[categoriesArray[indexPath.row]]!.index(of: taskName)
         
-        let postKey = listNameArray[indexPath.row] + "@" + fileName
+        let postKey = categoriesArray[indexPath.row] + "@" + taskName
         
-        if fileIndex == nil {
-            filesDict[listNameArray[indexPath.row]]!.append(fileName)
+        if taskIndex == nil {
+            tasksDict[categoriesArray[indexPath.row]]!.append(taskName)
             
-            let index = filesDict[preFolderName]!.index(of: fileName)!
-            filesDict[preFolderName]?.remove(at: index)
+            let index = tasksDict[preCategory]!.index(of: taskName)!
+            tasksDict[preCategory]?.remove(at: index)
             
-            saveData.set(filesDict, forKey: "@dictData")
+            saveData.set(tasksDict, forKey: "@dictData")
             
-            resaveDate(pre: preKey, post: postKey)
+            resaveData(pre: preKey, post: postKey)
             
             variables.shared.isFromListView = true
             
@@ -104,15 +104,15 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 preferredStyle: .alert)
             
             let replaceAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_REPLACE", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
-                self.filesDict[self.listNameArray[indexPath.row]]!.remove(at: fileIndex!)
-                self.filesDict[self.listNameArray[indexPath.row]]!.append(fileName)
+                self.tasksDict[self.categoriesArray[indexPath.row]]!.remove(at: taskIndex!)
+                self.tasksDict[self.categoriesArray[indexPath.row]]!.append(taskName)
                 
-                let index = self.filesDict[preFolderName]!.index(of: fileName)!
-                self.filesDict[preFolderName]?.remove(at: index)
+                let index = self.tasksDict[preCategory]!.index(of: taskName)!
+                self.tasksDict[preCategory]?.remove(at: index)
                 
-                self.saveData.set(self.filesDict, forKey: "@dictData")
+                self.saveData.set(self.tasksDict, forKey: "@dictData")
                 
-                self.resaveDate(pre: preKey, post: postKey)
+                self.resaveData(pre: preKey, post: postKey)
                 
                 variables.shared.isFromListView = true
                 
@@ -130,7 +130,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    @IBAction func add() {
+    @IBAction func addItem() {
         let alert = UIAlertController(
             title: NSLocalizedString("ALERT_TITLE_ADD", comment: ""),
             message: NSLocalizedString("ALERT_MESSAGE_ENTER", comment: ""),
@@ -142,30 +142,30 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
             
             if !isBlank {
-                if self.listNameArray.index(of: textField.text!) == nil {
+                if self.categoriesArray.index(of: textField.text!) == nil {
                     if !textField.text!.contains("@") {
-                        self.listNameArray.append(textField.text!)
+                        self.categoriesArray.append(textField.text!)
                         
-                        self.filesDict[textField.text!] = []
+                        self.tasksDict[textField.text!] = []
                         
-                        self.saveData.set(self.filesDict, forKey: "@dictData")
-                        self.saveData.set(self.listNameArray, forKey: "@folders")
+                        self.saveData.set(self.tasksDict, forKey: "@dictData")
+                        self.saveData.set(self.categoriesArray, forKey: "@folders")
                         
                         self.table.reload()
                         
-                        self.table.scrollToRow(at: [0,self.filesDict.keys.count-1], at: .bottom, animated: true)
+                        self.table.scrollToRow(at: [0,self.tasksDict.keys.count-1], at: .bottom, animated: true)
                     } else {
-                        self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
+                        self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                         
                         self.table.deselectCell()
                     }
                 } else {
-                    self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
+                    self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
                     
                     self.table.deselectCell()
                 }
             } else {
-                self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
+                self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
                 
                 self.table.deselectCell()
             }
@@ -186,7 +186,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     // MARK: - Methods
     
-    func showalert(message: String) {
+    func showErrorAlert(message: String) {
         let alert = UIAlertController(
             title: NSLocalizedString("ALERT_TITLE_ERROR", comment: ""),
             message: message,
@@ -197,16 +197,16 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.present(alert, animated: true, completion: nil)
     }
     
-    func resaveDate(pre: String, post: String) {
-        let savedMemoText = saveData.object(forKey: pre + "@memo") as! String
-        let savedisShownParts = saveData.object(forKey: pre + "@ison") as! Bool
+    func resaveData(pre: String, post: String) {
+        let savedMemo = saveData.object(forKey: pre + "@memo") as! String
+        let savedSwitch = saveData.object(forKey: pre + "@ison") as! Bool
         let savedDate = saveData.object(forKey: pre + "@date") as! Date?
-        let savedisChecked = saveData.object(forKey: pre + "@check") as! Bool
+        let savedCheckmark = saveData.object(forKey: pre + "@check") as! Bool
         
-        saveData.set(savedMemoText, forKey: post + "@memo")
+        saveData.set(savedMemo, forKey: post + "@memo")
         saveData.removeObject(forKey: pre + "@memo")
         
-        saveData.set(savedisShownParts, forKey: post + "@ison")
+        saveData.set(savedSwitch, forKey: post + "@ison")
         saveData.removeObject(forKey: pre + "@ison")
         
         if savedDate != nil {
@@ -214,7 +214,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             saveData.removeObject(forKey: pre + "@date")
         }
         
-        saveData.set(savedisChecked, forKey: post + "@check")
+        saveData.set(savedCheckmark, forKey: post + "@check")
         saveData.removeObject(forKey: pre + "@check")
     }
     

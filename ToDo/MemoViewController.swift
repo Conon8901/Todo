@@ -40,15 +40,15 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let folderName = saveData.object(forKey: "@folderName") as! String
-        let fileName = saveData.object(forKey: "@fileName") as! String
-        key = folderName + "@" + fileName
+        let categoryName = saveData.object(forKey: "@folderName") as! String
+        let taskName = saveData.object(forKey: "@fileName") as! String
+        key = categoryName + "@" + taskName
         
         memoTextView.text = saveData.object(forKey: key + "@memo") as! String
         
         dateSwitch.isOn = saveData.object(forKey: key + "@ison") as! Bool
         
-        checkShowsPlaceHolder()
+        tryShowsPlaceHolder()
         
         if dateSwitch.isOn {
             showsDateParts(true)
@@ -60,7 +60,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             setDatePicker()
         }
         
-        navigationItem.title = fileName
+        navigationItem.title = taskName
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -76,7 +76,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     // MARK: - TextView
     
     func textViewDidChange(_ textView: UITextView) {
-        checkShowsPlaceHolder()
+        tryShowsPlaceHolder()
         
         saveData.set(memoTextView.text!, forKey: key + "@memo")
     }
@@ -124,7 +124,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         datePicker.isHidden = !bool
     }
     
-    func checkShowsPlaceHolder() {
+    func tryShowsPlaceHolder() {
         if memoTextView.text == "" {
             placeHolder.isHidden = false
         } else {

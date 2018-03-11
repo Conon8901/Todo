@@ -14,9 +14,9 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet var table: UITableView!
     
-    var dateArray = [String]()
+    var satisfiedArray = [String]()
     
-    var isArrayNil = false
+    var isDataNil = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,7 +29,7 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         navigationItem.title = variables.shared.condition
         
-        dateArray = variables.shared.dateArray
+        satisfiedArray = variables.shared.dateArray
     }
     
     override func didReceiveMemoryWarning() {
@@ -39,27 +39,27 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if dateArray.count == 0 {
-            isArrayNil = true
+        if satisfiedArray.count == 0 {
+            isDataNil = true
             
             return 1
         } else {
-            isArrayNil = false
+            isDataNil = false
             
-            return dateArray.count
+            return satisfiedArray.count
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Date")
         
-        if isArrayNil {
+        if isDataNil {
             cell?.textLabel?.text = NSLocalizedString("CELL_LABEL_NA", comment: "")
             cell?.textLabel?.textColor = .gray
             
             cell?.textLabel?.textAlignment = .center
         } else {
-            cell?.textLabel?.text = dateArray[indexPath.row]
+            cell?.textLabel?.text = satisfiedArray[indexPath.row]
         }
         
         return cell!

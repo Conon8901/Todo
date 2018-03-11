@@ -14,17 +14,17 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBOutlet var table: UITableView!
     @IBOutlet var editButton: UIBarButtonItem!
-    @IBOutlet var pickByDateButton: UIBarButtonItem!
+    @IBOutlet var pickButton: UIBarButtonItem!
     
     var deleteAllButton: UIBarButtonItem?
     
     var saveData = UserDefaults.standard
     
-    var filesDict = [String: [String]]()
+    var tasksDict = [String: [String]]()
     
     var cellIndex: IndexPath = [0,0]
     
-    var openedFolder = ""
+    var openedCategory = ""
     
     var isDataNil = false
     
@@ -37,37 +37,37 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.delegate = self
         table.setUp()
         
-        filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
+        tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
-        openedFolder = saveData.object(forKey: "@folderName") as! String
-        
-        editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
-        
-        deleteAllButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(FileViewController.deleteAll))
-        
-        self.navigationItem.leftBarButtonItem = nil
+        openedCategory = saveData.object(forKey: "@folderName") as! String
         
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.putCheckmark))
         table.addGestureRecognizer(longPressRecognizer)
         
+        editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
+        
+        self.navigationItem.leftBarButtonItem = nil
+        
+        deleteAllButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(FileViewController.deleteAll))
+        
         deleteAllButton?.tintColor = .red
         
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: openedFolder, style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: openedCategory, style: .plain, target: nil, action: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        navigationItem.title = openedFolder
+        navigationItem.title = openedCategory
         
         if variables.shared.isFromListView {
-            filesDict = saveData.object(forKey: "@dictData") as! [String: [String]]
+            tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
             
             variables.shared.isFromListView = false
         }
         
-        if let indexPathForSelectedRow = table.indexPathForSelectedRow {
-            cellIndex = indexPathForSelectedRow
+        if let selectedIndex = table.indexPathForSelectedRow {
+            cellIndex = selectedIndex
         }
         
         table.reload()
@@ -82,7 +82,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         }
         
-        checkIsArrayEmpty()
+        setEditButton()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -96,14 +96,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if filesDict[openedFolder]!.count == 0 {
+        if tasksDict[openedCategory]!.count == 0 {
             isDataNil = true
             
             return 1
         } else {
             isDataNil = false
             
-            return filesDict[openedFolder]!.count
+            return tasksDict[openedCategory]!.count
         }
     }
     
@@ -120,14 +120,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             table.allowsSelection = false
         } else {
-            var fileName = ""
-            var key = ""
+            let taskName = tasksDict[openedCategory]![indexPath.row]
             
-            fileName = filesDict[openedFolder]![indexPath.row]
+            let key = openedCategory + "@" + taskName
             
-            key = openedFolder + "@" + fileName
-            
-            cell?.textLabel?.text = fileName
+            cell?.textLabel?.text = taskName
             cell?.textLabel?.textColor = .black
             
             cell?.detailTextLabel?.text = saveData.object(forKey: key + "@memo") as! String?
@@ -140,9 +137,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             }
             
-            let searcharray = variables.shared.includingFiles
+            let satisfiedarray = variables.shared.includingTasks
             
-            if searcharray.index(of: fileName) != nil {
+            if satisfiedarray.index(of: taskName) != nil {
                 cell?.backgroundColor = UIColor(white: 224/255, alpha: 1)
             } else {
                 cell?.backgroundColor = .white
@@ -167,35 +164,32 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
                 
                 if !isBlank {
-                    if self.filesDict[self.openedFolder]?.index(of: textField.text!) == nil {
+                    if self.tasksDict[self.openedCategory]?.index(of: textField.text!) == nil {
                         if !textField.text!.contains("@") {
-                            var preKey = ""
-                            var postKey = ""
+                            let preKey = self.openedCategory + "@" + self.tasksDict[self.openedCategory]![indexPath.row]
+                            let postKey = self.openedCategory + "@" + textField.text!
                             
-                            preKey = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
-                            postKey = self.openedFolder + "@" + textField.text!
+                            self.tasksDict[self.openedCategory]?[indexPath.row] = textField.text!
                             
-                            self.filesDict[self.openedFolder]?[indexPath.row] = textField.text!
+                            self.saveData.set(self.tasksDict, forKey: "@dictData")
                             
-                            self.saveData.set(self.filesDict, forKey: "@dictData")
-                            
-                            self.resaveDate(pre: preKey, post: postKey)
+                            self.resaveData(pre: preKey, post: postKey)
                             
                             self.table.reload()
                         } else {
-                            self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
+                            self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                             
                             self.table.deselectCell()
                         }
                     } else {
-                        if textField.text != self.filesDict[self.openedFolder]?[indexPath.row] {
-                            self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
+                        if textField.text != self.tasksDict[self.openedCategory]?[indexPath.row] {
+                            self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
                         }
                         
                         self.table.deselectCell()
                     }
                 } else {
-                    self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
+                    self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
                     
                     self.table.deselectCell()
                 }
@@ -206,7 +200,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             
             alert.addTextField { (textField: UITextField!) -> Void in
-                textField.text = self.filesDict[self.openedFolder]?[indexPath.row]
+                textField.text = self.tasksDict[self.openedCategory]?[indexPath.row]
                 
                 textField.textAlignment = .left
                 
@@ -218,7 +212,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             present(alert, animated: true, completion: nil)
         } else {
-            saveData.set(filesDict[openedFolder]![indexPath.row], forKey: "@fileName")
+            saveData.set(tasksDict[openedCategory]![indexPath.row], forKey: "@fileName")
             
             let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Memo") as! MemoViewController
             self.navigationController?.pushViewController(nextView, animated: true)
@@ -228,13 +222,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_BUTTON_DELETE", comment: "")) { (action, index) -> Void in
             if !self.isDataNil {
-                var key = ""
+                let key = self.openedCategory + "@" + self.tasksDict[self.openedCategory]![indexPath.row]
                 
-                key = self.openedFolder + "@" + self.filesDict[self.openedFolder]![indexPath.row]
+                let maxIndex = self.tasksDict[self.openedCategory]!.count - 1
                 
-                let maxIndex = self.filesDict[self.openedFolder]!.count - 1
-                
-                self.filesDict[self.openedFolder]?.remove(at: indexPath.row)
+                self.tasksDict[self.openedCategory]?.remove(at: indexPath.row)
                 
                 tableView.reload()
                 
@@ -243,16 +235,16 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         tableView.scrollToRow(at: [0,maxIndex - 1], at: .bottom, animated: true)
                     }
                 } else {
-                    let visibleLastCell = self.filesDict[self.openedFolder]!.index(of: tableView.visibleCells.last!.textLabel!.text!)! - 1
+                    let visibleLastCell = self.tasksDict[self.openedCategory]!.index(of: tableView.visibleCells.last!.textLabel!.text!)! - 1
                     
                     tableView.scrollToRow(at: [0,visibleLastCell], at: .bottom, animated: true)
                 }
                 
-                self.saveData.set(self.filesDict, forKey: "@dictData")
+                self.saveData.set(self.tasksDict, forKey: "@dictData")
                 
                 self.removeAllObject(key: key)
                 
-                self.checkIsArrayEmpty()
+                self.setEditButton()
             }
             
         }
@@ -261,7 +253,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_BUTTON_MOVE", comment: "")) { (action, index) -> Void in
             if !self.isDataNil {
-                variables.shared.movingFileName = self.filesDict[self.openedFolder]![indexPath.row]
+                variables.shared.movingTaskName = self.tasksDict[self.openedCategory]![indexPath.row]
                 
                 let nextView = self.storyboard!.instantiateViewController(withIdentifier: "ListNav") as! UINavigationController
                 self.present(nextView, animated: true)
@@ -274,17 +266,17 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let movingItem = filesDict[openedFolder]![sourceIndexPath.row]
+        let movingItem = tasksDict[openedCategory]![sourceIndexPath.row]
         
-        filesDict[openedFolder]?.remove(at: sourceIndexPath.row)
-        filesDict[openedFolder]?.insert(movingItem, at: destinationIndexPath.row)
+        tasksDict[openedCategory]?.remove(at: sourceIndexPath.row)
+        tasksDict[openedCategory]?.insert(movingItem, at: destinationIndexPath.row)
         
-        saveData.set(filesDict, forKey: "@dictData")
+        saveData.set(tasksDict, forKey: "@dictData")
         
         table.reload()
     }
     
-    @IBAction func add() {
+    @IBAction func addItem() {
         let alert = UIAlertController(
             title: NSLocalizedString("ALERT_TITLE_ADD", comment: ""),
             message: NSLocalizedString("ALERT_MESSAGE_ENTER", comment: ""),
@@ -296,36 +288,35 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
             
             if !isBlank {
-                if self.filesDict[self.openedFolder]?.index(of: textField.text!) == nil {
+                if self.tasksDict[self.openedCategory]?.index(of: textField.text!) == nil {
                     if !textField.text!.contains("@") {
-                        self.filesDict[self.openedFolder]!.append(textField.text!)
+                        self.tasksDict[self.openedCategory]!.append(textField.text!)
                         
-                        let key = self.openedFolder + "@" + textField.text!
+                        let key = self.openedCategory + "@" + textField.text!
                         
                         self.saveData.set("", forKey: key + "@memo")
                         self.saveData.set(false, forKey: key + "@ison")
                         self.saveData.set(false, forKey: key + "@check")
                         
-                        self.saveData.set(self.filesDict, forKey: "@dictData")
+                        self.saveData.set(self.tasksDict, forKey: "@dictData")
                         
-                        self.checkIsArrayEmpty()
+                        self.setEditButton()
                         
                         self.table.reload()
                         
-                        self.table.scrollToRow(at: [0,self.filesDict[self.openedFolder]!.count-1], at: .bottom, animated: true)
-                        
+                        self.table.scrollToRow(at: [0,self.tasksDict[self.openedCategory]!.count-1], at: .bottom, animated: true)
                     } else {
-                        self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
+                        self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
                         
                         self.table.deselectCell()
                     }
                 } else {
-                    self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
+                    self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
                     
                     self.table.deselectCell()
                 }
             } else {
-                self.showalert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
+                self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
                 
                 self.table.deselectCell()
             }
@@ -351,11 +342,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if recognizer.state == .began {
                 if let cell = table.cellForRow(at: indexPath!) {
                     if cell.accessoryType == .none {
-                        saveData.set(true, forKey: openedFolder + "@" + filesDict[openedFolder]![indexPath!.row] + "@check")
+                        saveData.set(true, forKey: openedCategory + "@" + tasksDict[openedCategory]![indexPath!.row] + "@check")
                         
                         cell.accessoryType = .checkmark
                     } else {
-                        saveData.set(false, forKey: openedFolder + "@" + filesDict[openedFolder]![indexPath!.row] + "@check")
+                        saveData.set(false, forKey: openedCategory + "@" + tasksDict[openedCategory]![indexPath!.row] + "@check")
                         
                         cell.accessoryType = .none
                     }
@@ -375,7 +366,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             navigationItem.hidesBackButton = false
             
-            if filesDict[openedFolder]!.isEmpty {
+            if tasksDict[openedCategory]!.isEmpty {
                 editButton.isEnabled = false
             }
             
@@ -402,14 +393,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             preferredStyle: .alert)
         
         let deleteAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DELETE", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
-            let files = self.filesDict[self.openedFolder]!
+            let tasks = self.tasksDict[self.openedCategory]!
             
-            if !files.isEmpty {
-                files.forEach({ self.removeAllObject(key: self.openedFolder + "@" + $0) })
+            if !tasks.isEmpty {
+                tasks.forEach({ self.removeAllObject(key: self.openedCategory + "@" + $0) })
                 
-                self.filesDict[self.openedFolder] = []
+                self.tasksDict[self.openedCategory] = []
                 
-                self.saveData.set(self.filesDict, forKey: "@dictData")
+                self.saveData.set(self.tasksDict, forKey: "@dictData")
                 
                 self.editButton.isEnabled = true
                 
@@ -428,8 +419,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     // MARK: - Toolbar
     
-    @IBAction func pickByDate() {
-        var tmpArray = [String]()
+    @IBAction func pickItems() {
+        var satisfiedArray = [String]()
         
         let action = UIAlertController(title: NSLocalizedString("ALERT_TITLE_DATE", comment: ""), message: NSLocalizedString("ALERT_MESSAGE_DATE", comment: ""), preferredStyle: .actionSheet)
         
@@ -437,59 +428,58 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             (action: UIAlertAction!) in
             variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_MONTH", comment: "")
             
-            for file in self.filesDict[self.openedFolder]! {
-                let key = self.openedFolder + "@" + file + "@date"
+            for task in self.tasksDict[self.openedCategory]! {
+                let key = self.openedCategory + "@" + task + "@date"
                 if let date = self.saveData.object(forKey: key) as! Date? {
                     if date.timeIntervalSinceNow < 60*60*24*30 {
-                        tmpArray.append(file)
+                        satisfiedArray.append(task)
                     }
                 }
             }
             
-            variables.shared.dateArray = tmpArray
+            variables.shared.dateArray = satisfiedArray
             
-            self.modalToDate()
+            self.modalToDateView()
         })
         
         let week = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_WEEK", comment: ""), style: .default, handler: {
             (action: UIAlertAction!) in
             variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_WEEK", comment: "")
             
-            for file in self.filesDict[self.openedFolder]! {
-                let key = self.openedFolder + "@" + file + "@date"
+            for task in self.tasksDict[self.openedCategory]! {
+                let key = self.openedCategory + "@" + task + "@date"
                 if let date = self.saveData.object(forKey: key) as! Date? {
                     if date.timeIntervalSinceNow < 60*60*24*7 {
-                        tmpArray.append(file)
+                        satisfiedArray.append(task)
                     }
                 }
             }
             
-            variables.shared.dateArray = tmpArray
+            variables.shared.dateArray = satisfiedArray
             
-            self.modalToDate()
+            self.modalToDateView()
         })
         
         let finished = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_OVER", comment: ""), style: .default, handler: {
             (action: UIAlertAction!) in
             variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_OVER", comment: "")
             
-            for file in self.filesDict[self.openedFolder]! {
-                let key = self.openedFolder + "@" + file + "@date"
+            for task in self.tasksDict[self.openedCategory]! {
+                let key = self.openedCategory + "@" + task + "@date"
                 if let date = self.saveData.object(forKey: key) as! Date? {
                     if date.timeIntervalSinceNow < 0 {
-                        tmpArray.append(file)
+                        satisfiedArray.append(task)
                     }
                 }
             }
             
-            variables.shared.dateArray = tmpArray
+            variables.shared.dateArray = satisfiedArray
             
-            self.modalToDate()
+            self.modalToDateView()
         })
         
         let cancel = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel, handler: {
             (action: UIAlertAction!) in
-            
         })
         
         action.addAction(month)
@@ -502,7 +492,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     // MARK: - Methods
     
-    func showalert(message: String) {
+    func showErrorAlert(message: String) {
         let alert = UIAlertController(
             title: NSLocalizedString("ALERT_TITLE_ERROR", comment: ""),
             message: message,
@@ -513,8 +503,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.present(alert, animated: true, completion: nil)
     }
     
-    func checkIsArrayEmpty() {
-        if filesDict[openedFolder]!.isEmpty {
+    func setEditButton() {
+        if tasksDict[openedCategory]!.isEmpty {
             editButton.isEnabled = false
         } else {
             editButton.isEnabled = true
@@ -528,26 +518,26 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         saveData.removeObject(forKey: key + "@check")
     }
     
-    func resaveDate(pre: String, post: String) {
-        let savedMemoText = saveData.object(forKey: pre + "@memo") as! String
-        let savedisShownParts = saveData.object(forKey: pre + "@ison") as! Bool
+    func resaveData(pre: String, post: String) {
+        let savedMemo = saveData.object(forKey: pre + "@memo") as! String
+        let savedSwitch = saveData.object(forKey: pre + "@ison") as! Bool
         let savedDate = saveData.object(forKey: pre + "@date") as! Date?
-        let savedisCheckeded = saveData.object(forKey: pre + "@check") as! Bool
+        let savedCheckmark = saveData.object(forKey: pre + "@check") as! Bool
         
-        saveData.set(savedMemoText, forKey: post + "@memo")
+        saveData.set(savedMemo, forKey: post + "@memo")
         
-        saveData.set(savedisShownParts, forKey: post + "@ison")
+        saveData.set(savedSwitch, forKey: post + "@ison")
         
         if savedDate != nil {
             saveData.set(savedDate!, forKey: post + "@date")
         }
         
-        saveData.set(savedisCheckeded, forKey: post + "@check")
+        saveData.set(savedCheckmark, forKey: post + "@check")
         
         removeAllObject(key: pre)
     }
     
-    func modalToDate() {
+    func modalToDateView() {
         let nextView = self.storyboard!.instantiateViewController(withIdentifier: "DateNav") as! UINavigationController
         self.present(nextView, animated: true)
     }

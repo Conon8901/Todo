@@ -60,9 +60,9 @@ class variables {
     
     var isFromMemoView = false
     
-    var movingFileName = ""
+    var movingTaskName = ""
     
-    var includingFiles = [String]()
+    var includingTasks = [String]()
     
     var condition = ""
     
