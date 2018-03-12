@@ -62,6 +62,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             saveData.set(tasksDict, forKey: "@dictData")
         }
         
+        setEditButton()
+        
         if let selectedIndex = table.indexPathForSelectedRow {
             cellIndex = selectedIndex
         }
@@ -76,9 +78,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 
                 variables.shared.isFromFileView = false
             }
+            
+            searchBar.enable(true)
+            
+            showSearchResult()
         }
-        
-        setEditButton()
     }
     
     override func didReceiveMemoryWarning() {
@@ -241,11 +245,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             if !isDataNil {
                 let maxIndex = categoriesArray.count - 1
                 
-                for fileName in tasksDict[categoriesArray[indexPath.row]]! {
-                    removeAllObject(key: categoriesArray[indexPath.row] + "@" + fileName)
-                }
+                let categoryName = categoriesArray[indexPath.row]
                 
-                tasksDict[categoriesArray[indexPath.row]] = nil
+                tasksDict[categoryName]?.forEach({ removeAllObject(key: categoryName + "@" + $0 )})
+                
+                tasksDict[categoryName] = nil
                 
                 categoriesArray.remove(at: indexPath.row)
                 
