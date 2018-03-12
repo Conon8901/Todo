@@ -14,7 +14,7 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet var table: UITableView!
     
-    var satisfiedArray = [String]()
+    var pickedArray = [String]()
     
     var isDataNil = false
     
@@ -29,7 +29,7 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         navigationItem.title = variables.shared.condition
         
-        satisfiedArray = variables.shared.dateArray
+        pickedArray = variables.shared.dateArray
     }
     
     override func didReceiveMemoryWarning() {
@@ -39,14 +39,14 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if satisfiedArray.count == 0 {
+        if pickedArray.count == 0 {
             isDataNil = true
             
             return 1
         } else {
             isDataNil = false
             
-            return satisfiedArray.count
+            return pickedArray.count
         }
     }
     
@@ -56,10 +56,11 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
         if isDataNil {
             cell?.textLabel?.text = NSLocalizedString("CELL_LABEL_NA", comment: "")
             cell?.textLabel?.textColor = .gray
-            
             cell?.textLabel?.textAlignment = .center
         } else {
-            cell?.textLabel?.text = satisfiedArray[indexPath.row]
+            cell?.textLabel?.text = pickedArray[indexPath.row]
+            cell?.textLabel?.textColor = .black
+            cell?.textLabel?.textAlignment = .left
         }
         
         return cell!

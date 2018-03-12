@@ -20,13 +20,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     var saveData = UserDefaults.standard
     
     var tasksDict = [String: [String]]()
-    
     var categoriesArray = [String]()
     var searchArray = [String]()
-    var satisfiedDict = [String: [String]]()
+    var pickedDict = [String: [String]]()
     
     var cellIndex: IndexPath = [0,0]
-    
     var isDataNil = false
     
     // MARK: - LifeCycle
@@ -75,13 +73,13 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             DispatchQueue.main.asyncAfter(deadline: .now()) {
                 self.table.deselectRow(at: self.cellIndex, animated: true)
-                
-                variables.shared.isFromFileView = false
             }
             
-            searchBar.enable(true)
+            variables.shared.isFromFileView = false
             
-            showSearchResult()
+            self.searchBar.enable(true)
+            
+            self.showSearchResult()
         }
     }
     
@@ -125,11 +123,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             } else {
                 cell?.textLabel?.text = searchArray[indexPath.row]
                 
-                var includingFiles = ""
-                for files in satisfiedDict[cell!.textLabel!.text!]! {
-                    includingFiles += files + ", "
-                }
-                includingFiles = String(includingFiles.prefix(includingFiles.count - 2))
+                let includingFiles = pickedDict[cell!.textLabel!.text!]!.joined(separator: ", ")
                 
                 cell?.detailTextLabel?.text = includingFiles
             }
@@ -178,7 +172,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                 }
                             }
                             
-                            self.tasksDict[preCategoryName] = nil
+                            self.tasksDict.removeValue(forKey: preCategoryName)
                             
                             self.table.reload()
                         } else {
@@ -206,7 +200,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             alert.addTextField { (textField: UITextField!) -> Void in
                 textField.text = self.categoriesArray[indexPath.row]
-                
                 textField.textAlignment = .left
                 
                 textField.clearButtonMode = .always
@@ -224,7 +217,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             } else {
                 saveData.set(searchArray[indexPath.row], forKey: "@folderName")
                 
-                variables.shared.includingTasks = satisfiedDict[searchArray[indexPath.row]]!
+                variables.shared.includingTasks = pickedDict[searchArray[indexPath.row]]!
             }
             
             let nextView = self.storyboard!.instantiateViewController(withIdentifier: "File") as! FileViewController
@@ -244,13 +237,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         if editingStyle == .delete {
             if !isDataNil {
                 let maxIndex = categoriesArray.count - 1
-                
                 let categoryName = categoriesArray[indexPath.row]
                 
                 tasksDict[categoryName]?.forEach({ removeAllObject(key: categoryName + "@" + $0 )})
                 
-                tasksDict[categoryName] = nil
-                
+                tasksDict.removeValue(forKey: categoryName)
                 categoriesArray.remove(at: indexPath.row)
                 
                 tableView.reload()
@@ -450,7 +441,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     
     func showSearchResult() {
         searchArray.removeAll()
-        satisfiedDict.removeAll()
+        pickedDict.removeAll()
         
         if saveData.object(forKey: "@dictData") != nil {
             let dict = saveData.object(forKey: "@dictData") as! [String: [String]]
@@ -462,10 +453,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     if value.partialMatch(target: searchBar.text!) {
                         isIncluding = true
                         
-                        if satisfiedDict[key] == nil {
-                            satisfiedDict[key] = [value]
+                        if pickedDict[key] == nil {
+                            pickedDict[key] = [value]
                         } else {
-                            satisfiedDict[key]?.append(value)
+                            pickedDict[key]?.append(value)
                         }
                     }
                 }
@@ -484,13 +475,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let savedCheckmark = saveData.object(forKey: pre + "@check") as! Bool
         
         saveData.set(savedMemoText, forKey: post + "@memo")
-        
         saveData.set(savedSwitch, forKey: post + "@ison")
-        
         if savedDate != nil {
             saveData.set(savedDate!, forKey: post + "@date")
         }
-        
         saveData.set(savedCheckmark, forKey: post + "@check")
         
         removeAllObject(key: pre)

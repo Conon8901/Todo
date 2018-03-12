@@ -15,7 +15,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet var table: UITableView!
     @IBOutlet var editButton: UIBarButtonItem!
     @IBOutlet var pickButton: UIBarButtonItem!
-    
     var deleteAllButton: UIBarButtonItem?
     
     var saveData = UserDefaults.standard
@@ -23,9 +22,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var tasksDict = [String: [String]]()
     
     var cellIndex: IndexPath = [0,0]
-    
     var openedCategory = ""
-    
     var isDataNil = false
     
     // MARK: - LifeCycle
@@ -77,9 +74,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             DispatchQueue.main.asyncAfter(deadline: .now()) {
                 self.table.deselectRow(at: self.cellIndex, animated: true)
-                
-                variables.shared.isFromMemoView = false
             }
+            
+            variables.shared.isFromMemoView = false
         }
         
         setEditButton()
@@ -121,7 +118,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             table.allowsSelection = false
         } else {
             let taskName = tasksDict[openedCategory]![indexPath.row]
-            
             let key = openedCategory + "@" + taskName
             
             cell?.textLabel?.text = taskName
@@ -137,9 +133,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             }
             
-            let satisfiedarray = variables.shared.includingTasks
+            let pickedArray = variables.shared.includingTasks
             
-            if satisfiedarray.index(of: taskName) != nil {
+            if pickedArray.index(of: taskName) != nil {
                 cell?.backgroundColor = UIColor(white: 224/255, alpha: 1)
             } else {
                 cell?.backgroundColor = .white
@@ -201,7 +197,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             alert.addTextField { (textField: UITextField!) -> Void in
                 textField.text = self.tasksDict[self.openedCategory]?[indexPath.row]
-                
                 textField.textAlignment = .left
                 
                 textField.clearButtonMode = .whileEditing
@@ -223,7 +218,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_BUTTON_DELETE", comment: "")) { (action, index) -> Void in
             if !self.isDataNil {
                 let key = self.openedCategory + "@" + self.tasksDict[self.openedCategory]![indexPath.row]
-                
                 let maxIndex = self.tasksDict[self.openedCategory]!.count - 1
                 
                 self.tasksDict[self.openedCategory]?.remove(at: indexPath.row)
@@ -290,9 +284,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if !isBlank {
                 if self.tasksDict[self.openedCategory]?.index(of: textField.text!) == nil {
                     if !textField.text!.contains("@") {
-                        self.tasksDict[self.openedCategory]!.append(textField.text!)
-                        
                         let key = self.openedCategory + "@" + textField.text!
+                        
+                        self.tasksDict[self.openedCategory]!.append(textField.text!)
                         
                         self.saveData.set("", forKey: key + "@memo")
                         self.saveData.set(false, forKey: key + "@ison")
@@ -420,7 +414,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - Toolbar
     
     @IBAction func pickItems() {
-        var satisfiedArray = [String]()
+        var pickedArray = [String]()
         
         let action = UIAlertController(title: NSLocalizedString("ALERT_TITLE_DATE", comment: ""), message: NSLocalizedString("ALERT_MESSAGE_DATE", comment: ""), preferredStyle: .actionSheet)
         
@@ -432,12 +426,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 let key = self.openedCategory + "@" + task + "@date"
                 if let date = self.saveData.object(forKey: key) as! Date? {
                     if date.timeIntervalSinceNow < 60*60*24*30 {
-                        satisfiedArray.append(task)
+                        pickedArray.append(task)
                     }
                 }
             }
             
-            variables.shared.dateArray = satisfiedArray
+            variables.shared.dateArray = pickedArray
             
             self.modalToDateView()
         })
@@ -450,12 +444,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 let key = self.openedCategory + "@" + task + "@date"
                 if let date = self.saveData.object(forKey: key) as! Date? {
                     if date.timeIntervalSinceNow < 60*60*24*7 {
-                        satisfiedArray.append(task)
+                        pickedArray.append(task)
                     }
                 }
             }
             
-            variables.shared.dateArray = satisfiedArray
+            variables.shared.dateArray = pickedArray
             
             self.modalToDateView()
         })
@@ -468,12 +462,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 let key = self.openedCategory + "@" + task + "@date"
                 if let date = self.saveData.object(forKey: key) as! Date? {
                     if date.timeIntervalSinceNow < 0 {
-                        satisfiedArray.append(task)
+                        pickedArray.append(task)
                     }
                 }
             }
             
-            variables.shared.dateArray = satisfiedArray
+            variables.shared.dateArray = pickedArray
             
             self.modalToDateView()
         })
@@ -525,13 +519,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let savedCheckmark = saveData.object(forKey: pre + "@check") as! Bool
         
         saveData.set(savedMemo, forKey: post + "@memo")
-        
         saveData.set(savedSwitch, forKey: post + "@ison")
-        
         if savedDate != nil {
             saveData.set(savedDate!, forKey: post + "@date")
         }
-        
         saveData.set(savedCheckmark, forKey: post + "@check")
         
         removeAllObject(key: pre)

@@ -17,7 +17,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var saveData = UserDefaults.standard
     
     var tasksDict = [String: [String]]()
-    
     var categoriesArray = [String]()
     
     // MARK: - LifeCycle
@@ -55,9 +54,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         if cell?.textLabel?.text == saveData.object(forKey: "@folderName") as! String? {
             cell?.selectionStyle = .none
+            
             cell?.textLabel?.textColor = .lightGray
         } else {
             cell?.selectionStyle = .default
+            
             cell?.textLabel?.textColor = .black
         }
         
@@ -75,28 +76,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let preCategory = saveData.object(forKey: "@folderName") as! String
         let taskName = variables.shared.movingTaskName
-        
-        let preKey = preCategory + "@" + taskName
-        
         let taskIndex = tasksDict[categoriesArray[indexPath.row]]!.index(of: taskName)
         
-        let postKey = categoriesArray[indexPath.row] + "@" + taskName
-        
         if taskIndex == nil {
-            tasksDict[categoriesArray[indexPath.row]]!.append(taskName)
-            
-            let index = tasksDict[preCategory]!.index(of: taskName)!
-            tasksDict[preCategory]?.remove(at: index)
-            
-            saveData.set(tasksDict, forKey: "@dictData")
-            
-            resaveData(pre: preKey, post: postKey)
-            
-            variables.shared.isFromListView = true
-            
-            self.dismiss(animated: true, completion: nil)
+            moveTask(indexPath)
         } else {
             let alert = UIAlertController(
                 title: NSLocalizedString("ALERT_TITLE_REPLACE", comment: ""),
@@ -105,18 +89,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             let replaceAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_REPLACE", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
                 self.tasksDict[self.categoriesArray[indexPath.row]]!.remove(at: taskIndex!)
-                self.tasksDict[self.categoriesArray[indexPath.row]]!.append(taskName)
                 
-                let index = self.tasksDict[preCategory]!.index(of: taskName)!
-                self.tasksDict[preCategory]?.remove(at: index)
-                
-                self.saveData.set(self.tasksDict, forKey: "@dictData")
-                
-                self.resaveData(pre: preKey, post: postKey)
-                
-                variables.shared.isFromListView = true
-                
-                self.dismiss(animated: true, completion: nil)
+                self.moveTask(indexPath)
             }
             
             let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
@@ -128,6 +102,26 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             present(alert, animated: true, completion: nil)
         }
+    }
+    
+    func moveTask(_ indexPath: IndexPath) {
+        let preCategory = saveData.object(forKey: "@folderName") as! String
+        let taskName = variables.shared.movingTaskName
+        let preKey = preCategory + "@" + taskName
+        let postKey = categoriesArray[indexPath.row] + "@" + taskName
+        
+        tasksDict[categoriesArray[indexPath.row]]!.append(taskName)
+        
+        let index = tasksDict[preCategory]!.index(of: taskName)!
+        tasksDict[preCategory]?.remove(at: index)
+        
+        saveData.set(tasksDict, forKey: "@dictData")
+        
+        resaveData(pre: preKey, post: postKey)
+        
+        variables.shared.isFromListView = true
+        
+        self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func addItem() {
@@ -197,6 +191,13 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.present(alert, animated: true, completion: nil)
     }
     
+    func removeAllObject(key: String) {
+        saveData.removeObject(forKey: key + "@memo")
+        saveData.removeObject(forKey: key + "@ison")
+        saveData.removeObject(forKey: key + "@date")
+        saveData.removeObject(forKey: key + "@check")
+    }
+    
     func resaveData(pre: String, post: String) {
         let savedMemo = saveData.object(forKey: pre + "@memo") as! String
         let savedSwitch = saveData.object(forKey: pre + "@ison") as! Bool
@@ -204,18 +205,13 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let savedCheckmark = saveData.object(forKey: pre + "@check") as! Bool
         
         saveData.set(savedMemo, forKey: post + "@memo")
-        saveData.removeObject(forKey: pre + "@memo")
-        
         saveData.set(savedSwitch, forKey: post + "@ison")
-        saveData.removeObject(forKey: pre + "@ison")
-        
         if savedDate != nil {
-            saveData.set(savedDate, forKey: post + "@date")
-            saveData.removeObject(forKey: pre + "@date")
+            saveData.set(savedDate!, forKey: post + "@date")
         }
-        
         saveData.set(savedCheckmark, forKey: post + "@check")
-        saveData.removeObject(forKey: pre + "@check")
+        
+        removeAllObject(key: pre)
     }
     
     // MARK: - Others

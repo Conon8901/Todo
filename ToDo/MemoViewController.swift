@@ -134,7 +134,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     func setDatePicker() {
         let savedDate = saveData.object(forKey: key + "@date") as! Date
-        
         let span = Date().timeIntervalSince(savedDate)
         
         setDateText(span: span)
