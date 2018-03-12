@@ -476,9 +476,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         saveData.set(savedMemoText, forKey: post + "@memo")
         saveData.set(savedSwitch, forKey: post + "@ison")
-        if savedDate != nil {
-            saveData.set(savedDate!, forKey: post + "@date")
-        }
+        saveData.set(savedDate, forKey: post + "@date")
         saveData.set(savedCheckmark, forKey: post + "@check")
         
         removeAllObject(key: pre)
