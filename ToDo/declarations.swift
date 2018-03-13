@@ -69,8 +69,6 @@ class variables {
     var includingTasks = [String]()
     
     var condition: Condition = .month
-    
-    var dateArray = [String]()
 }
 
 enum Condition {

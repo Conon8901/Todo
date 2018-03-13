@@ -18,6 +18,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     @IBOutlet var dateField: UITextField!
     @IBOutlet var datePicker: UIDatePicker!
     @IBOutlet var dateLabel: UILabel!
+    var doneButton: UIBarButtonItem?
     
     var saveData = UserDefaults.standard
     
@@ -48,6 +49,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         dateSwitch.isOn = saveData.object(forKey: key + "@ison") as! Bool
         
+        doneButton = UIBarButtonItem(title: "NAV_BUTTON_DONE".localized, style: .done, target: self, action: #selector(MemoViewController.saveMemo))
+        
         tryShowsPlaceHolder()
         
         if dateSwitch.isOn {
@@ -74,6 +77,14 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     }
     
     // MARK: - TextView
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        navigationItem.rightBarButtonItem = doneButton
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        navigationItem.rightBarButtonItem = nil
+    }
     
     func textViewDidChange(_ textView: UITextView) {
         tryShowsPlaceHolder()
@@ -190,6 +201,12 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     func setRange() {
         datePicker.minimumDate = Date()
         datePicker.maximumDate = Date(timeInterval: 60*60*24*2000, since: Date())
+    }
+    
+    @objc func saveMemo() {
+        saveData.set(memoTextView.text!, forKey: key + "@memo")
+        
+        memoTextView.resignFirstResponder()
     }
     
     // MARK: - Others
