@@ -14,6 +14,8 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet var table: UITableView!
     
+    var saveData = UserDefaults.standard
+    
     var pickedArray = [String]()
     
     var isDataNil = false
@@ -27,9 +29,45 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
         table.allowsSelection = false
         table.tableFooterView = UIView()
         
-        navigationItem.title = variables.shared.condition
+        let tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
-        pickedArray = variables.shared.dateArray
+        let openedCategory = saveData.object(forKey: "@folderName") as! String
+        
+        switch variables.shared.condition {
+        case .month:
+            navigationItem.title = "ALERT_BUTTON_DATE_MONTH".localized
+            
+            for task in tasksDict[openedCategory]! {
+                let key = openedCategory + "@" + task + "@date"
+                if let date = saveData.object(forKey: key) as! Date? {
+                    if date.timeIntervalSinceNow < 60*60*24*30 {
+                        pickedArray.append(task)
+                    }
+                }
+            }
+        case .week:
+            navigationItem.title = "ALERT_BUTTON_DATE_WEEK".localized
+            
+            for task in tasksDict[openedCategory]! {
+                let key = openedCategory + "@" + task + "@date"
+                if let date = saveData.object(forKey: key) as! Date? {
+                    if date.timeIntervalSinceNow < 60*60*24*7 {
+                        pickedArray.append(task)
+                    }
+                }
+            }
+        case .finished:
+            navigationItem.title = "ALERT_BUTTON_DATE_OVER".localized
+            
+            for task in tasksDict[openedCategory]! {
+                let key = openedCategory + "@" + task + "@date"
+                if let date = saveData.object(forKey: key) as! Date? {
+                    if date.timeIntervalSinceNow < 0 {
+                        pickedArray.append(task)
+                    }
+                }
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {

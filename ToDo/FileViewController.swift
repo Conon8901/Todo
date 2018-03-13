@@ -414,60 +414,25 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - Toolbar
     
     @IBAction func pickItems() {
-        var pickedArray = [String]()
-        
         let action = UIAlertController(title: "ALERT_TITLE_DATE".localized, message: "ALERT_MESSAGE_DATE".localized, preferredStyle: .actionSheet)
         
         let month = UIAlertAction(title: "ALERT_BUTTON_DATE_MONTH".localized, style: .default, handler: {
             (action: UIAlertAction!) in
-            variables.shared.condition = "ALERT_BUTTON_DATE_MONTH".localized
-            
-            for task in self.tasksDict[self.openedCategory]! {
-                let key = self.openedCategory + "@" + task + "@date"
-                if let date = self.saveData.object(forKey: key) as! Date? {
-                    if date.timeIntervalSinceNow < 60*60*24*30 {
-                        pickedArray.append(task)
-                    }
-                }
-            }
-            
-            variables.shared.dateArray = pickedArray
+            variables.shared.condition = .month
             
             self.modalToDateView()
         })
         
         let week = UIAlertAction(title: "ALERT_BUTTON_DATE_WEEK".localized, style: .default, handler: {
             (action: UIAlertAction!) in
-            variables.shared.condition = "ALERT_BUTTON_DATE_WEEK".localized
-            
-            for task in self.tasksDict[self.openedCategory]! {
-                let key = self.openedCategory + "@" + task + "@date"
-                if let date = self.saveData.object(forKey: key) as! Date? {
-                    if date.timeIntervalSinceNow < 60*60*24*7 {
-                        pickedArray.append(task)
-                    }
-                }
-            }
-            
-            variables.shared.dateArray = pickedArray
+            variables.shared.condition = .week
             
             self.modalToDateView()
         })
         
         let finished = UIAlertAction(title: "ALERT_BUTTON_DATE_OVER".localized, style: .default, handler: {
             (action: UIAlertAction!) in
-            variables.shared.condition = "ALERT_BUTTON_DATE_OVER".localized
-            
-            for task in self.tasksDict[self.openedCategory]! {
-                let key = self.openedCategory + "@" + task + "@date"
-                if let date = self.saveData.object(forKey: key) as! Date? {
-                    if date.timeIntervalSinceNow < 0 {
-                        pickedArray.append(task)
-                    }
-                }
-            }
-            
-            variables.shared.dateArray = pickedArray
+            variables.shared.condition = .finished
             
             self.modalToDateView()
         })
