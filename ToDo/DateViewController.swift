@@ -54,7 +54,7 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCell(withIdentifier: "Date")
         
         if isDataNil {
-            cell?.textLabel?.text = NSLocalizedString("CELL_LABEL_NA", comment: "")
+            cell?.textLabel?.text = "CELL_LABEL_NA".localized
             cell?.textLabel?.textColor = .gray
             cell?.textLabel?.textAlignment = .center
         } else {

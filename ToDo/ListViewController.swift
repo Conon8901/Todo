@@ -32,7 +32,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
-        navigationItem.title = NSLocalizedString("NAV_TITLE_CATEGORY", comment: "")
+        navigationItem.title = "NAV_TITLE_CATEGORY".localized
     }
     
     override func didReceiveMemoryWarning() {
@@ -83,17 +83,17 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
             moveTask(indexPath)
         } else {
             let alert = UIAlertController(
-                title: NSLocalizedString("ALERT_TITLE_REPLACE", comment: ""),
-                message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""),
+                title: "ALERT_TITLE_REPLACE".localized,
+                message: "ALERT_MESSAGE_ERROR_SAME".localized,
                 preferredStyle: .alert)
             
-            let replaceAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_REPLACE", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+            let replaceAction = UIAlertAction(title: "ALERT_BUTTON_REPLACE".localized, style: .default) { (action: UIAlertAction!) -> Void in
                 self.tasksDict[self.categoriesArray[indexPath.row]]!.remove(at: taskIndex!)
                 
                 self.moveTask(indexPath)
             }
             
-            let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+            let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
                 self.table.deselectCell()
             }
             
@@ -126,11 +126,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBAction func addItem() {
         let alert = UIAlertController(
-            title: NSLocalizedString("ALERT_TITLE_ADD", comment: ""),
-            message: NSLocalizedString("ALERT_MESSAGE_ENTER", comment: ""),
+            title: "ALERT_TITLE_ADD".localized,
+            message: "ALERT_MESSAGE_ENTER".localized,
             preferredStyle: .alert)
         
-        let addAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_ADD", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+        let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
             let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
@@ -149,23 +149,23 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.table.scrollToRow(at: [0,self.tasksDict.keys.count-1], at: .bottom, animated: true)
                     } else {
-                        self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
+                        self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ATSIGN".localized)
                         
                         self.table.deselectCell()
                     }
                 } else {
-                    self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
+                    self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_SAME".localized)
                     
                     self.table.deselectCell()
                 }
             } else {
-                self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
+                self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ENTER".localized)
                 
                 self.table.deselectCell()
             }
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
         }
         
         alert.addTextField { (textField: UITextField!) -> Void in
@@ -182,11 +182,11 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func showErrorAlert(message: String) {
         let alert = UIAlertController(
-            title: NSLocalizedString("ALERT_TITLE_ERROR", comment: ""),
+            title: "ALERT_TITLE_ERROR".localized,
             message: message,
             preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CLOSE", comment: ""), style: .default))
+        alert.addAction(UIAlertAction(title: "ALERT_BUTTON_CLOSE".localized, style: .default))
         
         self.present(alert, animated: true, completion: nil)
     }

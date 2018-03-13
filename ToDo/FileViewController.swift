@@ -41,7 +41,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.putCheckmark))
         table.addGestureRecognizer(longPressRecognizer)
         
-        editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
+        editButton.title = "NAV_BUTTON_EDIT".localized
         
         self.navigationItem.leftBarButtonItem = nil
         
@@ -108,7 +108,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let cell = tableView.dequeueReusableCell(withIdentifier: "File")
         
         if isDataNil {
-            cell?.textLabel?.text = NSLocalizedString("CELL_LABEL_ADD_TASK", comment: "")
+            cell?.textLabel?.text = "CELL_LABEL_ADD_TASK".localized
             cell?.textLabel?.textColor = .gray
             
             cell?.detailTextLabel?.text = ""
@@ -150,11 +150,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isEditing {
             let alert = UIAlertController(
-                title: NSLocalizedString("ALERT_TITLE_CHANGE", comment: ""),
-                message: NSLocalizedString("ALERT_MESSAGE_ENTER", comment: ""),
+                title: "ALERT_TITLE_CHANGE".localized,
+                message: "ALERT_MESSAGE_ENTER".localized,
                 preferredStyle: .alert)
             
-            let changeAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CHANGE", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+            let changeAction = UIAlertAction(title: "ALERT_BUTTON_CHANGE".localized, style: .default) { (action: UIAlertAction!) -> Void in
                 let textField = alert.textFields![0] as UITextField
                 
                 let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
@@ -173,25 +173,25 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             
                             self.table.reload()
                         } else {
-                            self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
+                            self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ATSIGN".localized)
                             
                             self.table.deselectCell()
                         }
                     } else {
                         if textField.text != self.tasksDict[self.openedCategory]?[indexPath.row] {
-                            self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
+                            self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_SAME".localized)
                         }
                         
                         self.table.deselectCell()
                     }
                 } else {
-                    self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
+                    self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ENTER".localized)
                     
                     self.table.deselectCell()
                 }
             }
             
-            let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+            let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
                 self.table.deselectCell()
             }
             
@@ -215,7 +215,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_BUTTON_DELETE", comment: "")) { (action, index) -> Void in
+        let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: "CELL_BUTTON_DELETE".localized) { (action, index) -> Void in
             if !self.isDataNil {
                 let key = self.openedCategory + "@" + self.tasksDict[self.openedCategory]![indexPath.row]
                 let maxIndex = self.tasksDict[self.openedCategory]!.count - 1
@@ -245,7 +245,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         deleteButton.backgroundColor = .red
         
-        let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: NSLocalizedString("CELL_BUTTON_MOVE", comment: "")) { (action, index) -> Void in
+        let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: "CELL_BUTTON_MOVE".localized) { (action, index) -> Void in
             if !self.isDataNil {
                 variables.shared.movingTaskName = self.tasksDict[self.openedCategory]![indexPath.row]
                 
@@ -272,11 +272,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @IBAction func addItem() {
         let alert = UIAlertController(
-            title: NSLocalizedString("ALERT_TITLE_ADD", comment: ""),
-            message: NSLocalizedString("ALERT_MESSAGE_ENTER", comment: ""),
+            title: "ALERT_TITLE_ADD".localized,
+            message: "ALERT_MESSAGE_ENTER".localized,
             preferredStyle: .alert)
         
-        let addAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_ADD", comment: ""), style: .default) { (action: UIAlertAction!) -> Void in
+        let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
             let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
@@ -300,23 +300,23 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.table.scrollToRow(at: [0,self.tasksDict[self.openedCategory]!.count-1], at: .bottom, animated: true)
                     } else {
-                        self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ATSIGN", comment: ""))
+                        self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ATSIGN".localized)
                         
                         self.table.deselectCell()
                     }
                 } else {
-                    self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_SAME", comment: ""))
+                    self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_SAME".localized)
                     
                     self.table.deselectCell()
                 }
             } else {
-                self.showErrorAlert(message: NSLocalizedString("ALERT_MESSAGE_ERROR_ENTER", comment: ""))
+                self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ENTER".localized)
                 
                 self.table.deselectCell()
             }
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
         }
         
         alert.addTextField { (textField: UITextField!) -> Void in
@@ -354,7 +354,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
             
-            editButton.title = NSLocalizedString("NAV_BUTTON_EDIT", comment: "")
+            editButton.title = "NAV_BUTTON_EDIT".localized
             
             self.navigationItem.leftBarButtonItem = nil
             
@@ -370,7 +370,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             
-            editButton.title = NSLocalizedString("NAV_BUTTON_DONE", comment: "")
+            editButton.title = "NAV_BUTTON_DONE".localized
             
             navigationItem.hidesBackButton = true
             
@@ -382,11 +382,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     @objc func deleteAll() {
         let alert = UIAlertController(
-            title: NSLocalizedString("ALERT_TITLE_DELETEALL", comment: ""),
-            message: NSLocalizedString("ALERT_MESSAGE_DELETEALL", comment: ""),
+            title: "ALERT_TITLE_DELETEALL".localized,
+            message: "ALERT_MESSAGE_DELETEALL".localized,
             preferredStyle: .alert)
         
-        let deleteAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DELETE", comment: ""), style: .destructive) { (action: UIAlertAction!) -> Void in
+        let deleteAction = UIAlertAction(title: "ALERT_BUTTON_DELETE".localized, style: .destructive) { (action: UIAlertAction!) -> Void in
             let tasks = self.tasksDict[self.openedCategory]!
             
             if !tasks.isEmpty {
@@ -402,7 +402,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         }
         
-        let cancelAction = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel) { (action: UIAlertAction!) -> Void in
+        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
         }
         
         alert.addAction(cancelAction)
@@ -416,11 +416,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBAction func pickItems() {
         var pickedArray = [String]()
         
-        let action = UIAlertController(title: NSLocalizedString("ALERT_TITLE_DATE", comment: ""), message: NSLocalizedString("ALERT_MESSAGE_DATE", comment: ""), preferredStyle: .actionSheet)
+        let action = UIAlertController(title: "ALERT_TITLE_DATE".localized, message: "ALERT_MESSAGE_DATE".localized, preferredStyle: .actionSheet)
         
-        let month = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_MONTH", comment: ""), style: .default, handler: {
+        let month = UIAlertAction(title: "ALERT_BUTTON_DATE_MONTH".localized, style: .default, handler: {
             (action: UIAlertAction!) in
-            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_MONTH", comment: "")
+            variables.shared.condition = "ALERT_BUTTON_DATE_MONTH".localized
             
             for task in self.tasksDict[self.openedCategory]! {
                 let key = self.openedCategory + "@" + task + "@date"
@@ -436,9 +436,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.modalToDateView()
         })
         
-        let week = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_WEEK", comment: ""), style: .default, handler: {
+        let week = UIAlertAction(title: "ALERT_BUTTON_DATE_WEEK".localized, style: .default, handler: {
             (action: UIAlertAction!) in
-            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_WEEK", comment: "")
+            variables.shared.condition = "ALERT_BUTTON_DATE_WEEK".localized
             
             for task in self.tasksDict[self.openedCategory]! {
                 let key = self.openedCategory + "@" + task + "@date"
@@ -454,9 +454,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.modalToDateView()
         })
         
-        let finished = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_DATE_OVER", comment: ""), style: .default, handler: {
+        let finished = UIAlertAction(title: "ALERT_BUTTON_DATE_OVER".localized, style: .default, handler: {
             (action: UIAlertAction!) in
-            variables.shared.condition = NSLocalizedString("ALERT_BUTTON_DATE_OVER", comment: "")
+            variables.shared.condition = "ALERT_BUTTON_DATE_OVER".localized
             
             for task in self.tasksDict[self.openedCategory]! {
                 let key = self.openedCategory + "@" + task + "@date"
@@ -472,7 +472,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.modalToDateView()
         })
         
-        let cancel = UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CANCEL", comment: ""), style: .cancel, handler: {
+        let cancel = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel, handler: {
             (action: UIAlertAction!) in
         })
         
@@ -488,11 +488,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func showErrorAlert(message: String) {
         let alert = UIAlertController(
-            title: NSLocalizedString("ALERT_TITLE_ERROR", comment: ""),
+            title: "ALERT_TITLE_ERROR".localized,
             message: message,
             preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: NSLocalizedString("ALERT_BUTTON_CLOSE", comment: ""), style: .default))
+        alert.addAction(UIAlertAction(title: "ALERT_BUTTON_CLOSE".localized, style: .default))
         
         self.present(alert, animated: true, completion: nil)
     }

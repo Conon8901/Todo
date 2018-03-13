@@ -12,6 +12,10 @@ extension String {
     func partialMatch(target: String) -> Bool {
         return self.lowercased(with: .current).contains(target.lowercased(with: .current))
     }
+    
+    var localized: String {
+        return NSLocalizedString(self, comment: "")
+    }
 }
 
 extension UITableView {

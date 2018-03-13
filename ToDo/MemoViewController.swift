@@ -33,8 +33,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         setRange()
         
-        placeHolder.text = NSLocalizedString("LABEL_NOTE", comment: "")
-        dateLabel.text = NSLocalizedString("LABEL_DUE", comment: "")
+        placeHolder.text = "LABEL_NOTE".localized
+        dateLabel.text = "LABEL_DUE".localized
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -102,7 +102,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
             if saveData.object(forKey: key + "@date") == nil {
                 datePicker.date = Date()
                 
-                dateField.text = NSLocalizedString("TEXT_DUE_PRESENT", comment: "")
+                dateField.text = "TEXT_DUE_PRESENT".localized
             } else {
                 setDatePicker()
             }
@@ -151,39 +151,39 @@ class MemoViewController: UIViewController, UITextViewDelegate {
                 if span > 60*60 {
                     if span > 60*60*24 {
                         if span > 60*60*24*30 {
-                            dateField.text = String(format: NSLocalizedString("TEXT_DUE_PAST_MONTH", comment: ""), Int(span/2592000))
+                            dateField.text = String(format: "TEXT_DUE_PAST_MONTH".localized, Int(span/2592000))
                         } else {
-                            dateField.text = String(format: NSLocalizedString("TEXT_DUE_PAST_DAY", comment: ""), Int(span/86400))
+                            dateField.text = String(format: "TEXT_DUE_PAST_DAY".localized, Int(span/86400))
                         }
                     } else {
-                        dateField.text = String(format: NSLocalizedString("TEXT_DUE_PAST_HOUR", comment: ""), Int(span/3600))
+                        dateField.text = String(format: "TEXT_DUE_PAST_HOUR".localized, Int(span/3600))
                     }
                 } else {
-                    dateField.text = String(format: NSLocalizedString("TEXT_DUE_PAST_MINUTE", comment: ""), Int(span/60))
+                    dateField.text = String(format: "TEXT_DUE_PAST_MINUTE".localized, Int(span/60))
                 }
             } else {
-                dateField.text = NSLocalizedString("TEXT_DUE_PRESENT", comment: "")
+                dateField.text = "TEXT_DUE_PRESENT".localized
             }
         } else if span < 0 {
             if span < -60 {
                 if span < -60*60 {
                     if span < -60*60*24 {
                         if span < -60*60*24*30 {
-                            dateField.text = String(format: NSLocalizedString("TEXT_DUE_FUTURE_MONTH", comment: ""), Int(-span/2592000))
+                            dateField.text = String(format: "TEXT_DUE_FUTURE_MONTH".localized, Int(-span/2592000))
                         } else {
-                            dateField.text = String(format: NSLocalizedString("TEXT_DUE_FUTURE_DAY", comment: ""), Int(-span/86400))
+                            dateField.text = String(format: "TEXT_DUE_FUTURE_DAY".localized, Int(-span/86400))
                         }
                     } else {
-                        dateField.text = String(format: NSLocalizedString("TEXT_DUE_FUTURE_HOUR", comment: ""), Int(-span/3600))
+                        dateField.text = String(format: "TEXT_DUE_FUTURE_HOUR".localized, Int(-span/3600))
                     }
                 } else {
-                    dateField.text = String(format: NSLocalizedString("TEXT_DUE_FUTURE_MINUTE", comment: ""), Int(-span/60))
+                    dateField.text = String(format: "TEXT_DUE_FUTURE_MINUTE".localized, Int(-span/60))
                 }
             } else {
-                dateField.text = NSLocalizedString("TEXT_DUE_PRESENT", comment: "")
+                dateField.text = "TEXT_DUE_PRESENT".localized
             }
         } else {
-            dateField.text = NSLocalizedString("TEXT_DUE_PRESENT", comment: "")
+            dateField.text = "TEXT_DUE_PRESENT".localized
         }
     }
     
