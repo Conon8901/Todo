@@ -68,8 +68,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         memoTextView.resignFirstResponder()
-        
-        variables.shared.isFromMemoView = true
     }
     
     override func didReceiveMemoryWarning() {
@@ -124,15 +122,14 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         }
         
         saveData.set(dateSwitch.isOn, forKey: key + "@ison")
-        
         saveData.set(datePicker.date, forKey: key + "@date")
     }
     
     // MARK: - Methods
     
-    func showsDateParts(_ bool: Bool) {
-        dateField.isHidden = !bool
-        datePicker.isHidden = !bool
+    func showsDateParts(_ showing: Bool) {
+        dateField.isHidden = !showing
+        datePicker.isHidden = !showing
     }
     
     func tryShowsPlaceHolder() {

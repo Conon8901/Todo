@@ -24,7 +24,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     var searchArray = [String]()
     var pickedDict = [String: [String]]()
     
-    var cellIndex: IndexPath = [0,0]
     var isDataNil = false
     
     // MARK: - LifeCycle
@@ -40,9 +39,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         searchBar.placeholder = "SEARCH_PLACEHOLDER".localized
         searchBar.setUp()
         
+        navigationItem.title = "NAV_TITLE_CATEGORY".localized
+        
         editButton.title = "NAV_BUTTON_EDIT".localized
         
-        navigationItem.title = "NAV_TITLE_CATEGORY".localized
+        table.tableFooterView = UIView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,25 +63,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         setEditButton()
         
-        if let selectedIndex = table.indexPathForSelectedRow {
-            cellIndex = selectedIndex
-        }
-        
-        table.reload()
-        
-        if variables.shared.isFromFileView {
-            table.selectRow(at: cellIndex, animated: false, scrollPosition: .none)
-            
-            DispatchQueue.main.asyncAfter(deadline: .now()) {
-                self.table.deselectRow(at: self.cellIndex, animated: true)
-            }
-            
-            variables.shared.isFromFileView = false
-            
-            self.searchBar.enable(true)
-            
-            self.showSearchResult()
-        }
+        table.deselectCell()
     }
     
     override func didReceiveMemoryWarning() {
@@ -124,13 +107,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 cell?.textLabel?.text = searchArray[indexPath.row]
                 
                 let includingFiles = pickedDict[cell!.textLabel!.text!]!.joined(separator: ", ")
-                
                 cell?.detailTextLabel?.text = includingFiles
             }
             
             cell?.textLabel?.textColor = .black
-            
-            cell?.textLabel?.numberOfLines = 0
             
             table.allowsSelection = true
         }
@@ -148,12 +128,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             let changeAction = UIAlertAction(title: "ALERT_BUTTON_CHANGE".localized, style: .default) { (action: UIAlertAction!) -> Void in
                 let textField = alert.textFields![0] as UITextField
                 
-                let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
+                let isBlank = textField.text!.existsCharacter()
                 
-                if !isBlank {
+                if isBlank {
                     if self.categoriesArray.index(of: textField.text!) == nil {
                         if !textField.text!.contains("@") {
-                            
                             let preCategoryName = self.categoriesArray[indexPath.row]
                             
                             self.categoriesArray[indexPath.row] = textField.text!
@@ -168,7 +147,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                                     let preKey = preCategoryName + "@" + fileName
                                     let postKey = textField.text! + "@" + fileName
                                     
-                                    self.resaveData(pre: preKey, post: postKey)
+                                    self.resaveData(preKey, to: postKey)
                                 }
                             }
                             
@@ -200,7 +179,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             
             alert.addTextField { (textField: UITextField!) -> Void in
                 textField.text = self.categoriesArray[indexPath.row]
-                textField.textAlignment = .left
                 
                 textField.clearButtonMode = .always
             }
@@ -239,7 +217,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 let maxIndex = categoriesArray.count - 1
                 let categoryName = categoriesArray[indexPath.row]
                 
-                tasksDict[categoryName]?.forEach({ removeAllObject(key: categoryName + "@" + $0 )})
+                tasksDict[categoryName]?.forEach({ removeAllObject(categoryName + "@" + $0 )})
                 
                 tasksDict.removeValue(forKey: categoryName)
                 categoriesArray.remove(at: indexPath.row)
@@ -282,9 +260,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
+            let isBlank = textField.text!.existsCharacter()
             
-            if !isBlank {
+            if isBlank {
                 if self.categoriesArray.index(of: textField.text!) == nil {
                     if !textField.text!.contains("@") {
                         self.categoriesArray.append(textField.text!)
@@ -320,7 +298,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         alert.addTextField { (textField: UITextField!) -> Void in
-            textField.textAlignment = .left
+            
         }
         
         alert.addAction(cancelAction)
@@ -432,13 +410,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    func removeAllObject(key: String) {
-        saveData.removeObject(forKey: key + "@memo")
-        saveData.removeObject(forKey: key + "@ison")
-        saveData.removeObject(forKey: key + "@date")
-        saveData.removeObject(forKey: key + "@check")
-    }
-    
     func showSearchResult() {
         searchArray.removeAll()
         pickedDict.removeAll()
@@ -447,11 +418,11 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             let dict = saveData.object(forKey: "@dictData") as! [String: [String]]
             
             for key in categoriesArray {
-                var isIncluding = false
+                var isIncluded = false
                 
                 for value in dict[key]! {
                     if value.partialMatch(target: searchBar.text!) {
-                        isIncluding = true
+                        isIncluded = true
                         
                         if pickedDict[key] == nil {
                             pickedDict[key] = [value]
@@ -461,31 +432,39 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     }
                 }
                 
-                if isIncluding {
+                if isIncluded {
                     searchArray.append(key)
                 }
             }
         }
     }
     
-    func resaveData(pre: String, post: String) {
-        let savedMemoText = saveData.object(forKey: pre + "@memo") as! String
-        let savedSwitch = saveData.object(forKey: pre + "@ison") as! Bool
-        let savedDate = saveData.object(forKey: pre + "@date") as! Date?
-        let savedCheckmark = saveData.object(forKey: pre + "@check") as! Bool
+    func removeAllObject(_ key: String) {
+        saveData.removeObject(forKey: key + "@memo")
+        saveData.removeObject(forKey: key + "@ison")
+        saveData.removeObject(forKey: key + "@date")
+        saveData.removeObject(forKey: key + "@check")
+    }
+    
+    func resaveData(_ from: String, to: String) {
+        let savedMemoText = saveData.object(forKey: from + "@memo") as! String
+        let savedSwitch = saveData.object(forKey: from + "@ison") as! Bool
+        let savedDate = saveData.object(forKey: from + "@date") as! Date?
+        let savedCheck = saveData.object(forKey: from + "@check") as! Bool
         
-        saveData.set(savedMemoText, forKey: post + "@memo")
-        saveData.set(savedSwitch, forKey: post + "@ison")
-        saveData.set(savedDate, forKey: post + "@date")
-        saveData.set(savedCheckmark, forKey: post + "@check")
+        saveData.set(savedMemoText, forKey: to + "@memo")
+        saveData.set(savedSwitch, forKey: to + "@ison")
+        saveData.set(savedDate, forKey: to + "@date")
+        saveData.set(savedCheck, forKey: to + "@check")
         
-        removeAllObject(key: pre)
+        removeAllObject(from)
     }
     
     // MARK: - Others
     
     @IBAction func tapScreen(sender: UITapGestureRecognizer) {
         sender.cancelsTouchesInView = false
+        
         self.view.endEditing(true)
     }
 }

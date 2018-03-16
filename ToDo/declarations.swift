@@ -9,12 +9,16 @@
 import UIKit
 
 extension String {
+    var localized: String {
+        return NSLocalizedString(self, comment: "")
+    }
+    
     func partialMatch(target: String) -> Bool {
         return self.lowercased(with: .current).contains(target.lowercased(with: .current))
     }
     
-    var localized: String {
-        return NSLocalizedString(self, comment: "")
+    func existsCharacter() -> Bool {
+        return !self.components(separatedBy: .whitespaces).joined().isEmpty
     }
 }
 
@@ -58,12 +62,6 @@ extension UISearchBar {
 class variables {
     static let shared = variables()
     
-    var isFromFileView = false
-    
-    var isFromListView = false
-    
-    var isFromMemoView = false
-    
     var movingTaskName = ""
     
     var includingTasks = [String]()
@@ -74,5 +72,5 @@ class variables {
 enum Condition {
     case month
     case week
-    case finished
+    case over
 }

@@ -27,11 +27,12 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
         table.delegate = self
         table.rowHeight = 60
         table.allowsSelection = false
-        table.tableFooterView = UIView()
         
         let tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
         let openedCategory = saveData.object(forKey: "@folderName") as! String
+        
+        table.tableFooterView = UIView()
         
         switch variables.shared.condition {
         case .month:
@@ -56,7 +57,7 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
                     }
                 }
             }
-        case .finished:
+        case .over:
             navigationItem.title = "ALERT_BUTTON_DATE_OVER".localized
             
             for task in tasksDict[openedCategory]! {

@@ -21,7 +21,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var tasksDict = [String: [String]]()
     
-    var cellIndex: IndexPath = [0,0]
     var openedCategory = ""
     var isDataNil = false
     
@@ -38,18 +37,19 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         openedCategory = saveData.object(forKey: "@folderName") as! String
         
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.putCheckmark))
-        table.addGestureRecognizer(longPressRecognizer)
+        self.navigationItem.leftBarButtonItem = nil
         
         editButton.title = "NAV_BUTTON_EDIT".localized
         
-        self.navigationItem.leftBarButtonItem = nil
-        
         deleteAllButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(FileViewController.deleteAll))
-        
         deleteAllButton?.tintColor = .red
         
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.putCheckmark))
+        table.addGestureRecognizer(longPressRecognizer)
+        
         navigationItem.backBarButtonItem = UIBarButtonItem(title: openedCategory, style: .plain, target: nil, action: nil)
+        
+        table.tableFooterView = UIView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -57,33 +57,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         navigationItem.title = openedCategory
         
-        if variables.shared.isFromListView {
-            tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
-            
-            variables.shared.isFromListView = false
-        }
-        
-        if let selectedIndex = table.indexPathForSelectedRow {
-            cellIndex = selectedIndex
-        }
-        
-        table.reload()
-        
-        if variables.shared.isFromMemoView {
-            table.selectRow(at: cellIndex, animated: false, scrollPosition: .none)
-            
-            DispatchQueue.main.asyncAfter(deadline: .now()) {
-                self.table.deselectRow(at: self.cellIndex, animated: true)
-            }
-            
-            variables.shared.isFromMemoView = false
-        }
-        
         setEditButton()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        variables.shared.isFromFileView = true
+        
+        table.deselectCell()
     }
     
     override func didReceiveMemoryWarning() {
@@ -157,9 +133,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let changeAction = UIAlertAction(title: "ALERT_BUTTON_CHANGE".localized, style: .default) { (action: UIAlertAction!) -> Void in
                 let textField = alert.textFields![0] as UITextField
                 
-                let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
+                let isBlank = textField.text!.existsCharacter()
                 
-                if !isBlank {
+                if isBlank {
                     if self.tasksDict[self.openedCategory]?.index(of: textField.text!) == nil {
                         if !textField.text!.contains("@") {
                             let preKey = self.openedCategory + "@" + self.tasksDict[self.openedCategory]![indexPath.row]
@@ -168,8 +144,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             self.tasksDict[self.openedCategory]?[indexPath.row] = textField.text!
                             
                             self.saveData.set(self.tasksDict, forKey: "@dictData")
-                            
-                            self.resaveData(pre: preKey, post: postKey)
+                            self.resaveData(preKey, to: postKey)
                             
                             self.table.reload()
                         } else {
@@ -197,7 +172,6 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             alert.addTextField { (textField: UITextField!) -> Void in
                 textField.text = self.tasksDict[self.openedCategory]?[indexPath.row]
-                textField.textAlignment = .left
                 
                 textField.clearButtonMode = .whileEditing
             }
@@ -236,7 +210,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 self.saveData.set(self.tasksDict, forKey: "@dictData")
                 
-                self.removeAllObject(key: key)
+                self.removeAllObject(key)
                 
                 self.setEditButton()
             }
@@ -279,20 +253,19 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
+            let isBlank = textField.text!.existsCharacter()
             
-            if !isBlank {
+            if isBlank {
                 if self.tasksDict[self.openedCategory]?.index(of: textField.text!) == nil {
                     if !textField.text!.contains("@") {
                         let key = self.openedCategory + "@" + textField.text!
                         
                         self.tasksDict[self.openedCategory]!.append(textField.text!)
                         
+                        self.saveData.set(self.tasksDict, forKey: "@dictData")
                         self.saveData.set("", forKey: key + "@memo")
                         self.saveData.set(false, forKey: key + "@ison")
                         self.saveData.set(false, forKey: key + "@check")
-                        
-                        self.saveData.set(self.tasksDict, forKey: "@dictData")
                         
                         self.setEditButton()
                         
@@ -320,7 +293,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         alert.addTextField { (textField: UITextField!) -> Void in
-            textField.textAlignment = .left
+            
         }
         
         alert.addAction(cancelAction)
@@ -335,12 +308,14 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if indexPath != nil {
             if recognizer.state == .began {
                 if let cell = table.cellForRow(at: indexPath!) {
+                    let key = openedCategory + "@" + tasksDict[openedCategory]![indexPath!.row] + "@check"
+                    
                     if cell.accessoryType == .none {
-                        saveData.set(true, forKey: openedCategory + "@" + tasksDict[openedCategory]![indexPath!.row] + "@check")
+                        saveData.set(true, forKey: key)
                         
                         cell.accessoryType = .checkmark
                     } else {
-                        saveData.set(false, forKey: openedCategory + "@" + tasksDict[openedCategory]![indexPath!.row] + "@check")
+                        saveData.set(false, forKey: key)
                         
                         cell.accessoryType = .none
                     }
@@ -354,11 +329,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
             
-            editButton.title = "NAV_BUTTON_EDIT".localized
-            
             self.navigationItem.leftBarButtonItem = nil
             
             navigationItem.hidesBackButton = false
+            
+            editButton.title = "NAV_BUTTON_EDIT".localized
             
             if tasksDict[openedCategory]!.isEmpty {
                 editButton.isEnabled = false
@@ -370,11 +345,11 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             
-            editButton.title = "NAV_BUTTON_DONE".localized
+            self.navigationItem.leftBarButtonItem = deleteAllButton
             
             navigationItem.hidesBackButton = true
             
-            self.navigationItem.leftBarButtonItem = deleteAllButton
+            editButton.title = "NAV_BUTTON_DONE".localized
             
             table.gestureRecognizers?.removeAll()
         }
@@ -390,7 +365,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let tasks = self.tasksDict[self.openedCategory]!
             
             if !tasks.isEmpty {
-                tasks.forEach({ self.removeAllObject(key: self.openedCategory + "@" + $0) })
+                tasks.forEach({ self.removeAllObject(self.openedCategory + "@" + $0) })
                 
                 self.tasksDict[self.openedCategory] = []
                 
@@ -430,9 +405,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.modalToDateView()
         })
         
-        let finished = UIAlertAction(title: "ALERT_BUTTON_DATE_OVER".localized, style: .default, handler: {
+        let over = UIAlertAction(title: "ALERT_BUTTON_DATE_OVER".localized, style: .default, handler: {
             (action: UIAlertAction!) in
-            variables.shared.condition = .finished
+            variables.shared.condition = .over
             
             self.modalToDateView()
         })
@@ -443,7 +418,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         action.addAction(month)
         action.addAction(week)
-        action.addAction(finished)
+        action.addAction(over)
         action.addAction(cancel)
         
         self.present(action, animated: true, completion: nil)
@@ -470,25 +445,25 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    func removeAllObject(key: String) {
+    func removeAllObject(_ key: String) {
         saveData.removeObject(forKey: key + "@memo")
         saveData.removeObject(forKey: key + "@ison")
         saveData.removeObject(forKey: key + "@date")
         saveData.removeObject(forKey: key + "@check")
     }
     
-    func resaveData(pre: String, post: String) {
-        let savedMemo = saveData.object(forKey: pre + "@memo") as! String
-        let savedSwitch = saveData.object(forKey: pre + "@ison") as! Bool
-        let savedDate = saveData.object(forKey: pre + "@date") as! Date?
-        let savedCheckmark = saveData.object(forKey: pre + "@check") as! Bool
+    func resaveData(_ from: String, to: String) {
+        let savedMemo = saveData.object(forKey: from + "@memo") as! String
+        let savedSwitch = saveData.object(forKey: from + "@ison") as! Bool
+        let savedDate = saveData.object(forKey: from + "@date") as! Date?
+        let savedCheck = saveData.object(forKey: from + "@check") as! Bool
         
-        saveData.set(savedMemo, forKey: post + "@memo")
-        saveData.set(savedSwitch, forKey: post + "@ison")
-        saveData.set(savedDate, forKey: post + "@date")
-        saveData.set(savedCheckmark, forKey: post + "@check")
+        saveData.set(savedMemo, forKey: to + "@memo")
+        saveData.set(savedSwitch, forKey: to + "@ison")
+        saveData.set(savedDate, forKey: to + "@date")
+        saveData.set(savedCheck, forKey: to + "@check")
         
-        removeAllObject(key: pre)
+        removeAllObject(from)
     }
     
     func modalToDateView() {

@@ -11,5 +11,5 @@
     - searchController
 
 - 更新
-    - I fixed bugs and made it easy to understand tasks status.
-    - バグを修正し、タスクの状況をわかりやすくしました。
+    - I fixed bugs and improved convenience.
+    - バグを修正し、利便性を向上しました。

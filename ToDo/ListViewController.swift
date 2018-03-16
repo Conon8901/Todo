@@ -33,6 +33,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
         navigationItem.title = "NAV_TITLE_CATEGORY".localized
+        
+        table.tableFooterView = UIView()
     }
     
     override func didReceiveMemoryWarning() {
@@ -49,8 +51,6 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let cell = tableView.dequeueReusableCell(withIdentifier: "List")
         
         cell?.textLabel?.text = categoriesArray[indexPath.row]
-        
-        cell?.textLabel?.numberOfLines = 0
         
         if cell?.textLabel?.text == saveData.object(forKey: "@folderName") as! String? {
             cell?.selectionStyle = .none
@@ -117,9 +117,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         saveData.set(tasksDict, forKey: "@dictData")
         
-        resaveData(pre: preKey, post: postKey)
-        
-        variables.shared.isFromListView = true
+        resaveData(preKey, to: postKey)
         
         self.dismiss(animated: true, completion: nil)
     }
@@ -133,9 +131,9 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = textField.text!.components(separatedBy: .whitespaces).joined().isEmpty
+            let isBlank = textField.text!.existsCharacter()
             
-            if !isBlank {
+            if isBlank {
                 if self.categoriesArray.index(of: textField.text!) == nil {
                     if !textField.text!.contains("@") {
                         self.categoriesArray.append(textField.text!)
@@ -169,7 +167,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         alert.addTextField { (textField: UITextField!) -> Void in
-            textField.textAlignment = .left
+            
         }
         
         alert.addAction(cancelAction)
@@ -191,25 +189,25 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.present(alert, animated: true, completion: nil)
     }
     
-    func removeAllObject(key: String) {
+    func removeAllObject(_ key: String) {
         saveData.removeObject(forKey: key + "@memo")
         saveData.removeObject(forKey: key + "@ison")
         saveData.removeObject(forKey: key + "@date")
         saveData.removeObject(forKey: key + "@check")
     }
     
-    func resaveData(pre: String, post: String) {
-        let savedMemo = saveData.object(forKey: pre + "@memo") as! String
-        let savedSwitch = saveData.object(forKey: pre + "@ison") as! Bool
-        let savedDate = saveData.object(forKey: pre + "@date") as! Date?
-        let savedCheckmark = saveData.object(forKey: pre + "@check") as! Bool
+    func resaveData(_ from: String, to: String) {
+        let savedMemo = saveData.object(forKey: from + "@memo") as! String
+        let savedSwitch = saveData.object(forKey: from + "@ison") as! Bool
+        let savedDate = saveData.object(forKey: from + "@date") as! Date?
+        let savedCheck = saveData.object(forKey: from + "@check") as! Bool
         
-        saveData.set(savedMemo, forKey: post + "@memo")
-        saveData.set(savedSwitch, forKey: post + "@ison")
-        saveData.set(savedDate, forKey: post + "@date")
-        saveData.set(savedCheckmark, forKey: post + "@check")
+        saveData.set(savedMemo, forKey: to + "@memo")
+        saveData.set(savedSwitch, forKey: to + "@ison")
+        saveData.set(savedDate, forKey: to + "@date")
+        saveData.set(savedCheck, forKey: to + "@check")
         
-        removeAllObject(key: pre)
+        removeAllObject(from)
     }
     
     // MARK: - Others
