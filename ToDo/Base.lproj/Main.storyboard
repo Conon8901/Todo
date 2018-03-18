@@ -185,6 +185,7 @@
                         </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="addButton" destination="lsO-t3-KtB" id="90g-xv-lYw"/>
                         <outlet property="editButton" destination="lKS-zJ-ReQ" id="uQs-4c-a0T"/>
                         <outlet property="pickButton" destination="LM9-Fg-Pqa" id="HJK-yl-mXm"/>
                         <outlet property="table" destination="40m-Kp-Nxk" id="OMa-UA-7ah"/>

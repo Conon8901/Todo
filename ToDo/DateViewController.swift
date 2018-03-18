@@ -27,45 +27,33 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
         table.delegate = self
         table.rowHeight = 60
         table.allowsSelection = false
-        
-        let tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
-        
-        let openedCategory = saveData.object(forKey: "@folderName") as! String
-        
         table.tableFooterView = UIView()
         
         switch variables.shared.condition {
         case .month:
             navigationItem.title = "ALERT_BUTTON_DATE_MONTH".localized
             
-            for task in tasksDict[openedCategory]! {
-                let key = openedCategory + "@" + task + "@date"
-                if let date = saveData.object(forKey: key) as! Date? {
-                    if date.timeIntervalSinceNow < 60*60*24*30 {
-                        pickedArray.append(task)
-                    }
-                }
-            }
+            pickTasks(interval: 60*60*24*30)
         case .week:
             navigationItem.title = "ALERT_BUTTON_DATE_WEEK".localized
             
-            for task in tasksDict[openedCategory]! {
-                let key = openedCategory + "@" + task + "@date"
-                if let date = saveData.object(forKey: key) as! Date? {
-                    if date.timeIntervalSinceNow < 60*60*24*7 {
-                        pickedArray.append(task)
-                    }
-                }
-            }
+            pickTasks(interval: 60*60*24*7)
         case .over:
             navigationItem.title = "ALERT_BUTTON_DATE_OVER".localized
             
-            for task in tasksDict[openedCategory]! {
-                let key = openedCategory + "@" + task + "@date"
-                if let date = saveData.object(forKey: key) as! Date? {
-                    if date.timeIntervalSinceNow < 0 {
-                        pickedArray.append(task)
-                    }
+            pickTasks(interval: 0)
+        }
+    }
+    
+    func pickTasks(interval: Double) {
+        let tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
+        let openedCategory = saveData.object(forKey: "@folderName") as! String
+        
+        for task in tasksDict[openedCategory]! {
+            let key = openedCategory + "@" + task + "@date"
+            if let date = saveData.object(forKey: key) as! Date? {
+                if date.timeIntervalSinceNow < interval {
+                    pickedArray.append(task)
                 }
             }
         }

@@ -44,10 +44,6 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         editButton.title = "NAV_BUTTON_EDIT".localized
         
         table.tableFooterView = UIView()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         
         if saveData.object(forKey: "@folders") != nil {
             categoriesArray = saveData.object(forKey: "@folders") as! [String]
@@ -62,6 +58,10 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         setEditButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         table.deselectCell()
     }

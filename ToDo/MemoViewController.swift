@@ -30,40 +30,38 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         
         memoTextView.delegate = self
-        memoTextView.text = ""
         
-        setRange()
+        datePicker.maximumDate = Date(timeInterval: 60*60*24*2000, since: Date())
         
         placeHolder.text = "LABEL_NOTE".localized
         dateLabel.text = "LABEL_DUE".localized
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         
         let categoryName = saveData.object(forKey: "@folderName") as! String
         let taskName = saveData.object(forKey: "@fileName") as! String
         key = categoryName + "@" + taskName
         
+        navigationItem.title = taskName
+        
         memoTextView.text = saveData.object(forKey: key + "@memo") as! String
-        
-        dateSwitch.isOn = saveData.object(forKey: key + "@ison") as! Bool
-        
-        doneButton = UIBarButtonItem(title: "NAV_BUTTON_DONE".localized, style: .done, target: self, action: #selector(MemoViewController.saveMemo))
         
         tryShowsPlaceHolder()
         
-        if dateSwitch.isOn {
-            showsDateParts(true)
-        } else {
-            showsDateParts(false)
-        }
+        let isSwitchOn = saveData.object(forKey: key + "@ison") as! Bool
         
-        if saveData.object(forKey: key + "@date") != nil {
+        dateSwitch.isOn = isSwitchOn
+        
+        showsDateParts(isSwitchOn)
+        
+        doneButton = UIBarButtonItem(title: "NAV_BUTTON_DONE".localized, style: .done, target: self, action: #selector(MemoViewController.saveMemo))
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //カレンダー形式にするならここで
+        if dateSwitch.isOn {
             setDatePicker()
         }
-        
-        navigationItem.title = taskName
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -106,7 +104,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         if dateSwitch.isOn {
             showsDateParts(true)
             
-            setRange()
+            datePicker.maximumDate = Date(timeInterval: 60*60*24*2000, since: Date())
             
             if saveData.object(forKey: key + "@date") == nil {
                 datePicker.date = Date()
@@ -146,8 +144,10 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         setDateText(span: span)
         
-        if span > 60 {
+        if span > 0 {
             datePicker.minimumDate = savedDate
+        } else {
+            datePicker.minimumDate = Date()
         }
         
         datePicker.date = savedDate
@@ -193,11 +193,6 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         } else {
             dateField.text = "TEXT_DUE_PRESENT".localized
         }
-    }
-    
-    func setRange() {
-        datePicker.minimumDate = Date()
-        datePicker.maximumDate = Date(timeInterval: 60*60*24*2000, since: Date())
     }
     
     @objc func saveMemo() {

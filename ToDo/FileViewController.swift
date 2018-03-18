@@ -13,6 +13,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - Declare
     
     @IBOutlet var table: UITableView!
+    @IBOutlet var addButton: UIBarButtonItem!
     @IBOutlet var editButton: UIBarButtonItem!
     @IBOutlet var pickButton: UIBarButtonItem!
     var deleteAllButton: UIBarButtonItem?
@@ -37,6 +38,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         openedCategory = saveData.object(forKey: "@folderName") as! String
         
+        navigationItem.title = openedCategory
+        
         self.navigationItem.leftBarButtonItem = nil
         
         editButton.title = "NAV_BUTTON_EDIT".localized
@@ -50,14 +53,12 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         navigationItem.backBarButtonItem = UIBarButtonItem(title: openedCategory, style: .plain, target: nil, action: nil)
         
         table.tableFooterView = UIView()
+        
+        setEditButton()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        navigationItem.title = openedCategory
-        
-        setEditButton()
         
         table.deselectCell()
     }
@@ -335,9 +336,8 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             editButton.title = "NAV_BUTTON_EDIT".localized
             
-            if tasksDict[openedCategory]!.isEmpty {
-                editButton.isEnabled = false
-            }
+            addButton.isEnabled = true
+            pickButton.isEnabled = true
             
             let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.putCheckmark))
             table.addGestureRecognizer(longPressRecognizer)
@@ -350,6 +350,9 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             navigationItem.hidesBackButton = true
             
             editButton.title = "NAV_BUTTON_DONE".localized
+            
+            addButton.isEnabled = false
+            pickButton.isEnabled = false
             
             table.gestureRecognizers?.removeAll()
         }
