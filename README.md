@@ -7,6 +7,7 @@
     
 - 修正
     - searchController
+    - forKey変更コード削除
 
 - 更新
     - I fixed bugs and improved convenience.
