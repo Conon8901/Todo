@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DateViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class PickViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     // MARK: - Declare
     
@@ -78,7 +78,7 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Date")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Pick")
         
         if isDataNil {
             cell?.textLabel?.text = "CELL_LABEL_NA".localized

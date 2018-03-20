@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MemoViewController: UIViewController, UITextViewDelegate {
+class NoteViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - Declare
     
@@ -52,7 +52,7 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         
         showsDateParts(isSwitchOn)
         
-        doneButton = UIBarButtonItem(title: "NAV_BUTTON_DONE".localized, style: .done, target: self, action: #selector(MemoViewController.saveMemo))
+        doneButton = UIBarButtonItem(title: "NAV_BUTTON_DONE".localized, style: .done, target: self, action: #selector(NoteViewController.saveMemo))
     }
     
     override func viewWillAppear(_ animated: Bool) {

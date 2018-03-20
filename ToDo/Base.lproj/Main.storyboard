@@ -13,10 +13,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Folder-->
+        <!--Category-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="Folder" id="BYZ-38-t0r" customClass="FolderViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Category" id="BYZ-38-t0r" customClass="CategoryViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -34,7 +34,7 @@
                                     </scopeButtonTitles>
                                 </searchBar>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Folder" textLabel="RDM-Yt-3Oi" detailTextLabel="koG-yV-miz" rowHeight="50" style="IBUITableViewCellStyleSubtitle" id="8eg-WV-9OM">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Category" textLabel="RDM-Yt-3Oi" detailTextLabel="koG-yV-miz" rowHeight="50" style="IBUITableViewCellStyleSubtitle" id="8eg-WV-9OM">
                                         <rect key="frame" x="0.0" y="84" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8eg-WV-9OM" id="mpi-P5-sBQ">
@@ -74,7 +74,7 @@
                             <outletCollection property="gestureRecognizers" destination="f0x-eF-eWW" appends="YES" id="LyC-aY-oQr"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Folder" id="Ml9-jU-I4o">
+                    <navigationItem key="navigationItem" title="Category" id="Ml9-jU-I4o">
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="c4h-3X-LVY">
                                 <connections>
@@ -105,10 +105,10 @@
             </objects>
             <point key="canvasLocation" x="1398" y="240"/>
         </scene>
-        <!--File-->
+        <!--Task-->
         <scene sceneID="QOp-mh-yap">
             <objects>
-                <viewController storyboardIdentifier="File" id="7DH-dA-Yea" customClass="FileViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Task" id="7DH-dA-Yea" customClass="TaskViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Znx-qs-Gg9">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -117,7 +117,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="559"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="File" textLabel="ONS-y6-wd4" detailTextLabel="dUP-6E-MvD" rowHeight="50" style="IBUITableViewCellStyleSubtitle" id="yR4-6v-zJc">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Task" textLabel="ONS-y6-wd4" detailTextLabel="dUP-6E-MvD" rowHeight="50" style="IBUITableViewCellStyleSubtitle" id="yR4-6v-zJc">
                                         <rect key="frame" x="0.0" y="28" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yR4-6v-zJc" id="eOL-fz-hxq">
@@ -170,7 +170,7 @@
                             <outletCollection property="gestureRecognizers" destination="upi-Sc-Blt" appends="YES" id="VsG-4E-aFO"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="File" id="isx-ny-Hoc">
+                    <navigationItem key="navigationItem" title="Task" id="isx-ny-Hoc">
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="lsO-t3-KtB">
                                 <connections>
@@ -200,10 +200,10 @@
             </objects>
             <point key="canvasLocation" x="2142" y="240"/>
         </scene>
-        <!--Folder-->
+        <!--Category-->
         <scene sceneID="wMn-L4-S2b">
             <objects>
-                <viewController storyboardIdentifier="List" id="tW4-FO-QSh" customClass="ListViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Move" id="tW4-FO-QSh" customClass="MoveViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="QSM-p2-XnS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -219,7 +219,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="List" rowHeight="50" id="ooc-dU-40G">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Move" rowHeight="50" id="ooc-dU-40G">
                                         <rect key="frame" x="0.0" y="28" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ooc-dU-40G" id="ikd-MR-AvZ">
@@ -242,7 +242,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="hpe-q4-ZrJ"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Folder" id="erV-DB-vxn">
+                    <navigationItem key="navigationItem" title="Category" id="erV-DB-vxn">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="gTa-34-Eo5">
                             <connections>
                                 <action selector="tapCancel" destination="tW4-FO-QSh" id="7fW-iE-FWq"/>
@@ -265,7 +265,7 @@
         <!--Condition-->
         <scene sceneID="Crb-rA-7lm">
             <objects>
-                <viewController storyboardIdentifier="Date" id="HqG-u5-mZW" customClass="DateViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Pick" id="HqG-u5-mZW" customClass="PickViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2Xi-rk-lcx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -274,7 +274,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Date" rowHeight="50" id="KCK-g2-5Pj">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Pick" rowHeight="50" id="KCK-g2-5Pj">
                                         <rect key="frame" x="0.0" y="28" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KCK-g2-5Pj" id="lU7-0R-I5F">
@@ -312,7 +312,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Ef6-f8-VFj">
             <objects>
-                <navigationController storyboardIdentifier="FolderNav" automaticallyAdjustsScrollViewInsets="NO" id="osd-wA-16a" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="CategoryNav" automaticallyAdjustsScrollViewInsets="NO" id="osd-wA-16a" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="ibq-E1-pMp">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -330,7 +330,7 @@
         <!--Navigation Controller-->
         <scene sceneID="9Md-hl-rWl">
             <objects>
-                <navigationController storyboardIdentifier="FileNav" automaticallyAdjustsScrollViewInsets="NO" id="BHA-S8-N1I" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="TaskNav" automaticallyAdjustsScrollViewInsets="NO" id="BHA-S8-N1I" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="947-sX-SWL">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -345,10 +345,10 @@
             </objects>
             <point key="canvasLocation" x="2142" y="-573"/>
         </scene>
-        <!--Memo-->
+        <!--Note-->
         <scene sceneID="vO1-Qm-wuQ">
             <objects>
-                <viewController storyboardIdentifier="Memo" id="cFD-wo-LKb" customClass="MemoViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Note" id="cFD-wo-LKb" customClass="NoteViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Die-Zc-TEL">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -442,7 +442,7 @@
                             <outletCollection property="gestureRecognizers" destination="gNg-7B-E45" appends="YES" id="a93-7v-uLg"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Memo" id="JIv-pH-Dei"/>
+                    <navigationItem key="navigationItem" title="Note" id="JIv-pH-Dei"/>
                     <connections>
                         <outlet property="dateField" destination="5cl-b8-eKw" id="aVT-nw-qc3"/>
                         <outlet property="dateLabel" destination="A0h-Rs-Qai" id="G7w-PY-VCz"/>
@@ -464,7 +464,7 @@
         <!--Navigation Controller-->
         <scene sceneID="cNz-Bm-z0t">
             <objects>
-                <navigationController storyboardIdentifier="MemoNav" automaticallyAdjustsScrollViewInsets="NO" id="h6S-8f-x2W" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NoteNav" automaticallyAdjustsScrollViewInsets="NO" id="h6S-8f-x2W" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="6bN-2h-WZg">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -482,7 +482,7 @@
         <!--Navigation Controller-->
         <scene sceneID="U1x-8T-pcv">
             <objects>
-                <navigationController storyboardIdentifier="DateNav" automaticallyAdjustsScrollViewInsets="NO" id="ngL-d3-iPO" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="PickNav" automaticallyAdjustsScrollViewInsets="NO" id="ngL-d3-iPO" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="yLQ-NY-M7p">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -500,7 +500,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Ymw-O6-aJC">
             <objects>
-                <navigationController storyboardIdentifier="ListNav" automaticallyAdjustsScrollViewInsets="NO" id="t8I-jg-7Ci" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="MoveNav" automaticallyAdjustsScrollViewInsets="NO" id="t8I-jg-7Ci" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="4nO-Dq-88z">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>

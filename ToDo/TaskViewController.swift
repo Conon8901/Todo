@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - Declare
     
@@ -44,10 +44,10 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         editButton.title = "NAV_BUTTON_EDIT".localized
         
-        deleteAllButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(FileViewController.deleteAll))
+        deleteAllButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(TaskViewController.deleteAll))
         deleteAllButton?.tintColor = .red
         
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.putCheckmark))
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(TaskViewController.putCheckmark))
         table.addGestureRecognizer(longPressRecognizer)
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: openedCategory, style: .plain, target: nil, action: nil)
@@ -90,7 +90,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "File")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Task")
         
         if isDataNil {
             cell?.textLabel?.text = "CELL_LABEL_ADD_TASK".localized
@@ -192,7 +192,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             saveData.set(tasksDict[openedCategory]![indexPath.row], forKey: "fileName")
             
-            let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Memo") as! MemoViewController
+            let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Note") as! NoteViewController
             self.navigationController?.pushViewController(nextView, animated: true)
         }
     }
@@ -232,7 +232,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if !self.isDataNil {
                 variables.shared.movingTaskName = self.tasksDict[self.openedCategory]![indexPath.row]
                 
-                let nextView = self.storyboard!.instantiateViewController(withIdentifier: "ListNav") as! UINavigationController
+                let nextView = self.storyboard!.instantiateViewController(withIdentifier: "MoveNav") as! UINavigationController
                 self.present(nextView, animated: true)
             }
         }
@@ -347,7 +347,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             addButton.isEnabled = true
             pickButton.isEnabled = true
             
-            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(FileViewController.putCheckmark))
+            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(TaskViewController.putCheckmark))
             table.addGestureRecognizer(longPressRecognizer)
         } else {
             super.setEditing(true, animated: true)
@@ -478,7 +478,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func modalToDateView() {
-        let nextView = self.storyboard!.instantiateViewController(withIdentifier: "DateNav") as! UINavigationController
+        let nextView = self.storyboard!.instantiateViewController(withIdentifier: "PickNav") as! UINavigationController
         self.present(nextView, animated: true)
     }
     

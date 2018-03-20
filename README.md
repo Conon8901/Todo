@@ -6,7 +6,6 @@
     - realm
     
 - 修正
-    - searchController
     - forKey変更コード削除
 
 - 更新

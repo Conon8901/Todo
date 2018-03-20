@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FolderViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
+class CategoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
     // MARK: - Declare
     
@@ -97,7 +97,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Folder")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Category")
         
         if isDataNil {
             cell?.textLabel?.text = "CELL_LABEL_ADD_CATEGORY".localized
@@ -206,7 +206,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                 variables.shared.includingTasks = pickedDict[searchArray[indexPath.row]]!
             }
             
-            let nextView = self.storyboard!.instantiateViewController(withIdentifier: "File") as! FileViewController
+            let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Task") as! TaskViewController
             self.navigationController?.pushViewController(nextView, animated: true)
         }
     }
@@ -342,7 +342,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(FolderViewController.closeKeyboard))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(CategoryViewController.closeKeyboard))
         self.view.addGestureRecognizer(tapGesture)
     }
     
