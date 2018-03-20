@@ -52,7 +52,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         cell?.textLabel?.text = categoriesArray[indexPath.row]
         
-        if cell?.textLabel?.text == saveData.object(forKey: "@folderName") as! String? {
+        if cell?.textLabel?.text == saveData.object(forKey: "folderName") as! String? {
             cell?.selectionStyle = .none
             
             cell?.textLabel?.textColor = .lightGray
@@ -66,7 +66,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        let preCategory = saveData.object(forKey: "@folderName") as! String
+        let preCategory = saveData.object(forKey: "folderName") as! String
         
         if categoriesArray[indexPath.row] != preCategory {
             return indexPath
@@ -105,7 +105,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func moveTask(_ indexPath: IndexPath) {
-        let preCategory = saveData.object(forKey: "@folderName") as! String
+        let preCategory = saveData.object(forKey: "folderName") as! String
         let taskName = variables.shared.movingTaskName
         let preKey = preCategory + "@" + taskName
         let postKey = categoriesArray[indexPath.row] + "@" + taskName

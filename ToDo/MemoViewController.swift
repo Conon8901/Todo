@@ -36,8 +36,8 @@ class MemoViewController: UIViewController, UITextViewDelegate {
         placeHolder.text = "LABEL_NOTE".localized
         dateLabel.text = "LABEL_DUE".localized
         
-        let categoryName = saveData.object(forKey: "@folderName") as! String
-        let taskName = saveData.object(forKey: "@fileName") as! String
+        let categoryName = saveData.object(forKey: "folderName") as! String
+        let taskName = saveData.object(forKey: "fileName") as! String
         key = categoryName + "@" + taskName
         
         navigationItem.title = taskName

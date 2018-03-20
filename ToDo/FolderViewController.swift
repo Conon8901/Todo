@@ -45,16 +45,12 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         table.tableFooterView = UIView()
         
-        if saveData.object(forKey: "@folders") != nil {
-            categoriesArray = saveData.object(forKey: "@folders") as! [String]
-        } else {
-            saveData.set(categoriesArray, forKey: "@folders")
+        if let array = saveData.object(forKey: "@folders") as! [String]? {
+            categoriesArray = array
         }
         
-        if saveData.object(forKey: "@dictData") != nil {
-            tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
-        } else {
-            saveData.set(tasksDict, forKey: "@dictData")
+        if let dict = saveData.object(forKey: "@dictData") as! [String: [String]]? {
+            tasksDict = dict
         }
         
         setEditButton()
@@ -191,9 +187,9 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
             variables.shared.includingTasks.removeAll()
             
             if searchBar.text!.isEmpty {
-                saveData.set(categoriesArray[indexPath.row], forKey: "@folderName")
+                saveData.set(categoriesArray[indexPath.row], forKey: "folderName")
             } else {
-                saveData.set(searchArray[indexPath.row], forKey: "@folderName")
+                saveData.set(searchArray[indexPath.row], forKey: "folderName")
                 
                 variables.shared.includingTasks = pickedDict[searchArray[indexPath.row]]!
             }
@@ -414,9 +410,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         searchArray.removeAll()
         pickedDict.removeAll()
         
-        if saveData.object(forKey: "@dictData") != nil {
-            let dict = saveData.object(forKey: "@dictData") as! [String: [String]]
-            
+        if let dict = saveData.object(forKey: "@dictData") as! [String: [String]]? {
             for key in categoriesArray {
                 var isIncluded = false
                 

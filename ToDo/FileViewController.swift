@@ -36,7 +36,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
         
-        openedCategory = saveData.object(forKey: "@folderName") as! String
+        openedCategory = saveData.object(forKey: "folderName") as! String
         
         navigationItem.title = openedCategory
         
@@ -182,7 +182,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             present(alert, animated: true, completion: nil)
         } else {
-            saveData.set(tasksDict[openedCategory]![indexPath.row], forKey: "@fileName")
+            saveData.set(tasksDict[openedCategory]![indexPath.row], forKey: "fileName")
             
             let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Memo") as! MemoViewController
             self.navigationController?.pushViewController(nextView, animated: true)
