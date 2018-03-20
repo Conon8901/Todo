@@ -38,7 +38,7 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        variables.shared.isFromListViewController = true
+        variables.shared.isFromMoveViewController = true
     }
     
     override func didReceiveMemoryWarning() {
