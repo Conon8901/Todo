@@ -46,7 +46,7 @@ class DateViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func pickTasks(interval: Double) {
-        let tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
+        let tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
         let openedCategory = saveData.object(forKey: "folderName") as! String
         
         for task in tasksDict[openedCategory]! {

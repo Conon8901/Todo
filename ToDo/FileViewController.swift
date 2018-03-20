@@ -34,7 +34,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.delegate = self
         table.setUp()
         
-        tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
+        tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
         
         openedCategory = saveData.object(forKey: "folderName") as! String
         
@@ -60,7 +60,15 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        table.deselectCell()
+        if variables.shared.isFromListViewController {
+            tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
+            
+            table.reload()
+            
+            variables.shared.isFromListViewController = false
+        } else {
+            table.deselectCell()
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -144,7 +152,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             
                             self.tasksDict[self.openedCategory]?[indexPath.row] = textField.text!
                             
-                            self.saveData.set(self.tasksDict, forKey: "@dictData")
+                            self.saveData.set(self.tasksDict, forKey: "dictData")
                             self.resaveData(preKey, to: postKey)
                             
                             self.table.reload()
@@ -209,7 +217,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     tableView.scrollToRow(at: [0,visibleLastCell], at: .bottom, animated: true)
                 }
                 
-                self.saveData.set(self.tasksDict, forKey: "@dictData")
+                self.saveData.set(self.tasksDict, forKey: "dictData")
                 
                 self.removeAllObject(key)
                 
@@ -240,7 +248,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tasksDict[openedCategory]?.remove(at: sourceIndexPath.row)
         tasksDict[openedCategory]?.insert(movingItem, at: destinationIndexPath.row)
         
-        saveData.set(tasksDict, forKey: "@dictData")
+        saveData.set(tasksDict, forKey: "dictData")
         
         table.reload()
     }
@@ -263,7 +271,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.tasksDict[self.openedCategory]!.append(textField.text!)
                         
-                        self.saveData.set(self.tasksDict, forKey: "@dictData")
+                        self.saveData.set(self.tasksDict, forKey: "dictData")
                         self.saveData.set("", forKey: key + "@memo")
                         self.saveData.set(false, forKey: key + "@ison")
                         self.saveData.set(false, forKey: key + "@check")
@@ -372,7 +380,7 @@ class FileViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 self.tasksDict[self.openedCategory] = []
                 
-                self.saveData.set(self.tasksDict, forKey: "@dictData")
+                self.saveData.set(self.tasksDict, forKey: "dictData")
                 
                 self.editButton.isEnabled = true
                 

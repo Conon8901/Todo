@@ -28,13 +28,17 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.delegate = self
         table.setUp()
         
-        categoriesArray = saveData.object(forKey: "@folders") as! [String]
+        categoriesArray = saveData.object(forKey: "folders") as! [String]
         
-        tasksDict = saveData.object(forKey: "@dictData") as! [String: [String]]
+        tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
         
         navigationItem.title = "NAV_TITLE_CATEGORY".localized
         
         table.tableFooterView = UIView()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        variables.shared.isFromListViewController = true
     }
     
     override func didReceiveMemoryWarning() {
@@ -115,7 +119,7 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let index = tasksDict[preCategory]!.index(of: taskName)!
         tasksDict[preCategory]?.remove(at: index)
         
-        saveData.set(tasksDict, forKey: "@dictData")
+        saveData.set(tasksDict, forKey: "dictData")
         
         resaveData(preKey, to: postKey)
         
@@ -140,8 +144,8 @@ class ListViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.tasksDict[textField.text!] = []
                         
-                        self.saveData.set(self.tasksDict, forKey: "@dictData")
-                        self.saveData.set(self.categoriesArray, forKey: "@folders")
+                        self.saveData.set(self.tasksDict, forKey: "dictData")
+                        self.saveData.set(self.categoriesArray, forKey: "folders")
                         
                         self.table.reload()
                         

@@ -62,6 +62,8 @@ extension UISearchBar {
 class variables {
     static let shared = variables()
     
+    var isFromListViewController = false
+    
     var movingTaskName = ""
     
     var includingTasks = [String]()

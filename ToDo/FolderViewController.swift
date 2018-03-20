@@ -45,11 +45,23 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         
         table.tableFooterView = UIView()
         
+        //forKey切り替え
         if let array = saveData.object(forKey: "@folders") as! [String]? {
-            categoriesArray = array
+            saveData.removeObject(forKey: "@folders")
+            saveData.set(array, forKey: "folders")
         }
         
         if let dict = saveData.object(forKey: "@dictData") as! [String: [String]]? {
+            saveData.removeObject(forKey: "@dictData")
+            saveData.set(dict, forKey: "dictData")
+        }
+        //以上
+        
+        if let array = saveData.object(forKey: "folders") as! [String]? {
+            categoriesArray = array
+        }
+        
+        if let dict = saveData.object(forKey: "dictData") as! [String: [String]]? {
             tasksDict = dict
         }
         
@@ -135,8 +147,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                             
                             self.tasksDict[textField.text!] = self.tasksDict[preCategoryName]
                             
-                            self.saveData.set(self.tasksDict, forKey: "@dictData")
-                            self.saveData.set(self.categoriesArray, forKey: "@folders")
+                            self.saveData.set(self.tasksDict, forKey: "dictData")
+                            self.saveData.set(self.categoriesArray, forKey: "folders")
                             
                             if let files = self.tasksDict[preCategoryName] {
                                 for fileName in files {
@@ -230,8 +242,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                     tableView.scrollToRow(at: [0,visibleLastCell], at: .bottom, animated: true)
                 }
                 
-                self.saveData.set(self.tasksDict, forKey: "@dictData")
-                self.saveData.set(self.categoriesArray, forKey: "@folders")
+                self.saveData.set(self.tasksDict, forKey: "dictData")
+                self.saveData.set(self.categoriesArray, forKey: "folders")
                 
                 self.setEditButton()
             }
@@ -244,7 +256,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         categoriesArray.remove(at: sourceIndexPath.row)
         categoriesArray.insert(movingItem, at: destinationIndexPath.row)
         
-        saveData.set(categoriesArray, forKey: "@folders")
+        saveData.set(categoriesArray, forKey: "folders")
     }
     
     @IBAction func addItem() {
@@ -265,8 +277,8 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
                         
                         self.tasksDict[textField.text!] = []
                         
-                        self.saveData.set(self.tasksDict, forKey: "@dictData")
-                        self.saveData.set(self.categoriesArray, forKey: "@folders")
+                        self.saveData.set(self.tasksDict, forKey: "dictData")
+                        self.saveData.set(self.categoriesArray, forKey: "folders")
                         
                         self.setEditButton()
                         
@@ -410,7 +422,7 @@ class FolderViewController: UIViewController, UITableViewDataSource, UITableView
         searchArray.removeAll()
         pickedDict.removeAll()
         
-        if let dict = saveData.object(forKey: "@dictData") as! [String: [String]]? {
+        if let dict = saveData.object(forKey: "dictData") as! [String: [String]]? {
             for key in categoriesArray {
                 var isIncluded = false
                 
