@@ -60,18 +60,20 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if variables.shared.isFromMoveViewController {
+        if variables.shared.isFromNoteViewController {
+            table.deselectCell()
+            
+            variables.shared.isFromNoteViewController = false
+        } else if variables.shared.isFromMoveViewController {
             tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
             
             table.reload()
             
             variables.shared.isFromMoveViewController = false
-        } else if variables.shared.isFromNoteViewController {
+        } else {
             table.reload()
             
-            variables.shared.isFromNoteViewController = false
-        } else {
-            table.deselectCell()
+            print(variables.shared.isFromNoteViewController)
         }
     }
     

@@ -13,7 +13,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Category-->
+        <!--Categories-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController storyboardIdentifier="Category" id="BYZ-38-t0r" customClass="CategoryViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
@@ -74,7 +74,7 @@
                             <outletCollection property="gestureRecognizers" destination="f0x-eF-eWW" appends="YES" id="LyC-aY-oQr"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Category" id="Ml9-jU-I4o">
+                    <navigationItem key="navigationItem" title="Categories" id="Ml9-jU-I4o">
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="c4h-3X-LVY">
                                 <connections>
@@ -105,7 +105,7 @@
             </objects>
             <point key="canvasLocation" x="1398" y="240"/>
         </scene>
-        <!--Task-->
+        <!--Tasks-->
         <scene sceneID="QOp-mh-yap">
             <objects>
                 <viewController storyboardIdentifier="Task" id="7DH-dA-Yea" customClass="TaskViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
@@ -170,7 +170,7 @@
                             <outletCollection property="gestureRecognizers" destination="upi-Sc-Blt" appends="YES" id="VsG-4E-aFO"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Task" id="isx-ny-Hoc">
+                    <navigationItem key="navigationItem" title="Tasks" id="isx-ny-Hoc">
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="lsO-t3-KtB">
                                 <connections>
@@ -200,7 +200,7 @@
             </objects>
             <point key="canvasLocation" x="2142" y="240"/>
         </scene>
-        <!--Category-->
+        <!--Categories-->
         <scene sceneID="wMn-L4-S2b">
             <objects>
                 <viewController storyboardIdentifier="Move" id="tW4-FO-QSh" customClass="MoveViewController" customModule="ToDo" customModuleProvider="target" sceneMemberID="viewController">
@@ -242,7 +242,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="hpe-q4-ZrJ"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Category" id="erV-DB-vxn">
+                    <navigationItem key="navigationItem" title="Categories" id="erV-DB-vxn">
                         <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="gTa-34-Eo5">
                             <connections>
                                 <action selector="tapCancel" destination="tW4-FO-QSh" id="7fW-iE-FWq"/>
