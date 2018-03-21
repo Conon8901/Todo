@@ -61,19 +61,23 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewWillAppear(animated)
         
         if variables.shared.isFromNoteViewController {
+            let index = table.indexPathForSelectedRow
+            
+            table.reloadRows(at: [index!], with: .none)
+            
+            table.selectRow(at: index, animated: false, scrollPosition: .none)
+            
             table.deselectCell()
             
             variables.shared.isFromNoteViewController = false
-        } else if variables.shared.isFromMoveViewController {
+        }
+
+        if variables.shared.isFromMoveViewController {
             tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
-            
+
             table.reload()
             
             variables.shared.isFromMoveViewController = false
-        } else {
-            table.reload()
-            
-            print(variables.shared.isFromNoteViewController)
         }
     }
     
