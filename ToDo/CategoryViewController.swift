@@ -31,8 +31,6 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
-        
         table.dataSource = self
         table.delegate = self
         table.setUp()

@@ -24,6 +24,8 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var openedCategory = ""
     var isDataNil = false
+    var toNoteViewController = false
+    var selectedIndex: IndexPath = [0,0]
     
     // MARK: - LifeCycle
     
@@ -61,9 +63,9 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewWillAppear(animated)
         
         if variables.shared.isFromNoteViewController {
-            let index = table.indexPathForSelectedRow
+            let index = selectedIndex
             
-            table.reloadRows(at: [index!], with: .none)
+            table.reloadRows(at: [index], with: .none)
             
             table.selectRow(at: index, animated: false, scrollPosition: .none)
             
@@ -71,13 +73,23 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             variables.shared.isFromNoteViewController = false
         }
-
+        
         if variables.shared.isFromMoveViewController {
             tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
 
             table.reload()
             
             variables.shared.isFromMoveViewController = false
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        if toNoteViewController {
+            if let index = table.indexPathForSelectedRow {
+                selectedIndex = index
+            }
+            
+            toNoteViewController = false
         }
     }
     
@@ -201,6 +213,8 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             present(alert, animated: true, completion: nil)
         } else {
             saveData.set(tasksDict[openedCategory]![indexPath.row], forKey: "fileName")
+            
+            toNoteViewController = true
             
             let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Note") as! NoteViewController
             self.navigationController?.pushViewController(nextView, animated: true)
