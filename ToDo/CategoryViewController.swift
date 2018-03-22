@@ -78,6 +78,82 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         super.didReceiveMemoryWarning()
     }
     
+    // MARK: - NavigationController
+    
+    @IBAction func addItem() {
+        let alert = UIAlertController(
+            title: "ALERT_TITLE_ADD".localized,
+            message: "ALERT_MESSAGE_ENTER".localized,
+            preferredStyle: .alert)
+        
+        let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
+            let textField = alert.textFields![0] as UITextField
+            
+            let isBlank = textField.text!.existsCharacter()
+            
+            if isBlank {
+                if self.categoriesArray.index(of: textField.text!) == nil {
+                    if !textField.text!.contains("@") {
+                        self.categoriesArray.append(textField.text!)
+                        
+                        self.tasksDict[textField.text!] = []
+                        
+                        self.saveData.set(self.tasksDict, forKey: "dictData")
+                        self.saveData.set(self.categoriesArray, forKey: "folders")
+                        
+                        self.setEditButton()
+                        
+                        self.table.reload()
+                        
+                        self.table.scrollToRow(at: [0,self.categoriesArray.count-1], at: .bottom, animated: true)
+                    } else {
+                        self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ATSIGN".localized)
+                        
+                        self.table.deselectCell()
+                    }
+                } else {
+                    self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_SAME".localized)
+                    
+                    self.table.deselectCell()
+                }
+            } else {
+                self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ENTER".localized)
+                
+                self.table.deselectCell()
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
+        }
+        
+        alert.addTextField { (textField: UITextField!) -> Void in
+            
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(addAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    @IBAction func tapEdit() {
+        if isEditing {
+            super.setEditing(false, animated: true)
+            table.setEditing(false, animated: true)
+            
+            searchBar.enable(true)
+            
+            editButton.title = "NAV_BUTTON_EDIT".localized
+        } else {
+            super.setEditing(true, animated: true)
+            table.setEditing(true, animated: true)
+            
+            searchBar.enable(false)
+            
+            editButton.title = "NAV_BUTTON_DONE".localized
+        }
+    }
+    
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -225,7 +301,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                 let maxIndex = categoriesArray.count - 1
                 let categoryName = categoriesArray[indexPath.row]
                 
-                tasksDict[categoryName]?.forEach({ removeAllObject(categoryName + "@" + $0 )})
+                tasksDict[categoryName]?.forEach({ removeData(categoryName + "@" + $0 )})
                 
                 tasksDict.removeValue(forKey: categoryName)
                 categoriesArray.remove(at: indexPath.row)
@@ -257,80 +333,6 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         categoriesArray.insert(movingItem, at: destinationIndexPath.row)
         
         saveData.set(categoriesArray, forKey: "folders")
-    }
-    
-    @IBAction func addItem() {
-        let alert = UIAlertController(
-            title: "ALERT_TITLE_ADD".localized,
-            message: "ALERT_MESSAGE_ENTER".localized,
-            preferredStyle: .alert)
-        
-        let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
-            let textField = alert.textFields![0] as UITextField
-            
-            let isBlank = textField.text!.existsCharacter()
-            
-            if isBlank {
-                if self.categoriesArray.index(of: textField.text!) == nil {
-                    if !textField.text!.contains("@") {
-                        self.categoriesArray.append(textField.text!)
-                        
-                        self.tasksDict[textField.text!] = []
-                        
-                        self.saveData.set(self.tasksDict, forKey: "dictData")
-                        self.saveData.set(self.categoriesArray, forKey: "folders")
-                        
-                        self.setEditButton()
-                        
-                        self.table.reload()
-                        
-                        self.table.scrollToRow(at: [0,self.categoriesArray.count-1], at: .bottom, animated: true)
-                    } else {
-                        self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ATSIGN".localized)
-                        
-                        self.table.deselectCell()
-                    }
-                } else {
-                    self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_SAME".localized)
-                    
-                    self.table.deselectCell()
-                }
-            } else {
-                self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ENTER".localized)
-                
-                self.table.deselectCell()
-            }
-        }
-        
-        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
-        }
-        
-        alert.addTextField { (textField: UITextField!) -> Void in
-            
-        }
-        
-        alert.addAction(cancelAction)
-        alert.addAction(addAction)
-        
-        present(alert, animated: true, completion: nil)
-    }
-    
-    @IBAction func tapEdit() {
-        if isEditing {
-            super.setEditing(false, animated: true)
-            table.setEditing(false, animated: true)
-            
-            searchBar.enable(true)
-            
-            editButton.title = "NAV_BUTTON_EDIT".localized
-        } else {
-            super.setEditing(true, animated: true)
-            table.setEditing(true, animated: true)
-            
-            searchBar.enable(false)
-            
-            editButton.title = "NAV_BUTTON_DONE".localized
-        }
     }
     
     // MARK: - searchBar
@@ -381,6 +383,14 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     
     @objc func closeKeyboard() {
         searchBar.endEditing(true)
+    }
+    
+    // MARK: - Gesture
+    
+    @IBAction func tapScreen(sender: UITapGestureRecognizer) {
+        sender.cancelsTouchesInView = false
+        
+        self.view.endEditing(true)
     }
     
     // MARK: - Methods
@@ -445,7 +455,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    func removeAllObject(_ key: String) {
+    func removeData(_ key: String) {
         saveData.removeObject(forKey: key + "@memo")
         saveData.removeObject(forKey: key + "@ison")
         saveData.removeObject(forKey: key + "@date")
@@ -463,14 +473,6 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         saveData.set(savedDate, forKey: to + "@date")
         saveData.set(savedCheck, forKey: to + "@check")
         
-        removeAllObject(from)
-    }
-    
-    // MARK: - Others
-    
-    @IBAction func tapScreen(sender: UITapGestureRecognizer) {
-        sender.cancelsTouchesInView = false
-        
-        self.view.endEditing(true)
+        removeData(from)
     }
 }

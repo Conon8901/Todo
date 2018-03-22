@@ -45,6 +45,66 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.didReceiveMemoryWarning()
     }
     
+    // MARK: - NavigationController
+    
+    @IBAction func tapCancel() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func addItem() {
+        let alert = UIAlertController(
+            title: "ALERT_TITLE_ADD".localized,
+            message: "ALERT_MESSAGE_ENTER".localized,
+            preferredStyle: .alert)
+        
+        let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
+            let textField = alert.textFields![0] as UITextField
+            
+            let isBlank = textField.text!.existsCharacter()
+            
+            if isBlank {
+                if self.categoriesArray.index(of: textField.text!) == nil {
+                    if !textField.text!.contains("@") {
+                        self.categoriesArray.append(textField.text!)
+                        
+                        self.tasksDict[textField.text!] = []
+                        
+                        self.saveData.set(self.tasksDict, forKey: "dictData")
+                        self.saveData.set(self.categoriesArray, forKey: "folders")
+                        
+                        self.table.reload()
+                        
+                        self.table.scrollToRow(at: [0,self.tasksDict.keys.count-1], at: .bottom, animated: true)
+                    } else {
+                        self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ATSIGN".localized)
+                        
+                        self.table.deselectCell()
+                    }
+                } else {
+                    self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_SAME".localized)
+                    
+                    self.table.deselectCell()
+                }
+            } else {
+                self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ENTER".localized)
+                
+                self.table.deselectCell()
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
+        }
+        
+        alert.addTextField { (textField: UITextField!) -> Void in
+            
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(addAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -108,6 +168,8 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
+    // MARK: - Methods
+    
     func moveTask(_ indexPath: IndexPath) {
         let preCategory = saveData.object(forKey: "folderName") as! String
         let taskName = variables.shared.movingTaskName
@@ -125,62 +187,6 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         self.dismiss(animated: true, completion: nil)
     }
-    
-    @IBAction func addItem() {
-        let alert = UIAlertController(
-            title: "ALERT_TITLE_ADD".localized,
-            message: "ALERT_MESSAGE_ENTER".localized,
-            preferredStyle: .alert)
-        
-        let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
-            let textField = alert.textFields![0] as UITextField
-            
-            let isBlank = textField.text!.existsCharacter()
-            
-            if isBlank {
-                if self.categoriesArray.index(of: textField.text!) == nil {
-                    if !textField.text!.contains("@") {
-                        self.categoriesArray.append(textField.text!)
-                        
-                        self.tasksDict[textField.text!] = []
-                        
-                        self.saveData.set(self.tasksDict, forKey: "dictData")
-                        self.saveData.set(self.categoriesArray, forKey: "folders")
-                        
-                        self.table.reload()
-                        
-                        self.table.scrollToRow(at: [0,self.tasksDict.keys.count-1], at: .bottom, animated: true)
-                    } else {
-                        self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ATSIGN".localized)
-                        
-                        self.table.deselectCell()
-                    }
-                } else {
-                    self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_SAME".localized)
-                    
-                    self.table.deselectCell()
-                }
-            } else {
-                self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ENTER".localized)
-                
-                self.table.deselectCell()
-            }
-        }
-        
-        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
-        }
-        
-        alert.addTextField { (textField: UITextField!) -> Void in
-            
-        }
-        
-        alert.addAction(cancelAction)
-        alert.addAction(addAction)
-        
-        present(alert, animated: true, completion: nil)
-    }
-    
-    // MARK: - Methods
     
     func showErrorAlert(message: String) {
         let alert = UIAlertController(
@@ -212,11 +218,5 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         saveData.set(savedCheck, forKey: to + "@check")
         
         removeAllObject(from)
-    }
-    
-    // MARK: - Others
-    
-    @IBAction func tapCancel() {
-        self.dismiss(animated: true, completion: nil)
     }
 }

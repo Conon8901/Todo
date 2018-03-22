@@ -92,7 +92,7 @@ class NoteViewController: UIViewController, UITextViewDelegate {
     
     // MARK: DatePicker
     
-    @IBAction func changeDate() {
+    @IBAction func dateChanged() {
         setDateText(span: Date().timeIntervalSince(datePicker.date))
         
         saveData.set(datePicker.date, forKey: key + "@date")
@@ -203,7 +203,7 @@ class NoteViewController: UIViewController, UITextViewDelegate {
         memoTextView.resignFirstResponder()
     }
     
-    // MARK: - Others
+    // MARK: - Gesture
     
     @IBAction func tapScreen() {
         memoTextView.resignFirstResponder()

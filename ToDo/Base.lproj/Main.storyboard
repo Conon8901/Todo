@@ -392,7 +392,7 @@
                                     <!--2017-09-11 08:11:47 +0000-->
                                 </date>
                                 <connections>
-                                    <action selector="changeDate" destination="cFD-wo-LKb" eventType="valueChanged" id="4ch-3i-wr4"/>
+                                    <action selector="dateChanged" destination="cFD-wo-LKb" eventType="valueChanged" id="4ch-3i-wr4"/>
                                 </connections>
                             </datePicker>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="HU6-fN-tgQ">

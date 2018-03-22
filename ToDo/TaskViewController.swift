@@ -97,6 +97,168 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.didReceiveMemoryWarning()
     }
     
+    // MARK: - NavigationController
+    
+    @IBAction func addItem() {
+        let alert = UIAlertController(
+            title: "ALERT_TITLE_ADD".localized,
+            message: "ALERT_MESSAGE_ENTER".localized,
+            preferredStyle: .alert)
+        
+        let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
+            let textField = alert.textFields![0] as UITextField
+            
+            let isBlank = textField.text!.existsCharacter()
+            
+            if isBlank {
+                if self.tasksDict[self.openedCategory]?.index(of: textField.text!) == nil {
+                    if !textField.text!.contains("@") {
+                        let key = self.openedCategory + "@" + textField.text!
+                        
+                        self.tasksDict[self.openedCategory]!.append(textField.text!)
+                        
+                        self.saveData.set(self.tasksDict, forKey: "dictData")
+                        self.saveData.set("", forKey: key + "@memo")
+                        self.saveData.set(false, forKey: key + "@ison")
+                        self.saveData.set(false, forKey: key + "@check")
+                        
+                        self.setEditButton()
+                        
+                        self.table.reload()
+                        
+                        self.table.scrollToRow(at: [0,self.tasksDict[self.openedCategory]!.count-1], at: .bottom, animated: true)
+                    } else {
+                        self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ATSIGN".localized)
+                        
+                        self.table.deselectCell()
+                    }
+                } else {
+                    self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_SAME".localized)
+                    
+                    self.table.deselectCell()
+                }
+            } else {
+                self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ENTER".localized)
+                
+                self.table.deselectCell()
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
+        }
+        
+        alert.addTextField { (textField: UITextField!) -> Void in
+            
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(addAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    @IBAction func tapEdit() {
+        if isEditing {
+            super.setEditing(false, animated: true)
+            table.setEditing(false, animated: true)
+            
+            self.navigationItem.leftBarButtonItem = nil
+            
+            navigationItem.hidesBackButton = false
+            
+            editButton.title = "NAV_BUTTON_EDIT".localized
+            
+            addButton.isEnabled = true
+            pickButton.isEnabled = true
+            
+            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(TaskViewController.putCheckmark))
+            table.addGestureRecognizer(longPressRecognizer)
+        } else {
+            super.setEditing(true, animated: true)
+            table.setEditing(true, animated: true)
+            
+            self.navigationItem.leftBarButtonItem = deleteAllButton
+            
+            navigationItem.hidesBackButton = true
+            
+            editButton.title = "NAV_BUTTON_DONE".localized
+            
+            addButton.isEnabled = false
+            pickButton.isEnabled = false
+            
+            table.gestureRecognizers?.removeAll()
+        }
+    }
+    
+    @objc func deleteAll() {
+        let alert = UIAlertController(
+            title: "ALERT_TITLE_DELETEALL".localized,
+            message: "ALERT_MESSAGE_DELETEALL".localized,
+            preferredStyle: .alert)
+        
+        let deleteAction = UIAlertAction(title: "ALERT_BUTTON_DELETE".localized, style: .destructive) { (action: UIAlertAction!) -> Void in
+            let tasks = self.tasksDict[self.openedCategory]!
+            
+            if !tasks.isEmpty {
+                tasks.forEach({ self.removeData(self.openedCategory + "@" + $0) })
+                
+                self.tasksDict[self.openedCategory] = []
+                
+                self.saveData.set(self.tasksDict, forKey: "dictData")
+                
+                self.editButton.isEnabled = true
+                
+                self.table.reload()
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(deleteAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    // MARK: Toolbar
+    
+    @IBAction func pickItems() {
+        let action = UIAlertController(title: "ALERT_TITLE_DATE".localized, message: "ALERT_MESSAGE_DATE".localized, preferredStyle: .actionSheet)
+        
+        let month = UIAlertAction(title: "ALERT_BUTTON_DATE_MONTH".localized, style: .default, handler: {
+            (action: UIAlertAction!) in
+            variables.shared.condition = .month
+            
+            self.goToDateViewController()
+        })
+        
+        let week = UIAlertAction(title: "ALERT_BUTTON_DATE_WEEK".localized, style: .default, handler: {
+            (action: UIAlertAction!) in
+            variables.shared.condition = .week
+            
+            self.goToDateViewController()
+        })
+        
+        let over = UIAlertAction(title: "ALERT_BUTTON_DATE_OVER".localized, style: .default, handler: {
+            (action: UIAlertAction!) in
+            variables.shared.condition = .over
+            
+            self.goToDateViewController()
+        })
+        
+        let cancel = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel, handler: {
+            (action: UIAlertAction!) in
+        })
+        
+        action.addAction(month)
+        action.addAction(week)
+        action.addAction(over)
+        action.addAction(cancel)
+        
+        self.present(action, animated: true, completion: nil)
+    }
+    
     // MARK: - TableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -243,7 +405,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 self.saveData.set(self.tasksDict, forKey: "dictData")
                 
-                self.removeAllObject(key)
+                self.removeData(key)
                 
                 self.setEditButton()
             }
@@ -277,64 +439,6 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.reload()
     }
     
-    @IBAction func addItem() {
-        let alert = UIAlertController(
-            title: "ALERT_TITLE_ADD".localized,
-            message: "ALERT_MESSAGE_ENTER".localized,
-            preferredStyle: .alert)
-        
-        let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
-            let textField = alert.textFields![0] as UITextField
-            
-            let isBlank = textField.text!.existsCharacter()
-            
-            if isBlank {
-                if self.tasksDict[self.openedCategory]?.index(of: textField.text!) == nil {
-                    if !textField.text!.contains("@") {
-                        let key = self.openedCategory + "@" + textField.text!
-                        
-                        self.tasksDict[self.openedCategory]!.append(textField.text!)
-                        
-                        self.saveData.set(self.tasksDict, forKey: "dictData")
-                        self.saveData.set("", forKey: key + "@memo")
-                        self.saveData.set(false, forKey: key + "@ison")
-                        self.saveData.set(false, forKey: key + "@check")
-                        
-                        self.setEditButton()
-                        
-                        self.table.reload()
-                        
-                        self.table.scrollToRow(at: [0,self.tasksDict[self.openedCategory]!.count-1], at: .bottom, animated: true)
-                    } else {
-                        self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ATSIGN".localized)
-                        
-                        self.table.deselectCell()
-                    }
-                } else {
-                    self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_SAME".localized)
-                    
-                    self.table.deselectCell()
-                }
-            } else {
-                self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ENTER".localized)
-                
-                self.table.deselectCell()
-            }
-        }
-        
-        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
-        }
-        
-        alert.addTextField { (textField: UITextField!) -> Void in
-            
-        }
-        
-        alert.addAction(cancelAction)
-        alert.addAction(addAction)
-        
-        present(alert, animated: true, completion: nil)
-    }
-    
     @objc func putCheckmark(recognizer: UILongPressGestureRecognizer) {
         let indexPath = table.indexPathForRow(at: recognizer.location(in: table))
         
@@ -357,106 +461,11 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    @IBAction func tapEdit() {
-        if isEditing {
-            super.setEditing(false, animated: true)
-            table.setEditing(false, animated: true)
-            
-            self.navigationItem.leftBarButtonItem = nil
-            
-            navigationItem.hidesBackButton = false
-            
-            editButton.title = "NAV_BUTTON_EDIT".localized
-            
-            addButton.isEnabled = true
-            pickButton.isEnabled = true
-            
-            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(TaskViewController.putCheckmark))
-            table.addGestureRecognizer(longPressRecognizer)
-        } else {
-            super.setEditing(true, animated: true)
-            table.setEditing(true, animated: true)
-            
-            self.navigationItem.leftBarButtonItem = deleteAllButton
-            
-            navigationItem.hidesBackButton = true
-            
-            editButton.title = "NAV_BUTTON_DONE".localized
-            
-            addButton.isEnabled = false
-            pickButton.isEnabled = false
-            
-            table.gestureRecognizers?.removeAll()
-        }
-    }
+    // MARK: - Gesture
     
-    @objc func deleteAll() {
-        let alert = UIAlertController(
-            title: "ALERT_TITLE_DELETEALL".localized,
-            message: "ALERT_MESSAGE_DELETEALL".localized,
-            preferredStyle: .alert)
-        
-        let deleteAction = UIAlertAction(title: "ALERT_BUTTON_DELETE".localized, style: .destructive) { (action: UIAlertAction!) -> Void in
-            let tasks = self.tasksDict[self.openedCategory]!
-            
-            if !tasks.isEmpty {
-                tasks.forEach({ self.removeAllObject(self.openedCategory + "@" + $0) })
-                
-                self.tasksDict[self.openedCategory] = []
-                
-                self.saveData.set(self.tasksDict, forKey: "dictData")
-                
-                self.editButton.isEnabled = true
-                
-                self.table.reload()
-            }
-        }
-        
-        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
-        }
-        
-        alert.addAction(cancelAction)
-        alert.addAction(deleteAction)
-        
-        present(alert, animated: true, completion: nil)
-    }
-    
-    // MARK: - Toolbar
-    
-    @IBAction func pickItems() {
-        let action = UIAlertController(title: "ALERT_TITLE_DATE".localized, message: "ALERT_MESSAGE_DATE".localized, preferredStyle: .actionSheet)
-        
-        let month = UIAlertAction(title: "ALERT_BUTTON_DATE_MONTH".localized, style: .default, handler: {
-            (action: UIAlertAction!) in
-            variables.shared.condition = .month
-            
-            self.modalToDateView()
-        })
-        
-        let week = UIAlertAction(title: "ALERT_BUTTON_DATE_WEEK".localized, style: .default, handler: {
-            (action: UIAlertAction!) in
-            variables.shared.condition = .week
-            
-            self.modalToDateView()
-        })
-        
-        let over = UIAlertAction(title: "ALERT_BUTTON_DATE_OVER".localized, style: .default, handler: {
-            (action: UIAlertAction!) in
-            variables.shared.condition = .over
-            
-            self.modalToDateView()
-        })
-        
-        let cancel = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel, handler: {
-            (action: UIAlertAction!) in
-        })
-        
-        action.addAction(month)
-        action.addAction(week)
-        action.addAction(over)
-        action.addAction(cancel)
-        
-        self.present(action, animated: true, completion: nil)
+    @IBAction func tapScreen(sender: UITapGestureRecognizer) {
+        sender.cancelsTouchesInView = false
+        self.view.endEditing(true)
     }
     
     // MARK: - Methods
@@ -480,7 +489,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    func removeAllObject(_ key: String) {
+    func removeData(_ key: String) {
         saveData.removeObject(forKey: key + "@memo")
         saveData.removeObject(forKey: key + "@ison")
         saveData.removeObject(forKey: key + "@date")
@@ -498,18 +507,11 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         saveData.set(savedDate, forKey: to + "@date")
         saveData.set(savedCheck, forKey: to + "@check")
         
-        removeAllObject(from)
+        removeData(from)
     }
     
-    func modalToDateView() {
+    func goToDateViewController() {
         let nextView = self.storyboard!.instantiateViewController(withIdentifier: "PickNav") as! UINavigationController
         self.present(nextView, animated: true)
-    }
-    
-    // MARK: - Others
-    
-    @IBAction func tapScreen(sender: UITapGestureRecognizer) {
-        sender.cancelsTouchesInView = false
-        self.view.endEditing(true)
     }
 }

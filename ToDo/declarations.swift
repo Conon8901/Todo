@@ -8,6 +8,8 @@
 
 import UIKit
 
+// MARK: - extension
+
 extension String {
     var localized: String {
         return NSLocalizedString(self, comment: "")
@@ -59,6 +61,8 @@ extension UISearchBar {
     }
 }
 
+// MARK: - class
+
 class variables {
     static let shared = variables()
     
@@ -71,6 +75,8 @@ class variables {
     
     var condition: Condition = .month
 }
+
+// MARK: - enum
 
 enum Condition {
     case month

@@ -20,6 +20,8 @@ class PickViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var isDataNil = false
     
+    // MARK: - LifeCycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -45,22 +47,14 @@ class PickViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    func pickTasks(interval: Double) {
-        let tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
-        let openedCategory = saveData.object(forKey: "folderName") as! String
-        
-        for task in tasksDict[openedCategory]! {
-            let key = openedCategory + "@" + task + "@date"
-            if let date = saveData.object(forKey: key) as! Date? {
-                if date.timeIntervalSinceNow < interval {
-                    pickedArray.append(task)
-                }
-            }
-        }
-    }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    // MARK: - NavigationController
+    
+    @IBAction func tapCancel() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - TableView
@@ -93,9 +87,19 @@ class PickViewController: UIViewController, UITableViewDelegate, UITableViewData
         return cell!
     }
     
-    // MARK: - Others
+    // MARK: - Methods
     
-    @IBAction func tapCancel() {
-        self.dismiss(animated: true, completion: nil)
+    func pickTasks(interval: Double) {
+        let tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
+        let openedCategory = saveData.object(forKey: "folderName") as! String
+        
+        for task in tasksDict[openedCategory]! {
+            let key = openedCategory + "@" + task + "@date"
+            if let date = saveData.object(forKey: key) as! Date? {
+                if date.timeIntervalSinceNow < interval {
+                    pickedArray.append(task)
+                }
+            }
+        }
     }
 }
