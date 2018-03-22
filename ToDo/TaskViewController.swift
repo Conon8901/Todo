@@ -305,7 +305,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let pickedArray = variables.shared.includingTasks
             
             if pickedArray.index(of: taskName) != nil {
-                cell?.backgroundColor = UIColor(white: 224/255, alpha: 1)
+                cell?.backgroundColor = UIColor(white: 240/255, alpha: 1)
             } else {
                 cell?.backgroundColor = .white
             }

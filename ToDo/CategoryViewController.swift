@@ -25,6 +25,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     var pickedDict = [String: [String]]()
     
     var isDataNil = false
+    var selectedIndex: IndexPath = [0,0]
     
     // MARK: - LifeCycle
     
@@ -71,7 +72,17 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        if table.indexPathForSelectedRow == nil {
+            table.selectRow(at: selectedIndex, animated: false, scrollPosition: .none)
+        }
+        
         table.deselectCell()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        if let index = table.indexPathForSelectedRow {
+            selectedIndex = index
+        }
     }
     
     override func didReceiveMemoryWarning() {
