@@ -288,9 +288,9 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             variables.shared.includingTasks.removeAll()
             
             if searchBar.text!.isEmpty {
-                saveData.set(categoriesArray[indexPath.row], forKey: "folderName")
+                variables.shared.currentCategory = categoriesArray[indexPath.row]
             } else {
-                saveData.set(searchArray[indexPath.row], forKey: "folderName")
+                variables.shared.currentCategory = searchArray[indexPath.row]
                 
                 variables.shared.includingTasks = pickedDict[searchArray[indexPath.row]]!
             }

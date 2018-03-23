@@ -69,7 +69,10 @@ class variables {
     var isFromNoteViewController = false
     var isFromMoveViewController = false
     
-    var movingTaskName = ""
+    var currentCategory = ""
+    var currentTask = ""
+    
+    var movingTask = ""
     
     var includingTasks = [String]()
     
@@ -82,4 +85,10 @@ enum Condition {
     case month
     case week
     case over
+}
+
+enum PickRange: Double {
+    case month = 2592000
+    case week = 604800
+    case over = 0
 }

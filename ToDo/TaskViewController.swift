@@ -38,7 +38,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
         
-        openedCategory = saveData.object(forKey: "folderName") as! String
+        openedCategory = variables.shared.currentCategory
         
         navigationItem.title = openedCategory
         
@@ -374,7 +374,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             present(alert, animated: true, completion: nil)
         } else {
-            saveData.set(tasksDict[openedCategory]![indexPath.row], forKey: "fileName")
+            variables.shared.currentTask = tasksDict[openedCategory]![indexPath.row]
             
             toNoteViewController = true
             
@@ -416,7 +416,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: "CELL_BUTTON_MOVE".localized) { (action, index) -> Void in
             if !self.isDataNil {
-                variables.shared.movingTaskName = self.tasksDict[self.openedCategory]![indexPath.row]
+                variables.shared.movingTask = self.tasksDict[self.openedCategory]![indexPath.row]
                 
                 let nextView = self.storyboard!.instantiateViewController(withIdentifier: "MoveNav") as! UINavigationController
                 self.present(nextView, animated: true)

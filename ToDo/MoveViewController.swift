@@ -19,6 +19,8 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var tasksDict = [String: [String]]()
     var categoriesArray = [String]()
     
+    var preCategory = ""
+    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -28,9 +30,11 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.delegate = self
         table.setUp()
         
+        tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
+        
         categoriesArray = saveData.object(forKey: "folders") as! [String]
         
-        tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
+        preCategory = variables.shared.currentCategory
         
         navigationItem.title = "NAV_TITLE_CATEGORY".localized
         
@@ -116,7 +120,7 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         cell?.textLabel?.text = categoriesArray[indexPath.row]
         
-        if cell?.textLabel?.text == saveData.object(forKey: "folderName") as! String? {
+        if cell?.textLabel?.text == preCategory {
             cell?.selectionStyle = .none
             
             cell?.textLabel?.textColor = .lightGray
@@ -130,8 +134,6 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        let preCategory = saveData.object(forKey: "folderName") as! String
-        
         if categoriesArray[indexPath.row] != preCategory {
             return indexPath
         } else {
@@ -140,7 +142,7 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let taskName = variables.shared.movingTaskName
+        let taskName = variables.shared.movingTask
         let taskIndex = tasksDict[categoriesArray[indexPath.row]]!.index(of: taskName)
         
         if taskIndex == nil {
@@ -171,8 +173,7 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - Methods
     
     func moveTask(_ indexPath: IndexPath) {
-        let preCategory = saveData.object(forKey: "folderName") as! String
-        let taskName = variables.shared.movingTaskName
+        let taskName = variables.shared.movingTask
         let preKey = preCategory + "@" + taskName
         let postKey = categoriesArray[indexPath.row] + "@" + taskName
         

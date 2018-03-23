@@ -35,15 +35,15 @@ class PickViewController: UIViewController, UITableViewDelegate, UITableViewData
         case .month:
             navigationItem.title = "ALERT_BUTTON_DATE_MONTH".localized
             
-            pickTasks(interval: 60*60*24*30)
+            pickTasks(interval: .month)
         case .week:
             navigationItem.title = "ALERT_BUTTON_DATE_WEEK".localized
             
-            pickTasks(interval: 60*60*24*7)
+            pickTasks(interval: .week)
         case .over:
             navigationItem.title = "ALERT_BUTTON_DATE_OVER".localized
             
-            pickTasks(interval: 0)
+            pickTasks(interval: .over)
         }
     }
     
@@ -89,14 +89,14 @@ class PickViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     // MARK: - Methods
     
-    func pickTasks(interval: Double) {
+    func pickTasks(interval: PickRange) {
         let tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
-        let openedCategory = saveData.object(forKey: "folderName") as! String
+        let openedCategory = variables.shared.currentCategory
         
         for task in tasksDict[openedCategory]! {
             let key = openedCategory + "@" + task + "@date"
             if let date = saveData.object(forKey: key) as! Date? {
-                if date.timeIntervalSinceNow < interval {
+                if date.timeIntervalSinceNow < interval.rawValue {
                     pickedArray.append(task)
                 }
             }
