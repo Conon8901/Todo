@@ -152,6 +152,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
             
+            addButton.isEnabled = true
             searchBar.enable(true)
             
             editButton.title = "NAV_BUTTON_EDIT".localized
@@ -159,6 +160,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
             
+            addButton.isEnabled = false
             searchBar.enable(false)
             
             editButton.title = "NAV_BUTTON_DONE".localized
