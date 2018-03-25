@@ -20,6 +20,7 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var categoriesArray = [String]()
     
     var preCategory = ""
+    var movingTask = ""
     
     // MARK: - LifeCycle
     
@@ -31,10 +32,10 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.setUp()
         
         tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
-        
         categoriesArray = saveData.object(forKey: "folders") as! [String]
         
         preCategory = variables.shared.currentCategory
+        movingTask = variables.shared.movingTask
         
         navigationItem.title = "NAV_TITLE_CATEGORY".localized
         
@@ -142,8 +143,7 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let taskName = variables.shared.movingTask
-        let taskIndex = tasksDict[categoriesArray[indexPath.row]]!.index(of: taskName)
+        let taskIndex = tasksDict[categoriesArray[indexPath.row]]!.index(of: movingTask)
         
         if taskIndex == nil {
             moveTask(indexPath)
@@ -173,13 +173,12 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - Methods
     
     func moveTask(_ indexPath: IndexPath) {
-        let taskName = variables.shared.movingTask
-        let preKey = preCategory + "@" + taskName
-        let postKey = categoriesArray[indexPath.row] + "@" + taskName
+        let preKey = preCategory + "@" + movingTask
+        let postKey = categoriesArray[indexPath.row] + "@" + movingTask
         
-        tasksDict[categoriesArray[indexPath.row]]!.append(taskName)
+        tasksDict[categoriesArray[indexPath.row]]!.append(movingTask)
         
-        let index = tasksDict[preCategory]!.index(of: taskName)!
+        let index = tasksDict[preCategory]!.index(of: movingTask)!
         tasksDict[preCategory]?.remove(at: index)
         
         saveData.set(tasksDict, forKey: "dictData")

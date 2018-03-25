@@ -41,7 +41,6 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         searchBar.setUp()
         
         navigationItem.title = "NAV_TITLE_CATEGORY".localized
-        
         editButton.title = "NAV_BUTTON_EDIT".localized
         
         table.tableFooterView = UIView()

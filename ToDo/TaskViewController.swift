@@ -37,22 +37,19 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         table.setUp()
         
         tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
-        
         openedCategory = variables.shared.currentCategory
         
         navigationItem.title = openedCategory
-        
-        self.navigationItem.leftBarButtonItem = nil
         
         editButton.title = "NAV_BUTTON_EDIT".localized
         
         deleteAllButton = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(TaskViewController.deleteAll))
         deleteAllButton?.tintColor = .red
         
+        self.navigationItem.leftBarButtonItem = nil
+        
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(TaskViewController.putCheckmark))
         table.addGestureRecognizer(longPressRecognizer)
-        
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: openedCategory, style: .plain, target: nil, action: nil)
         
         table.tableFooterView = UIView()
         

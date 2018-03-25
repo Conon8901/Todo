@@ -14,10 +14,10 @@ class NoteViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet var memoTextView: UITextView!
     @IBOutlet var placeHolder: UILabel!
+    @IBOutlet var dateLabel: UILabel!
     @IBOutlet var dateSwitch: UISwitch!
     @IBOutlet var dateField: UITextField!
     @IBOutlet var datePicker: UIDatePicker!
-    @IBOutlet var dateLabel: UILabel!
     var doneButton: UIBarButtonItem?
     
     var saveData = UserDefaults.standard

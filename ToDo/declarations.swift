@@ -53,6 +53,7 @@ extension UISearchBar {
         if bool {
             self.isUserInteractionEnabled = true
             self.alpha = 1
+            
             self.endEditing(true)
         } else {
             self.isUserInteractionEnabled = false
