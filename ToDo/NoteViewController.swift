@@ -93,7 +93,7 @@ class NoteViewController: UIViewController, UITextViewDelegate {
     // MARK: DatePicker
     
     @IBAction func dateChanged() {
-        setDateText(span: Date().timeIntervalSince(datePicker.date))
+        setTextField(span: Date().timeIntervalSince(datePicker.date))
         
         saveData.set(datePicker.date, forKey: key + "@date")
     }
@@ -144,9 +144,9 @@ class NoteViewController: UIViewController, UITextViewDelegate {
         let savedDate = saveData.object(forKey: key + "@date") as! Date
         let span = Date().timeIntervalSince(savedDate)
         
-        setDateText(span: span)
+        setTextField(span: span)
         
-        if span > 0 {
+        if 0 < span {
             datePicker.minimumDate = savedDate
         } else {
             datePicker.minimumDate = Date()
@@ -155,12 +155,12 @@ class NoteViewController: UIViewController, UITextViewDelegate {
         datePicker.date = savedDate
     }
     
-    func setDateText(span: TimeInterval) {
-        if span > 0 {
-            if span > 60 {
-                if span > 60*60 {
-                    if span > 60*60*24 {
-                        if span > 60*60*24*30 {
+    func setTextField(span: TimeInterval) {
+        if 0 < span {
+            if 60 < span {
+                if 60*60 < span {
+                    if 60*60*24 < span {
+                        if 60*60*24*30 < span {
                             dateField.text = String(format: "TEXT_DUE_PAST_MONTH".localized, Int(span/2592000))
                         } else {
                             dateField.text = String(format: "TEXT_DUE_PAST_DAY".localized, Int(span/86400))
