@@ -6,6 +6,7 @@
 //  Copyright © 2017年 黒岩修. All rights reserved.
 //
 
+//FIXME: 強制アンラップを修正
 import UIKit
 
 class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
@@ -38,6 +39,8 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         movingTask = variables.shared.movingTask
         
         navigationItem.title = "NAV_TITLE_CATEGORY".localized
+        
+        table.tableFooterView = UIView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -63,7 +66,7 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = textField.text!.characterExists()
+            let isBlank = textField.text!.existsCharacter()
             
             if isBlank {
                 if self.categoriesArray.index(of: textField.text!) == nil {
@@ -181,7 +184,7 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         saveData.set(tasksDict, forKey: "dictData")
         
-        updateData(preKey, to: postKey)
+        resaveData(preKey, to: postKey)
         
         self.dismiss(animated: true, completion: nil)
     }
@@ -197,24 +200,24 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.present(alert, animated: true, completion: nil)
     }
     
-    func removeData(_ key: String) {
+    func removeAllObject(_ key: String) {
         saveData.removeObject(forKey: key + "@memo")
         saveData.removeObject(forKey: key + "@ison")
         saveData.removeObject(forKey: key + "@date")
         saveData.removeObject(forKey: key + "@check")
     }
     
-    func updateData(_ preKey: String, to postKey: String) {
-        let savedMemo = saveData.object(forKey: preKey + "@memo") as! String
-        let savedSwitch = saveData.object(forKey: preKey + "@ison") as! Bool
-        let savedDate = saveData.object(forKey: preKey + "@date") as! Date?
-        let savedCheck = saveData.object(forKey: preKey + "@check") as! Bool
+    func resaveData(_ from: String, to: String) {
+        let savedMemo = saveData.object(forKey: from + "@memo") as! String
+        let savedSwitch = saveData.object(forKey: from + "@ison") as! Bool
+        let savedDate = saveData.object(forKey: from + "@date") as! Date?
+        let savedCheck = saveData.object(forKey: from + "@check") as! Bool
         
-        saveData.set(savedMemo, forKey: postKey + "@memo")
-        saveData.set(savedSwitch, forKey: postKey + "@ison")
-        saveData.set(savedDate, forKey: postKey + "@date")
-        saveData.set(savedCheck, forKey: postKey + "@check")
+        saveData.set(savedMemo, forKey: to + "@memo")
+        saveData.set(savedSwitch, forKey: to + "@ison")
+        saveData.set(savedDate, forKey: to + "@date")
+        saveData.set(savedCheck, forKey: to + "@check")
         
-        removeData(preKey)
+        removeAllObject(from)
     }
 }

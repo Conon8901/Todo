@@ -15,11 +15,11 @@ extension String {
         return NSLocalizedString(self, comment: "")
     }
     
-    func partialMatch(_ target: String) -> Bool {
+    func partialMatch(target: String) -> Bool {
         return self.lowercased(with: .current).contains(target.lowercased(with: .current))
     }
     
-    func characterExists() -> Bool {
+    func existsCharacter() -> Bool {
         return !self.components(separatedBy: .whitespaces).joined().isEmpty
     }
 }
@@ -29,7 +29,6 @@ extension UITableView {
         self.rowHeight = 60
         self.keyboardDismissMode = .interactive
         self.allowsSelectionDuringEditing = true
-        self.tableFooterView = UIView()
     }
     
     func deselectCell() {
