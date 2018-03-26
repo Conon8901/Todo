@@ -88,7 +88,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = textField.text!.existsCharacter()
+            let isBlank = textField.text!.characterExists()
             
             if isBlank {
                 if self.categoriesArray.index(of: textField.text!) == nil {
@@ -213,7 +213,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             let changeAction = UIAlertAction(title: "ALERT_BUTTON_CHANGE".localized, style: .default) { (action: UIAlertAction!) -> Void in
                 let textField = alert.textFields![0] as UITextField
                 
-                let isBlank = textField.text!.existsCharacter()
+                let isBlank = textField.text!.characterExists()
                 
                 if isBlank {
                     if self.categoriesArray.index(of: textField.text!) == nil {
@@ -232,7 +232,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                                     let preKey = preCategoryName + "@" + fileName
                                     let postKey = textField.text! + "@" + fileName
                                     
-                                    self.resaveData(preKey, to: postKey)
+                                    self.updateData(preKey, to: postKey)
                                 }
                             }
                             
@@ -427,7 +427,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                 var isIncluded = false
                 
                 for value in dict[key]! {
-                    if value.partialMatch(target: searchBar.text!) {
+                    if value.partialMatch(searchBar.text!) {
                         isIncluded = true
                         
                         if pickedDict[key] == nil {
@@ -452,17 +452,17 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         saveData.removeObject(forKey: key + "@check")
     }
     
-    func resaveData(_ from: String, to: String) {
-        let savedMemoText = saveData.object(forKey: from + "@memo") as! String
-        let savedSwitch = saveData.object(forKey: from + "@ison") as! Bool
-        let savedDate = saveData.object(forKey: from + "@date") as! Date?
-        let savedCheck = saveData.object(forKey: from + "@check") as! Bool
+    func updateData(_ preKey: String, to postKey: String) {
+        let savedMemoText = saveData.object(forKey: preKey + "@memo") as! String
+        let savedSwitch = saveData.object(forKey: preKey + "@ison") as! Bool
+        let savedDate = saveData.object(forKey: preKey + "@date") as! Date?
+        let savedCheck = saveData.object(forKey: preKey + "@check") as! Bool
         
-        saveData.set(savedMemoText, forKey: to + "@memo")
-        saveData.set(savedSwitch, forKey: to + "@ison")
-        saveData.set(savedDate, forKey: to + "@date")
-        saveData.set(savedCheck, forKey: to + "@check")
+        saveData.set(savedMemoText, forKey: postKey + "@memo")
+        saveData.set(savedSwitch, forKey: postKey + "@ison")
+        saveData.set(savedDate, forKey: postKey + "@date")
+        saveData.set(savedCheck, forKey: postKey + "@check")
         
-        removeData(from)
+        removeData(preKey)
     }
 }

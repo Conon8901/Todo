@@ -25,7 +25,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var openedCategory = ""
     var isDataNil = false
-    var toNoteViewController = false
+    var isToNoteViewController = false
     var selectedIndex: IndexPath = [0,0]
     
     // MARK: - LifeCycle
@@ -82,12 +82,12 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        if toNoteViewController {
+        if isToNoteViewController {
             if let index = table.indexPathForSelectedRow {
                 selectedIndex = index
             }
             
-            toNoteViewController = false
+            isToNoteViewController = false
         }
     }
     
@@ -106,7 +106,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
             
-            let isBlank = textField.text!.existsCharacter()
+            let isBlank = textField.text!.characterExists()
             
             if isBlank {
                 if self.tasksDict[self.openedCategory]?.index(of: textField.text!) == nil {
@@ -324,7 +324,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let changeAction = UIAlertAction(title: "ALERT_BUTTON_CHANGE".localized, style: .default) { (action: UIAlertAction!) -> Void in
                 let textField = alert.textFields![0] as UITextField
                 
-                let isBlank = textField.text!.existsCharacter()
+                let isBlank = textField.text!.characterExists()
                 
                 if isBlank {
                     if self.tasksDict[self.openedCategory]?.index(of: textField.text!) == nil {
@@ -335,7 +335,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             self.tasksDict[self.openedCategory]?[indexPath.row] = textField.text!
                             
                             self.saveData.set(self.tasksDict, forKey: "dictData")
-                            self.resaveData(preKey, to: postKey)
+                            self.updateData(preKey, to: postKey)
                             
                             self.table.reload()
                         } else {
@@ -374,7 +374,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             variables.shared.currentTask = tasksDict[openedCategory]![indexPath.row]
             
-            toNoteViewController = true
+            isToNoteViewController = true
             
             let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Note") as! NoteViewController
             self.navigationController?.pushViewController(nextView, animated: true)
@@ -481,18 +481,18 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         saveData.removeObject(forKey: key + "@check")
     }
     
-    func resaveData(_ from: String, to: String) {
-        let savedMemo = saveData.object(forKey: from + "@memo") as! String
-        let savedSwitch = saveData.object(forKey: from + "@ison") as! Bool
-        let savedDate = saveData.object(forKey: from + "@date") as! Date?
-        let savedCheck = saveData.object(forKey: from + "@check") as! Bool
+    func updateData(_ preKey: String, to postKey: String) {
+        let savedMemo = saveData.object(forKey: preKey + "@memo") as! String
+        let savedSwitch = saveData.object(forKey: preKey + "@ison") as! Bool
+        let savedDate = saveData.object(forKey: preKey + "@date") as! Date?
+        let savedCheck = saveData.object(forKey: preKey + "@check") as! Bool
         
-        saveData.set(savedMemo, forKey: to + "@memo")
-        saveData.set(savedSwitch, forKey: to + "@ison")
-        saveData.set(savedDate, forKey: to + "@date")
-        saveData.set(savedCheck, forKey: to + "@check")
+        saveData.set(savedMemo, forKey: postKey + "@memo")
+        saveData.set(savedSwitch, forKey: postKey + "@ison")
+        saveData.set(savedDate, forKey: postKey + "@date")
+        saveData.set(savedCheck, forKey: postKey + "@check")
         
-        removeData(from)
+        removeData(preKey)
     }
     
     func goToDateViewController() {
