@@ -6,6 +6,7 @@
 //  Copyright © 2017年 黒岩修. All rights reserved.
 //
 
+//FIXME: 強制アンラップを修正
 import UIKit
 
 class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
@@ -384,21 +385,10 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: "CELL_BUTTON_DELETE".localized) { (action, index) -> Void in
             if !self.isDataNil {
                 let key = self.openedCategory + "@" + self.tasksDict[self.openedCategory]![indexPath.row]
-                let maxIndex = self.tasksDict[self.openedCategory]!.count - 1
                 
                 self.tasksDict[self.openedCategory]?.remove(at: indexPath.row)
                 
                 tableView.reload()
-                
-                if indexPath.row >= maxIndex - 1 {
-                    if indexPath.row != 0 {
-                        tableView.scrollToRow(at: [0,maxIndex - 1], at: .bottom, animated: true)
-                    }
-                } else {
-                    let visibleLastCell = self.tasksDict[self.openedCategory]!.index(of: tableView.visibleCells.last!.textLabel!.text!)! - 1
-                    
-                    tableView.scrollToRow(at: [0,visibleLastCell], at: .bottom, animated: true)
-                }
                 
                 self.saveData.set(self.tasksDict, forKey: "dictData")
                 
@@ -437,12 +427,10 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     @objc func putCheckmark(recognizer: UILongPressGestureRecognizer) {
-        let indexPath = table.indexPathForRow(at: recognizer.location(in: table))
-        
-        if indexPath != nil {
+        if let indexPath = table.indexPathForRow(at: recognizer.location(in: table)) {
             if recognizer.state == .began {
-                if let cell = table.cellForRow(at: indexPath!) {
-                    let key = openedCategory + "@" + tasksDict[openedCategory]![indexPath!.row] + "@check"
+                if let cell = table.cellForRow(at: indexPath) {
+                    let key = openedCategory + "@" + tasksDict[openedCategory]![indexPath.row] + "@check"
                     
                     if cell.accessoryType == .none {
                         saveData.set(true, forKey: key)

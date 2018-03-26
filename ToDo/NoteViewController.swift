@@ -87,7 +87,7 @@ class NoteViewController: UIViewController, UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         tryShowsPlaceHolder()
         
-        saveData.set(memoTextView.text!, forKey: key + "@memo")
+        saveData.set(memoTextView.text, forKey: key + "@memo")
     }
     
     // MARK: DatePicker
@@ -198,7 +198,7 @@ class NoteViewController: UIViewController, UITextViewDelegate {
     }
     
     @objc func saveMemo() {
-        saveData.set(memoTextView.text!, forKey: key + "@memo")
+        saveData.set(memoTextView.text, forKey: key + "@memo")
         
         memoTextView.resignFirstResponder()
     }

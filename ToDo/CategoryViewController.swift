@@ -6,6 +6,7 @@
 //  Copyright © 2017年 黒岩修. All rights reserved.
 //
 
+//FIXME: 強制アンラップを修正
 import UIKit
 
 class CategoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
@@ -44,18 +45,6 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         editButton.title = "NAV_BUTTON_EDIT".localized
         
         table.tableFooterView = UIView()
-        
-        //forKey切り替え
-        if let array = saveData.object(forKey: "@folders") as! [String]? {
-            saveData.removeObject(forKey: "@folders")
-            saveData.set(array, forKey: "folders")
-        }
-        
-        if let dict = saveData.object(forKey: "@dictData") as! [String: [String]]? {
-            saveData.removeObject(forKey: "@dictData")
-            saveData.set(dict, forKey: "dictData")
-        }
-        //以上
         
         if let array = saveData.object(forKey: "folders") as! [String]? {
             categoriesArray = array
@@ -310,7 +299,6 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             if !isDataNil {
-                let maxIndex = categoriesArray.count - 1
                 let categoryName = categoriesArray[indexPath.row]
                 
                 tasksDict[categoryName]?.forEach({ removeData(categoryName + "@" + $0 )})
@@ -319,16 +307,6 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                 categoriesArray.remove(at: indexPath.row)
                 
                 tableView.reload()
-                
-                if indexPath.row >= maxIndex - 1 {
-                    if indexPath.row != 0 {
-                        tableView.scrollToRow(at: [0,maxIndex - 1], at: .bottom, animated: true)
-                    }
-                } else {
-                    let visibleLastCell = categoriesArray.index(of: tableView.visibleCells.last!.textLabel!.text!)! - 1
-                    
-                    tableView.scrollToRow(at: [0,visibleLastCell], at: .bottom, animated: true)
-                }
                 
                 self.saveData.set(self.tasksDict, forKey: "dictData")
                 self.saveData.set(self.categoriesArray, forKey: "folders")
