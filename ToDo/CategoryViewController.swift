@@ -14,9 +14,9 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: - Declare
     
     @IBOutlet var table: UITableView!
+    @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var addButton: UIBarButtonItem!
     @IBOutlet var editButton: UIBarButtonItem!
-    @IBOutlet var searchBar: UISearchBar!
     
     var saveData = UserDefaults.standard
     
@@ -80,6 +80,8 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: - NavigationController
     
     @IBAction func addItem() {
+        searchBar.resignFirstResponder()
+        
         let alert = UIAlertController(
             title: "ALERT_TITLE_ADD".localized,
             message: "ALERT_MESSAGE_ENTER".localized,
