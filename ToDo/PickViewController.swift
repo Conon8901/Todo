@@ -89,7 +89,7 @@ class PickViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     // MARK: - Methods
     
-    func pickTasks(interval: PickRange) {
+    func pickTasks(interval: Condition) {
         let tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
         let openedCategory = variables.shared.currentCategory
         

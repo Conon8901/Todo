@@ -18,7 +18,7 @@ class NoteViewController: UIViewController, UITextViewDelegate {
     @IBOutlet var dateSwitch: UISwitch!
     @IBOutlet var dateField: UITextField!
     @IBOutlet var datePicker: UIDatePicker!
-    var doneButton: UIBarButtonItem?
+    @IBOutlet var doneButton: UIBarButtonItem!
     
     var saveData = UserDefaults.standard
     
@@ -30,6 +30,9 @@ class NoteViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         
         memoTextView.delegate = self
+        
+        doneButton.title = "NAV_BUTTON_DONE".localized
+        doneButton.hide(true)
         
         datePicker.maximumDate = Date(timeInterval: 60*60*24*2000, since: Date())
         
@@ -51,8 +54,6 @@ class NoteViewController: UIViewController, UITextViewDelegate {
         dateSwitch.isOn = isSwitchOn
         
         showsDateParts(isSwitchOn)
-        
-        doneButton = UIBarButtonItem(title: "NAV_BUTTON_DONE".localized, style: .done, target: self, action: #selector(NoteViewController.saveMemo))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,11 +78,11 @@ class NoteViewController: UIViewController, UITextViewDelegate {
     // MARK: - TextView
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        navigationItem.rightBarButtonItem = doneButton
+        doneButton.hide(false)
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
-        navigationItem.rightBarButtonItem = nil
+        doneButton.hide(true)
     }
     
     func textViewDidChange(_ textView: UITextView) {
@@ -110,6 +111,7 @@ class NoteViewController: UIViewController, UITextViewDelegate {
             
             if saveData.object(forKey: key + "@date") == nil {
                 datePicker.date = Date()
+                datePicker.minimumDate = Date()
                 
                 dateField.text = "TEXT_DUE_PRESENT".localized
             } else {
@@ -117,12 +119,9 @@ class NoteViewController: UIViewController, UITextViewDelegate {
             }
         } else {
             showsDateParts(false)
-            
-            saveData.set(datePicker.date, forKey: key + "@date")
         }
         
         saveData.set(dateSwitch.isOn, forKey: key + "@ison")
-        saveData.set(datePicker.date, forKey: key + "@date")
     }
     
     // MARK: - Methods
@@ -146,11 +145,7 @@ class NoteViewController: UIViewController, UITextViewDelegate {
         
         setTextField(span: span)
         
-        if 0 < span {
-            datePicker.minimumDate = savedDate
-        } else {
-            datePicker.minimumDate = Date()
-        }
+        datePicker.minimumDate = savedDate < Date() ? savedDate : Date()
         
         datePicker.date = savedDate
     }
@@ -197,10 +192,8 @@ class NoteViewController: UIViewController, UITextViewDelegate {
         }
     }
     
-    @objc func saveMemo() {
-        saveData.set(memoTextView.text, forKey: key + "@memo")
-        
-        memoTextView.resignFirstResponder()
+    @IBAction func tapDone() {
+       memoTextView.resignFirstResponder()
     }
     
     // MARK: - Gesture

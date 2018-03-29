@@ -62,6 +62,18 @@ extension UISearchBar {
     }
 }
 
+extension UIBarButtonItem {
+    func hide(_ bool: Bool) {
+        if bool {
+            self.isEnabled = false
+            self.tintColor = .clear
+        } else {
+            self.isEnabled = true
+            self.tintColor = nil
+        }
+    }
+}
+
 // MARK: - class
 
 class variables {
@@ -82,13 +94,7 @@ class variables {
 
 // MARK: - enum
 
-enum Condition {
-    case month
-    case week
-    case over
-}
-
-enum PickRange: Double {
+enum Condition: Double {
     case month = 2592000
     case week = 604800
     case over = 0
