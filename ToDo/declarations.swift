@@ -32,8 +32,8 @@ extension UITableView {
     }
     
     func deselectCell() {
-        if let indexPathForSelectedRow = self.indexPathForSelectedRow {
-            self.deselectRow(at: indexPathForSelectedRow, animated: true)
+        if let index = self.indexPathForSelectedRow {
+            self.deselectRow(at: index, animated: true)
         }
     }
     
@@ -49,8 +49,8 @@ extension UISearchBar {
         self.autocapitalizationType = .none
     }
     
-    func enable(_ bool: Bool) {
-        if bool {
+    func enable(_ isEnabled: Bool) {
+        if isEnabled {
             self.isUserInteractionEnabled = true
             self.alpha = 1
             
@@ -63,8 +63,8 @@ extension UISearchBar {
 }
 
 extension UIBarButtonItem {
-    func hide(_ bool: Bool) {
-        if bool {
+    func hide(_ isHidden: Bool) {
+        if isHidden {
             self.isEnabled = false
             self.tintColor = .clear
         } else {

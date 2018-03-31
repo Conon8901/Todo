@@ -111,7 +111,7 @@ class NoteViewController: UIViewController, UITextViewDelegate {
             
             if saveData.object(forKey: key + "@date") == nil {
                 datePicker.date = Date()
-                datePicker.minimumDate = Date()
+                datePicker.minimumDate = datePicker.date
                 
                 dateField.text = "TEXT_DUE_PRESENT".localized
             } else {

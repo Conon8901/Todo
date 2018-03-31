@@ -426,10 +426,10 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     @objc func putCheckmark(recognizer: UILongPressGestureRecognizer) {
-        if let indexPath = table.indexPathForRow(at: recognizer.location(in: table)) {
+        if let index = table.indexPathForRow(at: recognizer.location(in: table)) {
             if recognizer.state == .began {
-                if let cell = table.cellForRow(at: indexPath) {
-                    let key = openedCategory + "@" + tasksDict[openedCategory]![indexPath.row] + "@check"
+                if let cell = table.cellForRow(at: index) {
+                    let key = openedCategory + "@" + tasksDict[openedCategory]![index.row] + "@check"
                     
                     if cell.accessoryType == .none {
                         saveData.set(true, forKey: key)
