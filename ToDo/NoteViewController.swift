@@ -68,7 +68,7 @@ class NoteViewController: UIViewController, UITextViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         memoTextView.resignFirstResponder()
         
-        variables.shared.isFromNoteViewController = true
+        variables.shared.isFromNoteView = true
     }
     
     override func didReceiveMemoryWarning() {

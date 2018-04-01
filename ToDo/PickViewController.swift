@@ -95,8 +95,8 @@ class PickViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         for task in tasksDict[openedCategory]! {
             let key = openedCategory + "@" + task + "@date"
-            if let date = saveData.object(forKey: key) as! Date? {
-                if date.timeIntervalSinceNow < interval.rawValue {
+            if let savedDate = saveData.object(forKey: key) as! Date? {
+                if savedDate.timeIntervalSinceNow < interval.rawValue {
                     pickedArray.append(task)
                 }
             }

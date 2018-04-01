@@ -24,7 +24,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var openedCategory = ""
     var isDataNil = false
-    var isToNoteViewController = false
+    var isToNoteView = false
     var selectedIndex: IndexPath = [0,0]
     
     // MARK: - LifeCycle
@@ -59,7 +59,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if variables.shared.isFromNoteViewController {
+        if variables.shared.isFromNoteView {
             let index = selectedIndex
             
             table.reloadRows(at: [index], with: .none)
@@ -68,25 +68,25 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             table.deselectCell()
             
-            variables.shared.isFromNoteViewController = false
+            variables.shared.isFromNoteView = false
         }
         
-        if variables.shared.isFromMoveViewController {
+        if variables.shared.isFromMoveView {
             tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
 
             table.reload()
             
-            variables.shared.isFromMoveViewController = false
+            variables.shared.isFromMoveView = false
         }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        if isToNoteViewController {
+        if isToNoteView {
             if let index = table.indexPathForSelectedRow {
                 selectedIndex = index
             }
             
-            isToNoteViewController = false
+            isToNoteView = false
         }
     }
     
@@ -168,8 +168,8 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             addButton.isEnabled = true
             pickButton.isEnabled = true
             
-            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(TaskViewController.putCheckmark))
-            table.addGestureRecognizer(longPressRecognizer)
+            let gesture = UILongPressGestureRecognizer(target: self, action: #selector(TaskViewController.putCheckmark))
+            table.addGestureRecognizer(gesture)
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
@@ -194,19 +194,17 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             preferredStyle: .alert)
         
         let deleteAction = UIAlertAction(title: "ALERT_BUTTON_DELETE".localized, style: .destructive) { (action: UIAlertAction!) -> Void in
-            let tasks = self.tasksDict[self.openedCategory]!
+            let tasksArray = self.tasksDict[self.openedCategory]!
             
-            if !tasks.isEmpty {
-                tasks.forEach({ self.removeData(self.openedCategory + "@" + $0) })
-                
-                self.tasksDict[self.openedCategory] = []
-                
-                self.saveData.set(self.tasksDict, forKey: "dictData")
-                
-                self.editButton.isEnabled = true
-                
-                self.table.reload()
-            }
+            tasksArray.forEach({ self.removeData(self.openedCategory + "@" + $0) })
+            
+            self.tasksDict[self.openedCategory] = []
+            
+            self.saveData.set(self.tasksDict, forKey: "dictData")
+            
+            self.editButton.isEnabled = true
+            
+            self.table.reload()
         }
         
         let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
@@ -373,7 +371,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             variables.shared.currentTask = tasksDict[openedCategory]![indexPath.row]
             
-            isToNoteViewController = true
+            isToNoteView = true
             
             let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Note") as! NoteViewController
             self.navigationController?.pushViewController(nextView, animated: true)

@@ -192,8 +192,8 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             } else {
                 cell?.textLabel?.text = searchArray[indexPath.row]
                 
-                let includingFiles = pickedDict[cell!.textLabel!.text!]!.joined(separator: ", ")
-                cell?.detailTextLabel?.text = includingFiles
+                let includedFiles = pickedDict[cell!.textLabel!.text!]!.joined(separator: ", ")
+                cell?.detailTextLabel?.text = includedFiles
             }
             
             cell?.textLabel?.textColor = .black
@@ -228,8 +228,8 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                             self.saveData.set(self.tasksDict, forKey: "dictData")
                             self.saveData.set(self.categoriesArray, forKey: "folders")
                             
-                            if let files = self.tasksDict[preCategoryName] {
-                                for fileName in files {
+                            if let filesArray = self.tasksDict[preCategoryName] {
+                                for fileName in filesArray {
                                     let preKey = preCategoryName + "@" + fileName
                                     let postKey = textField.text! + "@" + fileName
                                     
@@ -335,8 +335,8 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(CategoryViewController.closeKeyboard))
-        self.view.addGestureRecognizer(tapGesture)
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(CategoryViewController.closeKeyboard))
+        self.view.addGestureRecognizer(gesture)
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {

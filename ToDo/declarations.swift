@@ -79,8 +79,8 @@ extension UIBarButtonItem {
 class variables {
     static let shared = variables()
     
-    var isFromNoteViewController = false
-    var isFromMoveViewController = false
+    var isFromNoteView = false
+    var isFromMoveView = false
     
     var currentCategory = ""
     var currentTask = ""

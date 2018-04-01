@@ -43,7 +43,7 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        variables.shared.isFromMoveViewController = true
+        variables.shared.isFromMoveView = true
     }
     
     override func didReceiveMemoryWarning() {
@@ -143,9 +143,9 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let taskIndex = tasksDict[categoriesArray[indexPath.row]]!.index(of: movingTask)
+        let applicableIndex = tasksDict[categoriesArray[indexPath.row]]!.index(of: movingTask)
         
-        if taskIndex == nil {
+        if applicableIndex == nil {
             moveTask(indexPath)
         } else {
             let alert = UIAlertController(
@@ -154,7 +154,7 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 preferredStyle: .alert)
             
             let replaceAction = UIAlertAction(title: "ALERT_BUTTON_REPLACE".localized, style: .default) { (action: UIAlertAction!) -> Void in
-                self.tasksDict[self.categoriesArray[indexPath.row]]!.remove(at: taskIndex!)
+                self.tasksDict[self.categoriesArray[indexPath.row]]!.remove(at: applicableIndex!)
                 
                 self.moveTask(indexPath)
             }
