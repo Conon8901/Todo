@@ -53,7 +53,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             tasksDict = dict
         }
         
-        setEditButton()
+        setTopParts()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -101,7 +101,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                         self.saveData.set(self.tasksDict, forKey: "dictData")
                         self.saveData.set(self.categoriesArray, forKey: "folders")
                         
-                        self.setEditButton()
+                        self.setTopParts()
                         
                         self.table.reload()
                         
@@ -312,7 +312,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                 self.saveData.set(self.tasksDict, forKey: "dictData")
                 self.saveData.set(self.categoriesArray, forKey: "folders")
                 
-                self.setEditButton()
+                self.setTopParts()
             }
         }
     }
@@ -397,7 +397,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         self.present(alert, animated: true, completion: nil)
     }
     
-    func setEditButton() {
+    func setTopParts() {
         if searchBar.text!.isEmpty {
             if categoriesArray.isEmpty {
                 editButton.isEnabled = false

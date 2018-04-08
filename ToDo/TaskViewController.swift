@@ -225,21 +225,21 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             (action: UIAlertAction!) in
             variables.shared.condition = .month
             
-            self.goToDateViewController()
+            self.goToDateView()
         })
         
         let week = UIAlertAction(title: "ALERT_BUTTON_DATE_WEEK".localized, style: .default, handler: {
             (action: UIAlertAction!) in
             variables.shared.condition = .week
             
-            self.goToDateViewController()
+            self.goToDateView()
         })
         
         let over = UIAlertAction(title: "ALERT_BUTTON_DATE_OVER".localized, style: .default, handler: {
             (action: UIAlertAction!) in
             variables.shared.condition = .over
             
-            self.goToDateViewController()
+            self.goToDateView()
         })
         
         let cancel = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel, handler: {
@@ -492,7 +492,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         removeData(preKey)
     }
     
-    func goToDateViewController() {
+    func goToDateView() {
         let nextView = self.storyboard!.instantiateViewController(withIdentifier: "PickNav") as! UINavigationController
         self.present(nextView, animated: true)
     }
