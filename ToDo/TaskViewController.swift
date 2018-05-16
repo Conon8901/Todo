@@ -80,6 +80,10 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        variables.shared.isFromTaskView = true
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         if isToNoteView {
             if let index = table.indexPathForSelectedRow {
@@ -104,15 +108,14 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
+            let newItemName = textField.text!
             
-            let isBlank = textField.text!.characterExists()
-            
-            if isBlank {
-                if self.tasksDict[self.openedCategory]?.index(of: textField.text!) == nil {
-                    if !textField.text!.contains("@") {
-                        let key = self.openedCategory + "@" + textField.text!
+            if newItemName.characterExists() {
+                if self.tasksDict[self.openedCategory]?.index(of: newItemName) == nil {
+                    if !newItemName.contains("@") {
+                        let key = self.openedCategory + "@" + newItemName
                         
-                        self.tasksDict[self.openedCategory]!.append(textField.text!)
+                        self.tasksDict[self.openedCategory]!.append(newItemName)
                         
                         self.saveData.set(self.tasksDict, forKey: "dictData")
                         self.saveData.set("", forKey: key + "@memo")
@@ -120,6 +123,10 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.saveData.set(false, forKey: key + "@check")
                         
                         self.setEditButton()
+                        
+                        if newItemName.partialMatch(variables.shared.searchText) {
+                            variables.shared.includingTasks.append(newItemName)
+                        }
                         
                         self.table.reload()
                         
@@ -320,19 +327,29 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             let changeAction = UIAlertAction(title: "ALERT_BUTTON_CHANGE".localized, style: .default) { (action: UIAlertAction!) -> Void in
                 let textField = alert.textFields![0] as UITextField
+                let newItemName = textField.text!
                 
-                let isBlank = textField.text!.characterExists()
-                
-                if isBlank {
-                    if self.tasksDict[self.openedCategory]?.index(of: textField.text!) == nil {
-                        if !textField.text!.contains("@") {
-                            let preKey = self.openedCategory + "@" + self.tasksDict[self.openedCategory]![indexPath.row]
-                            let postKey = self.openedCategory + "@" + textField.text!
+                if newItemName.characterExists() {
+                    if self.tasksDict[self.openedCategory]?.index(of: newItemName) == nil {
+                        if !newItemName.contains("@") {
+                            let oldItemName = self.tasksDict[self.openedCategory]![indexPath.row]
                             
-                            self.tasksDict[self.openedCategory]?[indexPath.row] = textField.text!
+                            let oldKey = self.openedCategory + "@" + oldItemName
+                            let newKey = self.openedCategory + "@" + newItemName
+                            
+                            self.tasksDict[self.openedCategory]?[indexPath.row] = newItemName
                             
                             self.saveData.set(self.tasksDict, forKey: "dictData")
-                            self.updateData(preKey, to: postKey)
+                            self.updateData(oldKey, to: newKey)
+                            
+                            let oldItemIndex = variables.shared.includingTasks.index(of: oldItemName)
+                            if oldItemIndex != nil {
+                                variables.shared.includingTasks.remove(at: oldItemIndex!)
+                            }
+                            
+                            if newItemName.partialMatch(variables.shared.searchText) {
+                                variables.shared.includingTasks.append(newItemName)
+                            }
                             
                             self.table.reload()
                         } else {
@@ -341,7 +358,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             self.table.deselectCell()
                         }
                     } else {
-                        if textField.text != self.tasksDict[self.openedCategory]?[indexPath.row] {
+                        if newItemName != self.tasksDict[self.openedCategory]?[indexPath.row] {
                             self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_SAME".localized)
                         }
                         
@@ -478,18 +495,18 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         saveData.removeObject(forKey: key + "@check")
     }
     
-    func updateData(_ preKey: String, to postKey: String) {
-        let savedMemo = saveData.object(forKey: preKey + "@memo") as! String
-        let savedSwitch = saveData.object(forKey: preKey + "@ison") as! Bool
-        let savedDate = saveData.object(forKey: preKey + "@date") as! Date?
-        let savedCheck = saveData.object(forKey: preKey + "@check") as! Bool
+    func updateData(_ oldKey: String, to newKey: String) {
+        let savedMemo = saveData.object(forKey: oldKey + "@memo") as! String
+        let savedSwitch = saveData.object(forKey: oldKey + "@ison") as! Bool
+        let savedDate = saveData.object(forKey: oldKey + "@date") as! Date?
+        let savedCheck = saveData.object(forKey: oldKey + "@check") as! Bool
         
-        saveData.set(savedMemo, forKey: postKey + "@memo")
-        saveData.set(savedSwitch, forKey: postKey + "@ison")
-        saveData.set(savedDate, forKey: postKey + "@date")
-        saveData.set(savedCheck, forKey: postKey + "@check")
+        saveData.set(savedMemo, forKey: newKey + "@memo")
+        saveData.set(savedSwitch, forKey: newKey + "@ison")
+        saveData.set(savedDate, forKey: newKey + "@date")
+        saveData.set(savedCheck, forKey: newKey + "@check")
         
-        removeData(preKey)
+        removeData(oldKey)
     }
     
     func goToDateView() {

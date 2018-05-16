@@ -82,6 +82,11 @@ class variables {
     var isFromNoteView = false
     var isFromMoveView = false
     
+    var isSearched = false
+    var searchText = ""
+    
+    var isFromTaskView = false
+    
     var currentCategory = ""
     var currentTask = ""
     

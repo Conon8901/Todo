@@ -64,15 +64,14 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
+            let newItemName = textField.text!
             
-            let isBlank = textField.text!.characterExists()
-            
-            if isBlank {
-                if self.categoriesArray.index(of: textField.text!) == nil {
-                    if !textField.text!.contains("@") {
-                        self.categoriesArray.append(textField.text!)
+            if newItemName.characterExists() {
+                if self.categoriesArray.index(of: newItemName) == nil {
+                    if !newItemName.contains("@") {
+                        self.categoriesArray.append(newItemName)
                         
-                        self.tasksDict[textField.text!] = []
+                        self.tasksDict[newItemName] = []
                         
                         self.saveData.set(self.tasksDict, forKey: "dictData")
                         self.saveData.set(self.categoriesArray, forKey: "folders")
@@ -173,8 +172,8 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - Methods
     
     func moveTask(_ indexPath: IndexPath) {
-        let preKey = preCategory + "@" + movingTask
-        let postKey = categoriesArray[indexPath.row] + "@" + movingTask
+        let oldKey = preCategory + "@" + movingTask
+        let newKey = categoriesArray[indexPath.row] + "@" + movingTask
         
         tasksDict[categoriesArray[indexPath.row]]!.append(movingTask)
         
@@ -183,7 +182,7 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         saveData.set(tasksDict, forKey: "dictData")
         
-        updateData(preKey, to: postKey)
+        updateData(oldKey, to: newKey)
         
         self.dismiss(animated: true, completion: nil)
     }
@@ -206,17 +205,17 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         saveData.removeObject(forKey: key + "@check")
     }
     
-    func updateData(_ preKey: String, to postKey: String) {
-        let savedMemo = saveData.object(forKey: preKey + "@memo") as! String
-        let savedSwitch = saveData.object(forKey: preKey + "@ison") as! Bool
-        let savedDate = saveData.object(forKey: preKey + "@date") as! Date?
-        let savedCheck = saveData.object(forKey: preKey + "@check") as! Bool
+    func updateData(_ oldKey: String, to newKey: String) {
+        let savedMemo = saveData.object(forKey: oldKey + "@memo") as! String
+        let savedSwitch = saveData.object(forKey: oldKey + "@ison") as! Bool
+        let savedDate = saveData.object(forKey: oldKey + "@date") as! Date?
+        let savedCheck = saveData.object(forKey: oldKey + "@check") as! Bool
         
-        saveData.set(savedMemo, forKey: postKey + "@memo")
-        saveData.set(savedSwitch, forKey: postKey + "@ison")
-        saveData.set(savedDate, forKey: postKey + "@date")
-        saveData.set(savedCheck, forKey: postKey + "@check")
+        saveData.set(savedMemo, forKey: newKey + "@memo")
+        saveData.set(savedSwitch, forKey: newKey + "@ison")
+        saveData.set(savedDate, forKey: newKey + "@date")
+        saveData.set(savedCheck, forKey: newKey + "@check")
         
-        removeData(preKey)
+        removeData(oldKey)
     }
 }

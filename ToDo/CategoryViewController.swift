@@ -64,6 +64,14 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         }
         
         table.deselectCell()
+        
+        if variables.shared.isFromTaskView {
+            tasksDict =  saveData.object(forKey: "dictData") as! [String: [String]]
+            
+            pickedDict[variables.shared.currentCategory] = tasksDict[variables.shared.currentCategory]?.filter({ $0.partialMatch(variables.shared.searchText) })
+            
+            self.table.reloadRows(at: [IndexPath(row: self.searchArray.index(of: variables.shared.currentCategory)!, section: 0)], with: .none)
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -88,15 +96,14 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         
         let addAction = UIAlertAction(title: "ALERT_BUTTON_ADD".localized, style: .default) { (action: UIAlertAction!) -> Void in
             let textField = alert.textFields![0] as UITextField
+            let newItemName = textField.text!
             
-            let isBlank = textField.text!.characterExists()
-            
-            if isBlank {
-                if self.categoriesArray.index(of: textField.text!) == nil {
-                    if !textField.text!.contains("@") {
-                        self.categoriesArray.append(textField.text!)
+            if newItemName.characterExists() {
+                if self.categoriesArray.index(of: newItemName) == nil {
+                    if !newItemName.contains("@") {
+                        self.categoriesArray.append(newItemName)
                         
-                        self.tasksDict[textField.text!] = []
+                        self.tasksDict[newItemName] = []
                         
                         self.saveData.set(self.tasksDict, forKey: "dictData")
                         self.saveData.set(self.categoriesArray, forKey: "folders")
@@ -213,31 +220,30 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             
             let changeAction = UIAlertAction(title: "ALERT_BUTTON_CHANGE".localized, style: .default) { (action: UIAlertAction!) -> Void in
                 let textField = alert.textFields![0] as UITextField
+                let newCategoryName = textField.text!
                 
-                let isBlank = textField.text!.characterExists()
-                
-                if isBlank {
-                    if self.categoriesArray.index(of: textField.text!) == nil {
-                        if !textField.text!.contains("@") {
-                            let preCategoryName = self.categoriesArray[indexPath.row]
+                if newCategoryName.characterExists() {
+                    if self.categoriesArray.index(of: newCategoryName) == nil {
+                        if !newCategoryName.contains("@") {
+                            let oldCategoryName = self.categoriesArray[indexPath.row]
                             
-                            self.categoriesArray[indexPath.row] = textField.text!
+                            self.categoriesArray[indexPath.row] = newCategoryName
                             
-                            self.tasksDict[textField.text!] = self.tasksDict[preCategoryName]
+                            self.tasksDict[newCategoryName] = self.tasksDict[oldCategoryName]
                             
                             self.saveData.set(self.tasksDict, forKey: "dictData")
                             self.saveData.set(self.categoriesArray, forKey: "folders")
                             
-                            if let filesArray = self.tasksDict[preCategoryName] {
+                            if let filesArray = self.tasksDict[oldCategoryName] {
                                 for fileName in filesArray {
-                                    let preKey = preCategoryName + "@" + fileName
-                                    let postKey = textField.text! + "@" + fileName
+                                    let oldKey = oldCategoryName + "@" + fileName
+                                    let newKey = newCategoryName + "@" + fileName
                                     
-                                    self.updateData(preKey, to: postKey)
+                                    self.updateData(oldKey, to: newKey)
                                 }
                             }
                             
-                            self.tasksDict.removeValue(forKey: preCategoryName)
+                            self.tasksDict.removeValue(forKey: oldCategoryName)
                             
                             self.table.reload()
                         } else {
@@ -246,7 +252,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                             self.table.deselectCell()
                         }
                     } else {
-                        if textField.text != self.categoriesArray[indexPath.row] {
+                        if newCategoryName != self.categoriesArray[indexPath.row] {
                             self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_SAME".localized)
                         }
                         
@@ -281,7 +287,12 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             } else {
                 variables.shared.currentCategory = searchArray[indexPath.row]
                 
+                showSearchResult()
+                
                 variables.shared.includingTasks = pickedDict[searchArray[indexPath.row]]!
+                
+                variables.shared.isSearched = true
+                variables.shared.searchText = searchBar.text!
             }
             
             let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Task") as! TaskViewController
@@ -453,17 +464,17 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         saveData.removeObject(forKey: key + "@check")
     }
     
-    func updateData(_ preKey: String, to postKey: String) {
-        let savedMemoText = saveData.object(forKey: preKey + "@memo") as! String
-        let savedSwitch = saveData.object(forKey: preKey + "@ison") as! Bool
-        let savedDate = saveData.object(forKey: preKey + "@date") as! Date?
-        let savedCheck = saveData.object(forKey: preKey + "@check") as! Bool
+    func updateData(_ oldKey: String, to newKey: String) {
+        let savedMemoText = saveData.object(forKey: oldKey + "@memo") as! String
+        let savedSwitch = saveData.object(forKey: oldKey + "@ison") as! Bool
+        let savedDate = saveData.object(forKey: oldKey + "@date") as! Date?
+        let savedCheck = saveData.object(forKey: oldKey + "@check") as! Bool
         
-        saveData.set(savedMemoText, forKey: postKey + "@memo")
-        saveData.set(savedSwitch, forKey: postKey + "@ison")
-        saveData.set(savedDate, forKey: postKey + "@date")
-        saveData.set(savedCheck, forKey: postKey + "@check")
+        saveData.set(savedMemoText, forKey: newKey + "@memo")
+        saveData.set(savedSwitch, forKey: newKey + "@ison")
+        saveData.set(savedDate, forKey: newKey + "@date")
+        saveData.set(savedCheck, forKey: newKey + "@check")
         
-        removeData(preKey)
+        removeData(oldKey)
     }
 }
