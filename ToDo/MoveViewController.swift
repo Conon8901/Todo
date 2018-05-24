@@ -79,6 +79,8 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.table.reload()
                         
                         self.table.scrollToRow(at: [0,self.tasksDict.keys.count-1], at: .bottom, animated: true)
+                        
+                        variables.shared.isCategoryAdded = true
                     } else {
                         self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ATSIGN".localized)
                         
@@ -200,20 +202,14 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func removeData(_ key: String) {
         saveData.removeObject(forKey: key + "@memo")
-        saveData.removeObject(forKey: key + "@ison")
-        saveData.removeObject(forKey: key + "@date")
         saveData.removeObject(forKey: key + "@check")
     }
     
     func updateData(_ oldKey: String, to newKey: String) {
         let savedMemo = saveData.object(forKey: oldKey + "@memo") as! String
-        let savedSwitch = saveData.object(forKey: oldKey + "@ison") as! Bool
-        let savedDate = saveData.object(forKey: oldKey + "@date") as! Date?
         let savedCheck = saveData.object(forKey: oldKey + "@check") as! Bool
         
         saveData.set(savedMemo, forKey: newKey + "@memo")
-        saveData.set(savedSwitch, forKey: newKey + "@ison")
-        saveData.set(savedDate, forKey: newKey + "@date")
         saveData.set(savedCheck, forKey: newKey + "@check")
         
         removeData(oldKey)

@@ -15,7 +15,6 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet var table: UITableView!
     @IBOutlet var addButton: UIBarButtonItem!
     @IBOutlet var editButton: UIBarButtonItem!
-    @IBOutlet var pickButton: UIBarButtonItem!
     var deleteAllButton: UIBarButtonItem?
     
     var saveData = UserDefaults.standard
@@ -81,7 +80,9 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        variables.shared.isFromTaskView = true
+        if variables.shared.isSearched {
+            variables.shared.isFromTaskView = true
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -119,7 +120,6 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         
                         self.saveData.set(self.tasksDict, forKey: "dictData")
                         self.saveData.set("", forKey: key + "@memo")
-                        self.saveData.set(false, forKey: key + "@ison")
                         self.saveData.set(false, forKey: key + "@check")
                         
                         self.setEditButton()
@@ -173,7 +173,6 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             editButton.title = "NAV_BUTTON_EDIT".localized
             
             addButton.isEnabled = true
-            pickButton.isEnabled = true
             
             let gesture = UILongPressGestureRecognizer(target: self, action: #selector(TaskViewController.putCheckmark))
             table.addGestureRecognizer(gesture)
@@ -188,7 +187,6 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             editButton.title = "NAV_BUTTON_DONE".localized
             
             addButton.isEnabled = false
-            pickButton.isEnabled = false
             
             table.gestureRecognizers?.removeAll()
         }
@@ -221,44 +219,6 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         alert.addAction(deleteAction)
         
         present(alert, animated: true, completion: nil)
-    }
-    
-    // MARK: Toolbar
-    
-    @IBAction func pickItems() {
-        let action = UIAlertController(title: "ALERT_TITLE_DATE".localized, message: "ALERT_MESSAGE_DATE".localized, preferredStyle: .actionSheet)
-        
-        let month = UIAlertAction(title: "ALERT_BUTTON_DATE_MONTH".localized, style: .default, handler: {
-            (action: UIAlertAction!) in
-            variables.shared.condition = .month
-            
-            self.goToDateView()
-        })
-        
-        let week = UIAlertAction(title: "ALERT_BUTTON_DATE_WEEK".localized, style: .default, handler: {
-            (action: UIAlertAction!) in
-            variables.shared.condition = .week
-            
-            self.goToDateView()
-        })
-        
-        let over = UIAlertAction(title: "ALERT_BUTTON_DATE_OVER".localized, style: .default, handler: {
-            (action: UIAlertAction!) in
-            variables.shared.condition = .over
-            
-            self.goToDateView()
-        })
-        
-        let cancel = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel, handler: {
-            (action: UIAlertAction!) in
-        })
-        
-        action.addAction(month)
-        action.addAction(week)
-        action.addAction(over)
-        action.addAction(cancel)
-        
-        self.present(action, animated: true, completion: nil)
     }
     
     // MARK: - TableView
@@ -490,20 +450,14 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func removeData(_ key: String) {
         saveData.removeObject(forKey: key + "@memo")
-        saveData.removeObject(forKey: key + "@ison")
-        saveData.removeObject(forKey: key + "@date")
         saveData.removeObject(forKey: key + "@check")
     }
     
     func updateData(_ oldKey: String, to newKey: String) {
         let savedMemo = saveData.object(forKey: oldKey + "@memo") as! String
-        let savedSwitch = saveData.object(forKey: oldKey + "@ison") as! Bool
-        let savedDate = saveData.object(forKey: oldKey + "@date") as! Date?
         let savedCheck = saveData.object(forKey: oldKey + "@check") as! Bool
         
         saveData.set(savedMemo, forKey: newKey + "@memo")
-        saveData.set(savedSwitch, forKey: newKey + "@ison")
-        saveData.set(savedDate, forKey: newKey + "@date")
         saveData.set(savedCheck, forKey: newKey + "@check")
         
         removeData(oldKey)

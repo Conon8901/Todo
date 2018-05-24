@@ -59,6 +59,16 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        if variables.shared.isCategoryAdded {
+            if let array = saveData.object(forKey: "folders") as! [String]? {
+                categoriesArray = array
+            }
+            
+            table.reload()
+            
+            variables.shared.isCategoryAdded = false
+        }
+        
         if table.indexPathForSelectedRow == nil {
             table.selectRow(at: selectedIndex, animated: false, scrollPosition: .none)
         }
@@ -459,20 +469,14 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func removeData(_ key: String) {
         saveData.removeObject(forKey: key + "@memo")
-        saveData.removeObject(forKey: key + "@ison")
-        saveData.removeObject(forKey: key + "@date")
         saveData.removeObject(forKey: key + "@check")
     }
     
     func updateData(_ oldKey: String, to newKey: String) {
         let savedMemoText = saveData.object(forKey: oldKey + "@memo") as! String
-        let savedSwitch = saveData.object(forKey: oldKey + "@ison") as! Bool
-        let savedDate = saveData.object(forKey: oldKey + "@date") as! Date?
         let savedCheck = saveData.object(forKey: oldKey + "@check") as! Bool
         
         saveData.set(savedMemoText, forKey: newKey + "@memo")
-        saveData.set(savedSwitch, forKey: newKey + "@ison")
-        saveData.set(savedDate, forKey: newKey + "@date")
         saveData.set(savedCheck, forKey: newKey + "@check")
         
         removeData(oldKey)

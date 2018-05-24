@@ -85,6 +85,8 @@ class variables {
     var isSearched = false
     var searchText = ""
     
+    var isCategoryAdded = false
+    
     var isFromTaskView = false
     
     var currentCategory = ""
@@ -93,14 +95,4 @@ class variables {
     var movingTask = ""
     
     var includingTasks = [String]()
-    
-    var condition: Condition = .month
-}
-
-// MARK: - enum
-
-enum Condition: Double {
-    case month = 2592000
-    case week = 604800
-    case over = 0
 }
