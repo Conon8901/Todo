@@ -235,6 +235,8 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                 if newCategoryName.characterExists() {
                     if self.categoriesArray.index(of: newCategoryName) == nil {
                         if !newCategoryName.contains("@") {
+                            self.tasksDict = self.saveData.object(forKey: "dictData") as! [String: [String]]
+                            
                             let oldCategoryName = self.categoriesArray[indexPath.row]
                             
                             self.categoriesArray[indexPath.row] = newCategoryName
@@ -252,6 +254,8 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                                     self.updateData(oldKey, to: newKey)
                                 }
                             }
+                            
+                            self.tasksDict[oldCategoryName] = nil
                             
                             self.tasksDict.removeValue(forKey: oldCategoryName)
                             

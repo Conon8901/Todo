@@ -254,7 +254,8 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             cell?.textLabel?.text = taskName
             cell?.textLabel?.textColor = .black
             
-            cell?.detailTextLabel?.text = saveData.object(forKey: key + "@memo") as! String?
+            let noteText = saveData.object(forKey: key + "@memo") as! String
+            cell?.detailTextLabel?.text = noteText.replacingOccurrences(of: "\n", with: " ")
             
             if let isChecked = saveData.object(forKey: key + "@check") as! Bool? {
                 if isChecked {
@@ -461,10 +462,5 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         saveData.set(savedCheck, forKey: newKey + "@check")
         
         removeData(oldKey)
-    }
-    
-    func goToDateView() {
-        let nextView = self.storyboard!.instantiateViewController(withIdentifier: "PickNav") as! UINavigationController
-        self.present(nextView, animated: true)
     }
 }
