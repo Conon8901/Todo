@@ -69,18 +69,24 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if newItemName.characterExists() {
                 if self.categoriesArray.index(of: newItemName) == nil {
                     if !newItemName.contains("@") {
+                        //追加
                         self.categoriesArray.append(newItemName)
                         
+                        //中身作成
                         self.tasksDict[newItemName] = []
                         
+                        //保存
                         self.saveData.set(self.tasksDict, forKey: "dictData")
                         self.saveData.set(self.categoriesArray, forKey: "folders")
                         
+                        //再読み込み
                         self.table.reload()
                         
+                        //スクロール
                         self.table.scrollToRow(at: [0,self.tasksDict.keys.count-1], at: .bottom, animated: true)
                         
-                        variables.shared.isCategoryAdded = true
+                        //記録
+                        variables.shared.isCategoryAddedInMoveView = true
                     } else {
                         self.showErrorAlert(message: "ALERT_MESSAGE_ERROR_ATSIGN".localized)
                         
@@ -157,6 +163,7 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let replaceAction = UIAlertAction(title: "ALERT_BUTTON_REPLACE".localized, style: .default) { (action: UIAlertAction!) -> Void in
                 self.tasksDict[self.categoriesArray[indexPath.row]]!.remove(at: applicableIndex!)
                 
+                //もともとあったタスクのメモは上書きされてるので削除は不要
                 self.moveTask(indexPath)
             }
             
@@ -177,8 +184,10 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let oldKey = preCategory + "@" + movingTask
         let newKey = categoriesArray[indexPath.row] + "@" + movingTask
         
+        //新カテゴリに追加
         tasksDict[categoriesArray[indexPath.row]]!.append(movingTask)
         
+        //旧カテゴリから削除
         let index = tasksDict[preCategory]!.index(of: movingTask)!
         tasksDict[preCategory]?.remove(at: index)
         

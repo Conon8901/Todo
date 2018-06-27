@@ -23,7 +23,6 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var openedCategory = ""
     var isDataNil = false
-    var isToNoteView = false
     var selectedIndex: IndexPath = [0,0]
     
     // MARK: - LifeCycle
@@ -58,6 +57,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        //UX改善
         if variables.shared.isFromNoteView {
             let index = selectedIndex
             
@@ -72,26 +72,10 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         if variables.shared.isFromMoveView {
             tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
-
+            
             table.reload()
             
             variables.shared.isFromMoveView = false
-        }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        if variables.shared.isSearched {
-            variables.shared.isFromTaskView = true
-        }
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        if isToNoteView {
-            if let index = table.indexPathForSelectedRow {
-                selectedIndex = index
-            }
-            
-            isToNoteView = false
         }
     }
     
@@ -114,18 +98,25 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if newItemName.characterExists() {
                 if self.tasksDict[self.openedCategory]?.index(of: newItemName) == nil {
                     if !newItemName.contains("@") {
+                        //UserDefaults準備
                         let key = self.openedCategory + "@" + newItemName
                         
+                        //追加
                         self.tasksDict[self.openedCategory]!.append(newItemName)
                         
+                        //保存・データ初期設定
                         self.saveData.set(self.tasksDict, forKey: "dictData")
                         self.saveData.set("", forKey: key + "@memo")
                         self.saveData.set(false, forKey: key + "@check")
                         
+                        //パーツ整備
                         self.setEditButton()
                         
-                        if newItemName.partialMatch(variables.shared.searchText) {
-                            variables.shared.includingTasks.append(newItemName)
+                        //検索中に該当か判定
+                        if variables.shared.isSearched {
+                            if newItemName.partialMatch(variables.shared.searchText) {
+                                variables.shared.includingTasks.append(newItemName)
+                            }
                         }
                         
                         self.table.reload()
@@ -199,11 +190,13 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             preferredStyle: .alert)
         
         let deleteAction = UIAlertAction(title: "ALERT_BUTTON_DELETE".localized, style: .destructive) { (action: UIAlertAction!) -> Void in
+            //カテゴリ内の全タスクを列挙
             let tasksArray = self.tasksDict[self.openedCategory]!
             
+            //それぞれデータ削除
             tasksArray.forEach({ self.removeData(self.openedCategory + "@" + $0) })
             
-            self.tasksDict[self.openedCategory] = []
+            self.tasksDict[self.openedCategory]?.removeAll()
             
             self.saveData.set(self.tasksDict, forKey: "dictData")
             
@@ -265,15 +258,17 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             }
             
-            let pickedArray = variables.shared.includingTasks
-            
-            if pickedArray.index(of: taskName) != nil {
-                cell?.backgroundColor = UIColor(white: 240/255, alpha: 1)
-            } else {
-                cell?.backgroundColor = .white
-            }
-            
             table.allowsSelection = true
+            
+            if variables.shared.isSearched {
+                let pickedArray = variables.shared.includingTasks
+                
+                if pickedArray.index(of: taskName) != nil {
+                    cell?.backgroundColor = UIColor(white: 240/255, alpha: 1)
+                } else {
+                    cell?.backgroundColor = .white
+                }
+            }
         }
         
         return cell!
@@ -293,23 +288,28 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 if newItemName.characterExists() {
                     if self.tasksDict[self.openedCategory]?.index(of: newItemName) == nil {
                         if !newItemName.contains("@") {
+                            //旧タスク名取り置き
                             let oldItemName = self.tasksDict[self.openedCategory]![indexPath.row]
                             
                             let oldKey = self.openedCategory + "@" + oldItemName
                             let newKey = self.openedCategory + "@" + newItemName
                             
+                            //名称更新
                             self.tasksDict[self.openedCategory]?[indexPath.row] = newItemName
                             
                             self.saveData.set(self.tasksDict, forKey: "dictData")
                             self.updateData(oldKey, to: newKey)
                             
-                            let oldItemIndex = variables.shared.includingTasks.index(of: oldItemName)
-                            if oldItemIndex != nil {
-                                variables.shared.includingTasks.remove(at: oldItemIndex!)
-                            }
-                            
-                            if newItemName.partialMatch(variables.shared.searchText) {
-                                variables.shared.includingTasks.append(newItemName)
+                            //検索中に新旧タスク名が当該如何の判定
+                            if variables.shared.isSearched {
+                                let oldItemIndex = variables.shared.includingTasks.index(of: oldItemName)
+                                if oldItemIndex != nil {
+                                    variables.shared.includingTasks.remove(at: oldItemIndex!)
+                                }
+                                
+                                if newItemName.partialMatch(variables.shared.searchText) {
+                                    variables.shared.includingTasks.append(newItemName)
+                                }
                             }
                             
                             self.table.reload()
@@ -347,9 +347,12 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             present(alert, animated: true, completion: nil)
         } else {
+            //タスク名保存
             variables.shared.currentTask = tasksDict[openedCategory]![indexPath.row]
             
-            isToNoteView = true
+            if let index = table.indexPathForSelectedRow {
+                selectedIndex = index
+            }
             
             let nextView = self.storyboard!.instantiateViewController(withIdentifier: "Note") as! NoteViewController
             self.navigationController?.pushViewController(nextView, animated: true)
@@ -358,6 +361,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: "CELL_BUTTON_DELETE".localized) { (action, index) -> Void in
+            //"Add a Task"を弾く
             if !self.isDataNil {
                 let key = self.openedCategory + "@" + self.tasksDict[self.openedCategory]![indexPath.row]
                 
@@ -377,6 +381,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         deleteButton.backgroundColor = .red
         
         let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: "CELL_BUTTON_MOVE".localized) { (action, index) -> Void in
+            //"Add a Task"を弾く
             if !self.isDataNil {
                 variables.shared.movingTask = self.tasksDict[self.openedCategory]![indexPath.row]
                 

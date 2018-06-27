@@ -85,9 +85,7 @@ class variables {
     var isSearched = false
     var searchText = ""
     
-    var isCategoryAdded = false
-    
-    var isFromTaskView = false
+    var isCategoryAddedInMoveView = false
     
     var currentCategory = ""
     var currentTask = ""

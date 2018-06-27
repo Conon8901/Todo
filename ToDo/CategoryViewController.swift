@@ -43,6 +43,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         navigationItem.title = "NAV_TITLE_CATEGORY".localized
         editButton.title = "NAV_BUTTON_EDIT".localized
         
+        //setUpの直後だと落ちる
         table.tableFooterView = UIView()
         
         if let array = saveData.object(forKey: "folders") as! [String]? {
@@ -59,14 +60,14 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if variables.shared.isCategoryAdded {
+        if variables.shared.isCategoryAddedInMoveView {
             if let array = saveData.object(forKey: "folders") as! [String]? {
                 categoriesArray = array
             }
             
             table.reload()
             
-            variables.shared.isCategoryAdded = false
+            variables.shared.isCategoryAddedInMoveView = false
         }
         
         if table.indexPathForSelectedRow == nil {
@@ -75,7 +76,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         
         table.deselectCell()
         
-        if variables.shared.isFromTaskView {
+        if variables.shared.isSearched {
             tasksDict =  saveData.object(forKey: "dictData") as! [String: [String]]
             
             pickedDict[variables.shared.currentCategory] = tasksDict[variables.shared.currentCategory]?.filter({ $0.partialMatch(variables.shared.searchText) })
@@ -111,13 +112,16 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             if newItemName.characterExists() {
                 if self.categoriesArray.index(of: newItemName) == nil {
                     if !newItemName.contains("@") {
+                        //追加
                         self.categoriesArray.append(newItemName)
                         
+                        //ファイル作成
                         self.tasksDict[newItemName] = []
                         
                         self.saveData.set(self.tasksDict, forKey: "dictData")
                         self.saveData.set(self.categoriesArray, forKey: "folders")
                         
+                        //パーツ整備
                         self.setTopParts()
                         
                         self.table.reload()
@@ -235,17 +239,22 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                 if newCategoryName.characterExists() {
                     if self.categoriesArray.index(of: newCategoryName) == nil {
                         if !newCategoryName.contains("@") {
+                            //データ更新
                             self.tasksDict = self.saveData.object(forKey: "dictData") as! [String: [String]]
                             
+                            //旧カテゴリ名取り置き
                             let oldCategoryName = self.categoriesArray[indexPath.row]
                             
+                            //名称更新
                             self.categoriesArray[indexPath.row] = newCategoryName
                             
+                            //データ移行
                             self.tasksDict[newCategoryName] = self.tasksDict[oldCategoryName]
                             
                             self.saveData.set(self.tasksDict, forKey: "dictData")
                             self.saveData.set(self.categoriesArray, forKey: "folders")
                             
+                            //ファイルデータ移行
                             if let filesArray = self.tasksDict[oldCategoryName] {
                                 for fileName in filesArray {
                                     let oldKey = oldCategoryName + "@" + fileName
@@ -255,8 +264,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                                 }
                             }
                             
-                            self.tasksDict[oldCategoryName] = nil
-                            
+                            //旧データ削除
                             self.tasksDict.removeValue(forKey: oldCategoryName)
                             
                             self.table.reload()
@@ -297,12 +305,17 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             variables.shared.includingTasks.removeAll()
             
             if searchBar.text!.isEmpty {
+                //現カテゴリーを保存
                 variables.shared.currentCategory = categoriesArray[indexPath.row]
+                
+                variables.shared.isSearched = false
+                variables.shared.searchText = ""
             } else {
                 variables.shared.currentCategory = searchArray[indexPath.row]
                 
-                showSearchResult()
+                //showSearchResult() //おそらく不要
                 
+                //色つける項目を保存
                 variables.shared.includingTasks = pickedDict[searchArray[indexPath.row]]!
                 
                 variables.shared.isSearched = true
@@ -324,11 +337,14 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            //"Add a Category"状態を弾く
             if !isDataNil {
                 let categoryName = categoriesArray[indexPath.row]
                 
+                //ファイルデータ削除
                 tasksDict[categoryName]?.forEach({ removeData(categoryName + "@" + $0 )})
                 
+                //カテゴリ削除
                 tasksDict.removeValue(forKey: categoryName)
                 categoriesArray.remove(at: indexPath.row)
                 
@@ -449,23 +465,23 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         pickedDict.removeAll()
         
         if let dict = saveData.object(forKey: "dictData") as! [String: [String]]? {
-            for key in categoriesArray {
+            for category in categoriesArray {
                 var isIncluded = false
                 
-                for value in dict[key]! {
-                    if value.partialMatch(searchBar.text!) {
+                for task in dict[category]! {
+                    if task.partialMatch(searchBar.text!) {
                         isIncluded = true
                         
-                        if pickedDict[key] == nil {
-                            pickedDict[key] = [value]
+                        if pickedDict[category] == nil {
+                            pickedDict[category] = [task]
                         } else {
-                            pickedDict[key]?.append(value)
+                            pickedDict[category]?.append(task)
                         }
                     }
                 }
                 
                 if isIncluded {
-                    searchArray.append(key)
+                    searchArray.append(category)
                 }
             }
         }

@@ -48,6 +48,8 @@ class NoteViewController: UIViewController, UITextViewDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        saveData.set(memoTextView.text, forKey: key + "@memo")
+        
         memoTextView.resignFirstResponder()
         
         variables.shared.isFromNoteView = true
@@ -84,7 +86,7 @@ class NoteViewController: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func tapDone() {
-       memoTextView.resignFirstResponder()
+        memoTextView.resignFirstResponder()
     }
     
     // MARK: - Gesture
