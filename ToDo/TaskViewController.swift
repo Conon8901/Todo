@@ -153,7 +153,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     @IBAction func tapEdit() {
-        if isEditing {
+        if isEditing {//編集終了後にスクロール可能に
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
             
@@ -183,7 +183,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    @objc func deleteAll() {
+    @objc func deleteAll() {//削除後に編集状態終了
         let alert = UIAlertController(
             title: "ALERT_TITLE_DELETEALL".localized,
             message: "ALERT_MESSAGE_DELETEALL".localized,

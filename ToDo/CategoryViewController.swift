@@ -83,6 +83,8 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             
             self.table.reloadRows(at: [IndexPath(row: self.searchArray.index(of: variables.shared.currentCategory)!, section: 0)], with: .none)
         }
+        
+        tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -342,7 +344,7 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                 let categoryName = categoriesArray[indexPath.row]
                 
                 //ファイルデータ削除
-                tasksDict[categoryName]?.forEach({ removeData(categoryName + "@" + $0 )})
+                tasksDict[categoryName]?.forEach({ removeData(categoryName + "@" + $0) })
                 
                 //カテゴリ削除
                 tasksDict.removeValue(forKey: categoryName)
