@@ -19,6 +19,8 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var saveData = UserDefaults.standard
     
+    var checkPuttingRecognizer = UILongPressGestureRecognizer()
+    
     var tasksDict = [String: [String]]()
     
     var openedCategory = ""
@@ -46,8 +48,10 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         self.navigationItem.leftBarButtonItem = nil
         
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(TaskViewController.putCheckmark))
-        table.addGestureRecognizer(longPressRecognizer)
+        //読み込み速度の問題で別書き
+        checkPuttingRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(TaskViewController.putCheckmark))
+        
+        table.addGestureRecognizer(checkPuttingRecognizer)
         
         table.tableFooterView = UIView()
         
@@ -165,8 +169,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             addButton.isEnabled = true
             
-            let gesture = UILongPressGestureRecognizer(target: self, action: #selector(TaskViewController.putCheckmark))
-            table.addGestureRecognizer(gesture)
+            table.addGestureRecognizer(checkPuttingRecognizer)
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
@@ -179,7 +182,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             addButton.isEnabled = false
             
-            table.gestureRecognizers?.removeAll()
+            table.removeGestureRecognizer(checkPuttingRecognizer)
         }
     }
     
@@ -200,7 +203,9 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             self.saveData.set(self.tasksDict, forKey: "dictData")
             
-            self.editButton.isEnabled = true
+            //非編集状態に
+            self.tapEdit()
+            self.setEditButton()
             
             self.table.reload()
         }

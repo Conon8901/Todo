@@ -19,6 +19,8 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     
     var saveData = UserDefaults.standard
     
+    var keyboardClosingGesture = UITapGestureRecognizer()
+    
     var tasksDict = [String: [String]]()
     var categoriesArray = [String]()
     var searchArray = [String]()
@@ -45,6 +47,9 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         
         //setUpの直後だと落ちる
         table.tableFooterView = UIView()
+        
+        //読み込み速度の問題で別書き
+        keyboardClosingGesture = UITapGestureRecognizer(target: self, action: #selector(CategoryViewController.closeKeyboard))
         
         if let array = saveData.object(forKey: "folders") as! [String]? {
             categoriesArray = array
@@ -378,14 +383,13 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
         
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(CategoryViewController.closeKeyboard))
-        self.view.addGestureRecognizer(gesture)
+        self.view.addGestureRecognizer(keyboardClosingGesture)
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
         
-        self.view.gestureRecognizers?.removeAll()
+        self.view.removeGestureRecognizer(keyboardClosingGesture)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
