@@ -51,10 +51,12 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         //読み込み速度の問題で別書き
         keyboardClosingGesture = UITapGestureRecognizer(target: self, action: #selector(CategoryViewController.closeKeyboard))
         
+        //初回起動時はnil
         if let array = saveData.object(forKey: "folders") as! [String]? {
             categoriesArray = array
         }
         
+        //初回起動時はnil
         if let dict = saveData.object(forKey: "dictData") as! [String: [String]]? {
             tasksDict = dict
         }
@@ -89,7 +91,10 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             self.table.reloadRows(at: [IndexPath(row: self.searchArray.index(of: variables.shared.currentCategory)!, section: 0)], with: .none)
         }
         
-        tasksDict = saveData.object(forKey: "dictData") as! [String: [String]]
+        //初回起動時はnil
+        if let dict = saveData.object(forKey: "dictData") as! [String: [String]]? {
+            tasksDict = dict
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
