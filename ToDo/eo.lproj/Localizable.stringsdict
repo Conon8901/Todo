@@ -20,9 +20,9 @@
                 <key>NSStringFormatValueTypeKey</key>
                 <string>d</string>
                 <key>one</key>
-                <string>1 mês atrás</string>
+                <string>Antaŭ 1 monato</string>
                 <key>other</key>
-                <string>%d mêses atrás</string>
+                <string>Antaŭ %d monatoj</string>
             </dict>
         </dict>
         <key>TEXT_DUE_PAST_DAY</key>
@@ -36,25 +36,25 @@
                 <key>NSStringFormatValueTypeKey</key>
                 <string>d</string>
                 <key>one</key>
-                <string>1 dia atrás</string>
+                <string>Antaŭ 1 tago</string>
                 <key>other</key>
-                <string>%d dias atrás</string>
+                <string>Antaŭ %d tagoj</string>
             </dict>
         </dict>
         <key>TEXT_DUE_PAST_HOUR</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
             <string>%#@pHours@</string>
-            <key>pHhours</key>
+            <key>pHours</key>
             <dict>
                 <key>NSStringFormatSpecTypeKey</key>
                 <string>NSStringPluralRuleType</string>
                 <key>NSStringFormatValueTypeKey</key>
                 <string>d</string>
                 <key>one</key>
-                <string>1 hora atrás</string>
+                <string>Antaŭ 1 horo</string>
                 <key>other</key>
-                <string>%d horas atrás</string>
+                <string>Antaŭ %d horoj</string>
             </dict>
         </dict>
         <key>TEXT_DUE_PAST_MINUTE</key>
@@ -68,9 +68,9 @@
                 <key>NSStringFormatValueTypeKey</key>
                 <string>d</string>
                 <key>one</key>
-                <string>1 minuto atrás</string>
+                <string>Antaŭ 1 minuto</string>
                 <key>other</key>
-                <string>%d minutos atrás</string>
+                <string>Antaŭ %d minutoj</string>
             </dict>
         </dict>
         <key>TEXT_DUE_FUTURE_MONTH</key>
@@ -84,9 +84,9 @@
                 <key>NSStringFormatValueTypeKey</key>
                 <string>d</string>
                 <key>one</key>
-                <string>em 1 mês</string>
+                <string>en 1 monato</string>
                 <key>other</key>
-                <string>em %d mêses</string>
+                <string>en %d monatoj</string>
             </dict>
         </dict>
         <key>TEXT_DUE_FUTURE_DAY</key>
@@ -100,25 +100,25 @@
                 <key>NSStringFormatValueTypeKey</key>
                 <string>d</string>
                 <key>one</key>
-                <string>em 1 dia</string>
+                <string>en 1 tago</string>
                 <key>other</key>
-                <string>em %d dias</string>
+                <string>en %d tagoj</string>
             </dict>
         </dict>
         <key>TEXT_DUE_FUTURE_HOUR</key>
         <dict>
             <key>NSStringLocalizedFormatKey</key>
             <string>%#@fHours@</string>
-            <key>fHhours</key>
+            <key>fHours</key>
             <dict>
                 <key>NSStringFormatSpecTypeKey</key>
                 <string>NSStringPluralRuleType</string>
                 <key>NSStringFormatValueTypeKey</key>
                 <string>d</string>
                 <key>one</key>
-                <string>em 1 hora</string>
+                <string>en 1 horo</string>
                 <key>other</key>
-                <string>em %d horas</string>
+                <string>en %d horoj</string>
             </dict>
         </dict>
         <key>TEXT_DUE_FUTURE_MINUTE</key>
@@ -132,9 +132,9 @@
                 <key>NSStringFormatValueTypeKey</key>
                 <string>d</string>
                 <key>one</key>
-                <string>em 1 minuto</string>
+                <string>en 1 minuto</string>
                 <key>other</key>
-                <string>em %d minutos</string>
+                <string>en %d minutoj</string>
             </dict>
         </dict>
     </dict>
