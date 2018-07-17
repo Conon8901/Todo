@@ -253,7 +253,8 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             cell?.textLabel?.textColor = .black
             
             let noteText = saveData.object(forKey: key + "@memo") as! String
-            cell?.detailTextLabel?.text = noteText.replacingOccurrences(of: "\n", with: " ")
+            
+            cell?.detailTextLabel?.text = noteText.regexReplacing(pattern: "\n+", with: " ")
             
             if let isChecked = saveData.object(forKey: key + "@check") as! Bool? {
                 if isChecked {

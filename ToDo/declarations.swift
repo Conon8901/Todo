@@ -22,6 +22,11 @@ extension String {
     func characterExists() -> Bool {
         return !self.components(separatedBy: .whitespaces).joined().isEmpty
     }
+    
+    func regexReplacing(pattern: String, with: String) -> String {
+        let regex = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+        return regex.stringByReplacingMatches(in: self, options: [], range: NSMakeRange(0, self.count), withTemplate: with)
+    }
 }
 
 extension UITableView {
