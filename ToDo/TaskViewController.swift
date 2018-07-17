@@ -364,35 +364,36 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if isDataNil {
+            return false
+        } else {
+            return true
+        }
+    }
+    
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: "CELL_BUTTON_DELETE".localized) { (action, index) -> Void in
-            //"Add a Task"を弾く
-            if !self.isDataNil {
-                let key = self.openedCategory + "@" + self.tasksDict[self.openedCategory]![indexPath.row]
-                
-                self.tasksDict[self.openedCategory]?.remove(at: indexPath.row)
-                
-                tableView.reload()
-                
-                self.saveData.set(self.tasksDict, forKey: "dictData")
-                
-                self.removeData(key)
-                
-                self.setEditButton()
-            }
+            let key = self.openedCategory + "@" + self.tasksDict[self.openedCategory]![indexPath.row]
             
+            self.tasksDict[self.openedCategory]?.remove(at: indexPath.row)
+            
+            tableView.reload()
+            
+            self.saveData.set(self.tasksDict, forKey: "dictData")
+            
+            self.removeData(key)
+            
+            self.setEditButton()
         }
         
         deleteButton.backgroundColor = .red
         
         let moveButton: UITableViewRowAction = UITableViewRowAction(style: .normal, title: "CELL_BUTTON_MOVE".localized) { (action, index) -> Void in
-            //"Add a Task"を弾く
-            if !self.isDataNil {
-                variables.shared.movingTask = self.tasksDict[self.openedCategory]![indexPath.row]
-                
-                let nextView = self.storyboard!.instantiateViewController(withIdentifier: "MoveNav") as! UINavigationController
-                self.present(nextView, animated: true)
-            }
+            variables.shared.movingTask = self.tasksDict[self.openedCategory]![indexPath.row]
+            
+            let nextView = self.storyboard!.instantiateViewController(withIdentifier: "MoveNav") as! UINavigationController
+            self.present(nextView, animated: true)
         }
         
         moveButton.backgroundColor = .lightGray

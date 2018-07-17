@@ -216,6 +216,8 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             
             cell?.detailTextLabel?.text = ""
             
+            cell?.accessoryType = .none
+            
             table.allowsSelection = false
         } else {
             if searchBar.text!.isEmpty {
@@ -230,6 +232,8 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             }
             
             cell?.textLabel?.textColor = .black
+            
+            cell?.accessoryType = .disclosureIndicator
             
             table.allowsSelection = true
         }
@@ -339,6 +343,14 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if isDataNil {
+            return false
+        } else {
+            return true
+        }
+    }
+    
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
         if searchBar.text!.isEmpty {
             return .delete
@@ -349,24 +361,21 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            //"Add a Category"状態を弾く
-            if !isDataNil {
-                let categoryName = categoriesArray[indexPath.row]
-                
-                //ファイルデータ削除
-                tasksDict[categoryName]?.forEach({ removeData(categoryName + "@" + $0) })
-                
-                //カテゴリ削除
-                tasksDict.removeValue(forKey: categoryName)
-                categoriesArray.remove(at: indexPath.row)
-                
-                tableView.reload()
-                
-                self.saveData.set(self.tasksDict, forKey: "dictData")
-                self.saveData.set(self.categoriesArray, forKey: "folders")
-                
-                self.setTopParts()
-            }
+            let categoryName = categoriesArray[indexPath.row]
+            
+            //ファイルデータ削除
+            tasksDict[categoryName]?.forEach({ removeData(categoryName + "@" + $0) })
+            
+            //カテゴリ削除
+            tasksDict.removeValue(forKey: categoryName)
+            categoriesArray.remove(at: indexPath.row)
+            
+            tableView.reload()
+            
+            self.saveData.set(self.tasksDict, forKey: "dictData")
+            self.saveData.set(self.categoriesArray, forKey: "folders")
+            
+            self.setTopParts()
         }
     }
     
