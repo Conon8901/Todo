@@ -33,8 +33,6 @@ class NoteViewController: UIViewController, UITextViewDelegate {
         placeHolder.text = "LABEL_NOTE".localized
         placeHolder.isUserInteractionEnabled = false
         
-        memoTextView.backgroundColor = UIColor(white: 250/255, alpha: 1)
-        
         let categoryName = variables.shared.currentCategory
         let taskName = variables.shared.currentTask
         key = categoryName + "@" + taskName

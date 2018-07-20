@@ -104,12 +104,9 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         }
         
-        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
-        }
+        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in }
         
-        alert.addTextField { (textField: UITextField!) -> Void in
-            
-        }
+        alert.addTextField { (textField: UITextField!) -> Void in }
         
         alert.addAction(cancelAction)
         alert.addAction(addAction)

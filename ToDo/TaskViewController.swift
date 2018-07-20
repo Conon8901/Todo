@@ -143,12 +143,9 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         }
         
-        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
-        }
+        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in }
         
-        alert.addTextField { (textField: UITextField!) -> Void in
-            
-        }
+        alert.addTextField { (textField: UITextField!) -> Void in }
         
         alert.addAction(cancelAction)
         alert.addAction(addAction)
@@ -210,8 +207,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.table.reload()
         }
         
-        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
-        }
+        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in }
         
         alert.addAction(cancelAction)
         alert.addAction(deleteAction)

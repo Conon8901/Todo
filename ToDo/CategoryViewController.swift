@@ -156,12 +156,9 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
         
-        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in
-        }
+        let cancelAction = UIAlertAction(title: "ALERT_BUTTON_CANCEL".localized, style: .cancel) { (action: UIAlertAction!) -> Void in }
         
-        alert.addTextField { (textField: UITextField!) -> Void in
-            
-        }
+        alert.addTextField { (textField: UITextField!) -> Void in }
         
         alert.addAction(cancelAction)
         alert.addAction(addAction)

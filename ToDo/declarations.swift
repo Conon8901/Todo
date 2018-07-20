@@ -23,9 +23,14 @@ extension String {
         return !self.components(separatedBy: .whitespaces).joined().isEmpty
     }
     
+    var length: Int {
+        let string_NS = self as NSString
+        return string_NS.length
+    }
+    
     func regexReplacing(pattern: String, with: String) -> String {
         let regex = try! NSRegularExpression(pattern: pattern, options: .caseInsensitive)
-        return regex.stringByReplacingMatches(in: self, options: [], range: NSMakeRange(0, self.count), withTemplate: with)
+        return regex.stringByReplacingMatches(in: self, options: [], range: NSMakeRange(0, self.length), withTemplate: with)
     }
 }
 
