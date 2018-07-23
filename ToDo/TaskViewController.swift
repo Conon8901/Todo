@@ -19,7 +19,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var saveData = UserDefaults.standard
     
-    var checkPuttingRecognizer = UILongPressGestureRecognizer()
+    var checkPuttingGesture = UILongPressGestureRecognizer()
     
     var tasksDict = [String: [String]]()
     
@@ -49,9 +49,9 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.navigationItem.leftBarButtonItem = nil
         
         //読み込み速度の問題で別書き
-        checkPuttingRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(TaskViewController.putCheckmark))
+        checkPuttingGesture = UILongPressGestureRecognizer(target: self, action: #selector(TaskViewController.putCheckmark))
         
-        table.addGestureRecognizer(checkPuttingRecognizer)
+        table.addGestureRecognizer(checkPuttingGesture)
         
         table.tableFooterView = UIView()
         
@@ -166,7 +166,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             addButton.isEnabled = true
             
-            table.addGestureRecognizer(checkPuttingRecognizer)
+            table.addGestureRecognizer(checkPuttingGesture)
         } else {
             super.setEditing(true, animated: true)
             table.setEditing(true, animated: true)
@@ -179,7 +179,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             addButton.isEnabled = false
             
-            table.removeGestureRecognizer(checkPuttingRecognizer)
+            table.removeGestureRecognizer(checkPuttingGesture)
         }
     }
     
@@ -249,8 +249,17 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             cell?.textLabel?.textColor = .black
             
             let noteText = saveData.object(forKey: key + "@memo") as! String
+            var text = ""
             
-            cell?.detailTextLabel?.text = noteText.regexReplacing(pattern: "\n+", with: " ")
+            if noteText.prefix(2) == "##" {
+                text = String(noteText.suffix(noteText.count-2))
+                
+                if let index = text.range(of: "##") {
+                    cell?.detailTextLabel?.text = String(text.prefix(text.distance(from: text.startIndex, to: index.lowerBound)))
+                }
+            } else {
+                cell?.detailTextLabel?.text = noteText.regexReplacing(pattern: "\n+", with: "  ")
+            }
             
             if let isChecked = saveData.object(forKey: key + "@check") as! Bool? {
                 if isChecked {
