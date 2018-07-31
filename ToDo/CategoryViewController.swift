@@ -124,7 +124,6 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             if newItemName.characterExists() {
                 if self.categoriesArray.index(of: newItemName) == nil {
                     if !newItemName.contains("@") {
-                        //追加
                         self.categoriesArray.append(newItemName)
                         
                         //ファイル作成
@@ -133,7 +132,6 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                         self.saveData.set(self.tasksDict, forKey: "dictData")
                         self.saveData.set(self.categoriesArray, forKey: "folders")
                         
-                        //パーツ整備
                         self.setTopParts()
                         
                         self.table.reload()
@@ -255,13 +253,10 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
                             //データ更新
                             self.tasksDict = self.saveData.object(forKey: "dictData") as! [String: [String]]
                             
-                            //旧カテゴリ名取り置き
                             let oldCategoryName = self.categoriesArray[indexPath.row]
                             
-                            //名称更新
                             self.categoriesArray[indexPath.row] = newCategoryName
                             
-                            //データ移行
                             self.tasksDict[newCategoryName] = self.tasksDict[oldCategoryName]
                             
                             self.saveData.set(self.tasksDict, forKey: "dictData")
@@ -326,8 +321,6 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             } else {
                 variables.shared.currentCategory = searchArray[indexPath.row]
                 
-                //showSearchResult() //おそらく不要
-                
                 //色つける項目を保存
                 variables.shared.includingTasks = pickedDict[searchArray[indexPath.row]]!
                 
@@ -367,12 +360,12 @@ class CategoryViewController: UIViewController, UITableViewDataSource, UITableVi
             tasksDict.removeValue(forKey: categoryName)
             categoriesArray.remove(at: indexPath.row)
             
-            tableView.reload()
-            
             self.saveData.set(self.tasksDict, forKey: "dictData")
             self.saveData.set(self.categoriesArray, forKey: "folders")
             
             self.setTopParts()
+            
+            tableView.reload()
         }
     }
     

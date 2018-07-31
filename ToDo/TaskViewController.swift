@@ -102,21 +102,17 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if newItemName.characterExists() {
                 if self.tasksDict[self.openedCategory]?.index(of: newItemName) == nil {
                     if !newItemName.contains("@") {
-                        //UserDefaults準備
                         let key = self.openedCategory + "@" + newItemName
                         
-                        //追加
                         self.tasksDict[self.openedCategory]!.append(newItemName)
                         
-                        //保存・データ初期設定
                         self.saveData.set(self.tasksDict, forKey: "dictData")
                         self.saveData.set("", forKey: key + "@memo")
                         self.saveData.set(false, forKey: key + "@check")
                         
-                        //パーツ整備
                         self.setEditButton()
                         
-                        //検索中に該当か判定
+                        //検索該当判定
                         if variables.shared.isSearched {
                             if newItemName.partialMatch(variables.shared.searchText) {
                                 variables.shared.includingTasks.append(newItemName)
@@ -154,7 +150,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     @IBAction func tapEdit() {
-        if isEditing {//編集終了後にスクロール可能に
+        if isEditing {
             super.setEditing(false, animated: true)
             table.setEditing(false, animated: true)
             
@@ -183,7 +179,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    @objc func deleteAll() {//削除後に編集状態終了
+    @objc func deleteAll() {
         let alert = UIAlertController(
             title: "ALERT_TITLE_DELETEALL".localized,
             message: "ALERT_MESSAGE_DELETEALL".localized,
@@ -311,7 +307,7 @@ class TaskViewController: UIViewController, UITableViewDataSource, UITableViewDe
                             self.saveData.set(self.tasksDict, forKey: "dictData")
                             self.updateData(oldKey, to: newKey)
                             
-                            //検索中に新旧タスク名が当該如何の判定
+                            //検索該当判定
                             if variables.shared.isSearched {
                                 let oldItemIndex = variables.shared.includingTasks.index(of: oldItemName)
                                 if oldItemIndex != nil {

@@ -69,20 +69,16 @@ class MoveViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if newItemName.characterExists() {
                 if self.categoriesArray.index(of: newItemName) == nil {
                     if !newItemName.contains("@") {
-                        //追加
                         self.categoriesArray.append(newItemName)
                         
-                        //中身作成
+                        //ファイル作成
                         self.tasksDict[newItemName] = []
                         
-                        //保存
                         self.saveData.set(self.tasksDict, forKey: "dictData")
                         self.saveData.set(self.categoriesArray, forKey: "folders")
                         
-                        //再読み込み
                         self.table.reload()
                         
-                        //スクロール
                         self.table.scrollToRow(at: [0,self.tasksDict.keys.count-1], at: .bottom, animated: true)
                         
                         //記録
